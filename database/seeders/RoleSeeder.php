@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Admin\Role;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class RoleSeeder extends Seeder
 {
@@ -15,9 +14,9 @@ class RoleSeeder extends Seeder
     {
         // Membuat role awal: admin, drafter, checker
         Role::insert([
-            ['name'=>'admin','created_at'=>now(),'updated_at'=>now()],
-            ['name'=>'drafter','created_at'=>now(),'updated_at'=>now()],
-            ['name'=>'checker','created_at'=>now(),'updated_at'=>now()],
+            ['name' => 'admin', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'drafter', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'checker', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

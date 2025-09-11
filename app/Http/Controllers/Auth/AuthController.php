@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-     public function showLogin()
+    public function showLogin()
     {
         return view('auth.login');
     }
@@ -17,7 +17,7 @@ class AuthController extends Controller
     {
         // Validasi input
         $credentials = $request->validate([
-            'email' => ['required','email'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
@@ -47,6 +47,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('login');
     }
 }

@@ -6,9 +6,9 @@ namespace App\Models;
 
 use App\Models\Admin\Account;
 use App\Models\Admin\Role;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -29,12 +29,14 @@ class User extends Authenticatable
         'is_verified',
     ];
 
-    public function role(){ 
-        return $this->belongsTo(Role::class,'role_id'); 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function account(){ 
-        return $this->belongsTo(Account::class,'user_id'); 
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'user_id');
     }
 
     /**
@@ -59,6 +61,4 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-
 }

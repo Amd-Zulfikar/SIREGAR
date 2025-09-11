@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Auth\AuthController;
+use Illuminate\Support\Facades\Route;
 
 // Route login
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -28,7 +28,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/role/store', [RoleController::class, 'store'])->name('store.role');
     Route::post('/role/update/{id}', [RoleController::class, 'update'])->name('update.role');
     // Route::get('/role/delete/{id}', 'delete_role')->name('delete.role')
-    
+
     // route for view controller user
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('index.employee');
     Route::get('/admin/employee/add', [EmployeeController::class, 'employee_add'])->name('add.employee');
@@ -37,7 +37,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/employee/store', [EmployeeController::class, 'store'])->name('store.employee');
     Route::post('/admin/employee/update/{id}', [EmployeeController::class, 'update'])->name('update.employee');
     Route::post('/admin/employee/action/{id}', [EmployeeController::class, 'action'])
-    ->name('employee.action');
+        ->name('employee.action');
     // Route::get('/role/delete/{id}', 'delete_role')->name('delete.role');
 
 });

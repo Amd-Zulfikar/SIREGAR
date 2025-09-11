@@ -7,14 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $table='tb_roles';
-    protected $fillable=['name'];
+    protected $table = 'tb_roles';
 
-    public function users(){ 
-        return $this->hasMany(User::class,'role_id'); 
+    protected $fillable = ['name'];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'role_id');
     }
-    
-    public function accounts(){ 
-        return $this->hasMany(Account::class,'role_id'); 
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class, 'role_id');
     }
 }
