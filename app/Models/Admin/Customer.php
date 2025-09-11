@@ -10,7 +10,7 @@ class Customer extends Model
     protected $fillable=[
         'name',
         'direktur',
-        'paraf_direktur'
+        'foto_paraf'
     ];
     public function accounts(){ return $this->hasMany(Account::class,'customer_id'); }
 }
