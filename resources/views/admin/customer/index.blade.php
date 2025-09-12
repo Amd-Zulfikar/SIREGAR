@@ -8,13 +8,13 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
                             <a type="button" class="btn btn-block bg-gradient-primary"
-                                onclick="location.href='{{ route('add.employee') }}'">Tambah Data</a>
+                                onclick="location.href='{{ route('add.customer') }}'">Tambah Data</a>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Employee</li>
+                            <li class="breadcrumb-item active">Customer</li>
                         </ol>
                     </div>
                 </div>
@@ -27,27 +27,27 @@
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-edit"></i> Data Pegawai</h3>
+                                <h3 class="card-title"><i class="fas fa-edit"></i> Data Customer</h3>
                             </div>
                             <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Pegawai</th>
-                                            <th>Contact</th>
+                                            <th>Nama Perusahaan</th>
+                                            <th>Nama Direktur</th>
                                             <th>Paraf</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($employees as $employee)
+                                        @forelse($customers as $customer)
                                             <tr>
-                                                <td>{{ $employee->name }}</td>
-                                                <td>{{ $employee->contact }}</td>
+                                                <td>{{ $customer->name }}</td>
+                                                <td>{{ $customer->direktur }}</td>
                                                 <td>
-                                                    @if ($employee->foto_paraf)
-                                                        @php $files = json_decode($employee->foto_paraf, true); @endphp
+                                                    @if ($customer->foto_paraf)
+                                                        @php $files = json_decode($customer->foto_paraf, true); @endphp
                                                         @foreach ($files as $file)
                                                             <img src="{{ asset('storage/paraf/' . $file) }}"
                                                                 style="width:50px; height:50px; object-fit:cover; cursor:pointer;"
@@ -61,13 +61,13 @@
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" class="status-switch"
-                                                        data-id="{{ $employee->id }}" name="status"
-                                                        {{ $employee->status ? 'checked' : '' }} data-bootstrap-switch
+                                                        data-id="{{ $customer->id }}" name="status"
+                                                        {{ $customer->status ? 'checked' : '' }} data-bootstrap-switch
                                                         data-off-color="danger" data-on-color="success">
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-info btn-sm"
-                                                        href="{{ route('edit.employee', $employee->id) }}">
+                                                        href="{{ route('edit.customer', $customer->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
                                                 </td>
@@ -80,8 +80,8 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Pegawai</th>
-                                            <th>Contact</th>
+                                            <th>Nama Perusahaan</th>
+                                            <th>Nama Direktur</th>
                                             <th>Paraf</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
@@ -90,7 +90,7 @@
                                 </table>
 
                                 <div class="mt-2">
-                                    {{ $employees->links('pagination::bootstrap-4') }}
+                                    {{ $customers->links('pagination::bootstrap-4') }}
                                 </div>
                             </div>
                         </div>
@@ -135,7 +135,7 @@
                 let newStatus = state ? 1 : 0;
 
                 $.ajax({
-                    url: "{{ url('admin/employee/action') }}/" + id,
+                    url: "{{ url('admin/customer/action') }}/" + id,
                     method: "POST",
                     data: {
                         status: newStatus,

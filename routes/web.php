@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Auth\AuthController;
@@ -26,20 +27,35 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/role/edit/{id},', [RoleController::class, 'role_edit'])->name('edit.role');
     // route for function controller role
     Route::post('/admin/role/store', [RoleController::class, 'store'])->name('store.role');
-    Route::post('/role/update/{id}', [RoleController::class, 'update'])->name('update.role');
-    // Route::get('/role/delete/{id}', 'delete_role')->name('delete.role')
+    Route::post('/admin/role/update/{id}', [RoleController::class, 'update'])->name('update.role');
 
-    // route for view controller user
+    // route for view controller Employee
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('index.employee');
     Route::get('/admin/employee/add', [EmployeeController::class, 'employee_add'])->name('add.employee');
     Route::get('/admin/employee/edit/{id},', [EmployeeController::class, 'employee_edit'])->name('edit.employee');
-    // route for function controller role
+    // route for function controller employee
     Route::post('/admin/employee/store', [EmployeeController::class, 'store'])->name('store.employee');
     Route::post('/admin/employee/update/{id}', [EmployeeController::class, 'update'])->name('update.employee');
     Route::post('/admin/employee/action/{id}', [EmployeeController::class, 'action'])
         ->name('employee.action');
-    // Route::get('/role/delete/{id}', 'delete_role')->name('delete.role');
 
+    // route for view controller Customer
+    Route::get('/admin/customer', [CustomerController::class, 'index'])->name('index.customer');
+    Route::get('/admin/customer/add', [CustomerController::class, 'customer_add'])->name('add.customer');
+    Route::get('/admin/customer/edit/{id},', [CustomerController::class, 'customer_edit'])->name('edit.customer');
+    // route for function controller customer
+    Route::post('/admin/customer/store', [CustomerController::class, 'store'])->name('store.customer');
+    Route::post('/admin/customer/update/{id}', [CustomerController::class, 'update'])->name('update.customer');
+    Route::post('/admin/customer/action/{id}', [CustomerController::class, 'action'])
+        ->name('customer.action');
+
+    // route for view controller Account
+    Route::get('/admin/account', [App\Http\Controllers\Admin\AccountController::class, 'index'])->name('index.account');
+    Route::get('/admin/account/add', [App\Http\Controllers\Admin\AccountController::class, 'account_add'])->name('add.account');
+    Route::get('/admin/account/edit/{id},', [App\Http\Controllers\Admin\AccountController::class, 'account_edit'])->name('edit.account');
+    // route for function controller account
+    Route::post('/admin/account/store', [App\Http\Controllers\Admin\AccountController::class, 'store'])->name('store.account');
+    Route::post('/admin/account/update/{id}', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('update.account');
 });
 
 Route::middleware(['auth', 'role:drafter'])->group(function () {

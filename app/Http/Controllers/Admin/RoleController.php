@@ -18,7 +18,6 @@ class RoleController extends Controller
             'title' => 'Data Roles',
             'roles' => $roles,
         ]);
-
     }
 
     // public function view () {
@@ -41,30 +40,24 @@ class RoleController extends Controller
     {
         $tbrole = Role::find($id);
 
-        if (! $tbrole) {
+        if (!$tbrole) {
             return redirect()->route('index.role')->with('error', 'Role tidak ditemukan!');
         }
 
-        $data = ['title' => 'Edit Data Role',
-            'role' => $tbrole,
-            'roles' => Role::all(),
-        ];
+        $data = ['title' => 'Edit Data Role', 'role' => $tbrole, 'roles' => Role::all()];
 
         return view('admin.role.edit_role', $data);
     }
 
     public function store(Request $request)
     {
-
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'keterangan' => 'required',
-            ]);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'keterangan' => 'required',
+        ]);
 
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput()
-                ->with('error', 'Data gagal disimpan! Periksa input Anda.');
+            return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan! Periksa input Anda.');
         }
         $input = $request->all();
 
@@ -83,11 +76,10 @@ class RoleController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required',
-                'keterangan' => 'required',
-            ]);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'keterangan' => 'required',
+        ]);
 
         if ($validator->fails()) {
             session()->flash('message', $validator->messages()->first());

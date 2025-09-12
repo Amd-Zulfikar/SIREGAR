@@ -2,52 +2,52 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\Employee;
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\Admin\Customer;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class EmployeeController extends Controller
+class CustomerController extends Controller
 {
     public function index()
     {
-        $employees = Employee::paginate(5);
+        $customers = Customer::paginate(5);
 
-        return view('admin.employee.index', [
-            'title' => 'Data Employees',
-            'employees' => $employees,
+        return view('admin.customer.index', [
+            'title' => 'Data customers',
+            'customers' => $customers,
         ]);
     }
 
-    public function employee_add()
+    public function customer_add()
     {
-        return view('admin.employee.add_employee');
+        return view('admin.customer.add_customer');
     }
 
-    public function employee_edit($id)
+    public function customer_edit($id)
     {
-        $tbemployee = Employee::find($id);
+        $tbcustomer = Customer::find($id);
 
-        if (!$tbemployee) {
-            return redirect()->route('index.employee')->with('error', 'Employee tidak ditemukan!');
+        if (!$tbcustomer) {
+            return redirect()->route('index.customer')->with('error', 'Customer tidak ditemukan!');
         }
 
         $data = [
-            'title' => 'Edit Data Employee',
-            'employee' => $tbemployee,
-            'employees' => Employee::all(),
+            'title' => 'Edit Data Customer',
+            'customer' => $tbcustomer,
+            'customers' => Customer::all(),
         ];
 
-        return view('admin.employee.edit_employee', $data);
+        return view('admin.customer.edit_customer', $data);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'contact' => 'nullable|string|max:50',
+            'direktur' => 'required|string|max:255',
             'foto_paraf' => 'nullable|array',
             'foto_paraf.*' => 'file|mimes:jpg,jpeg,png|max:2000',
         ]);
@@ -68,14 +68,14 @@ class EmployeeController extends Controller
                 }
             }
 
-            Employee::create([
+            Customer::create([
                 'name' => $request->name,
-                'contact' => $request->contact,
+                'direktur' => $request->direktur,
                 'foto_paraf' => $fotoFiles ? json_encode($fotoFiles) : null,
                 'status' => 1,
             ]);
 
-            return redirect()->route('index.employee')->with('success', 'Pegawai berhasil ditambahkan!');
+            return redirect()->route('index.customer')->with('success', 'Customer berhasil ditambahkan!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
         }
@@ -83,30 +83,30 @@ class EmployeeController extends Controller
 
     public function action(Request $request, $id)
     {
-        $employee = Employee::findOrFail($id);
-        $employee->status = $request->status;
-        $employee->save();
+        $customer = Customer::findOrFail($id);
+        $customer->status = $request->status;
+        $customer->save();
 
-        return response()->json(['success' => true, 'status' => $employee->status]);
+        return response()->json(['success' => true, 'status' => $customer->status]);
     }
 
     public function update(Request $request, $id)
     {
-        $employee = Employee::findOrFail($id);
+        $customer = Customer::findOrFail($id);
 
         // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
-            'contact' => 'required|string|max:255',
+            'direktur' => 'required|string|max:255',
             'foto_paraf.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         // Update data
-        $employee->name = $request->name;
-        $employee->contact = $request->contact;
+        $customer->name = $request->name;
+        $customer->direktur = $request->direktur;
 
         // Ambil file lama dari DB
-        $oldFiles = $employee->foto_paraf ? json_decode($employee->foto_paraf, true) : [];
+        $oldFiles = $customer->foto_paraf ? json_decode($customer->foto_paraf, true) : [];
 
         // Ambil file lama yang masih ada setelah submit form
         $existingFiles = $request->existing_files ?? [];
@@ -131,10 +131,10 @@ class EmployeeController extends Controller
         }
 
         // Gabungkan file lama yang masih ada + file baru
-        $employee->foto_paraf = json_encode(array_merge($existingFiles, $newFiles));
+        $customer->foto_paraf = json_encode(array_merge($existingFiles, $newFiles));
 
-        $employee->save();
+        $customer->save();
 
-        return redirect()->route('index.employee')->with('success', 'Data pegawai berhasil diupdate.');
+        return redirect()->route('index.customer')->with('success', 'Data pegawai berhasil diupdate.');
     }
 }

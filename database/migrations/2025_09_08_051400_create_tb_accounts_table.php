@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained('tb_employees'); // FK ke employees
             $table->foreignId('customer_id')->constrained('tb_customers'); // FK ke customers
             $table->foreignId('role_id')->constrained('tb_roles'); // FK ke roles
+            $table->string('email')->unique();
+            $table->string('password');
             $table->timestamps();
         });
     }

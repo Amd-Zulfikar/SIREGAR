@@ -12,6 +12,7 @@ class Customer extends Model
         'name',
         'direktur',
         'foto_paraf',
+        'status',
     ];
 
     public function accounts()

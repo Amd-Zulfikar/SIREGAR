@@ -9,7 +9,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Employee</li>
+                            <li class="breadcrumb-item active">Customer</li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div>
@@ -19,28 +19,28 @@
 
         <section class="content">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('store.employee') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('store.customer') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-secondary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Tambah Pegawai</h3>
+                                    <h3 class="card-title">Tambah Customer</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="">Nama Pegawai</label>
+                                                <label for="">Nama Perusahaan</label>
                                                 <input name="name" type="text" class="form-control"
-                                                    placeholder="Masukan Nama Pegawai" required>
+                                                    placeholder="Masukan Nama Perusahaan" required>
                                                 <small>{{ $errors->first('name') }}</small>
                                             </div>
                                             <div class="form-group">
-                                                <label for="">Contact</label>
-                                                <input name="contact" type="text" class="form-control"
-                                                    placeholder="Masukan contact" required>
-                                                <small>{{ $errors->first('contact') }}</small>
+                                                <label for="">Nama Direktur</label>
+                                                <input name="direktur" type="text" class="form-control"
+                                                    placeholder="Masukan Nama direktur" required>
+                                                <small>{{ $errors->first('direktur') }}</small>
                                             </div>
                                         </div>
 
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer me-2">
-                                    <a href="{{ route('index.employee') }}" class="btn btn-danger">Kembali</a>
+                                    <a href="{{ route('index.customer') }}" class="btn btn-danger">Kembali</a>
                                     <input type="submit" value="Simpan" class="btn btn-success">
                                 </div>
                             </div>

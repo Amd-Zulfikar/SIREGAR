@@ -1,55 +1,57 @@
 @extends('admin.layouts.app')
 
 @section('content')
+
+    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header -->
+        <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6"></div>
+                    <div class="col-sm-6">
+                        <!-- <h1>General Form</h1> -->
+                    </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Employee</li>
+                            <li class="breadcrumb-item active">Customer</li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div>
                 </div>
-            </div>
+            </div><!-- /.container-fluid -->
         </section>
 
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('update.employee', [$employee->id]) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('update.customer', [$customer->id]) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
+                            <!-- general form elements disabled -->
                             <div class="card card-secondary">
                                 <div class="card-header">
-                                    <h3 class="card-title">Edit Pegawai</h3>
+                                    <h3 class="card-title">Edit Customer</h3>
                                 </div>
+                                <!-- /.card-header -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <!-- Form Input -->
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Nama Pegawai</label>
-                                                <input name="name" type="text"
-                                                    value="{{ old('name', $employee->name) }}" class="form-control"
-                                                    placeholder="Masukan Nama Pegawai" required>
-                                                <small class="text-danger">{{ $errors->first('name') }}</small>
+                                                <label for="">Nama Perusahaan</label>
+                                                <input name="name" type="text" value="{{ $customer->name }}"
+                                                    class="form-control" placeholder="Masukan Nama Pegawai" required>
+                                                <small>{{ $errors->first('name') }}</small>
                                             </div>
                                             <div class="form-group">
-                                                <label>Contact</label>
-                                                <input name="contact" type="text"
-                                                    value="{{ old('contact', $employee->contact) }}" class="form-control"
-                                                    placeholder="Masukan contact" required>
-                                                <small class="text-danger">{{ $errors->first('contact') }}</small>
+                                                <label for="">Nama Direktur</label>
+                                                <input name="direktur" type="text" value="{{ $customer->direktur }}"
+                                                    class="form-control" placeholder="Masukan Nama direktur" required>
+                                                <small>{{ $errors->first('direktur') }}</small>
                                             </div>
                                         </div>
 
-                                        <!-- Upload & Preview -->
                                         <div class="col-sm-6">
                                             <!-- Upload Gambar Baru -->
                                             <div class="form-group">
@@ -73,8 +75,8 @@
                                             <div class="form-group">
                                                 <label>Preview Paraf Lama</label>
                                                 <div id="oldPreviewContainer" class="d-flex flex-wrap">
-                                                    @if ($employee->foto_paraf)
-                                                        @php $files = json_decode($employee->foto_paraf, true); @endphp
+                                                    @if ($customer->foto_paraf)
+                                                        @php $files = json_decode($customer->foto_paraf, true); @endphp
                                                         @foreach ($files as $file)
                                                             <div class="position-relative m-1 old-image-wrapper">
                                                                 <img src="{{ asset('storage/paraf/' . $file) }}"
@@ -97,33 +99,20 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="card-footer">
-                                        <a href="{{ route('index.employee') }}" class="btn btn-danger">Kembali</a>
-                                        <input type="submit" value="Simpan" class="btn btn-success">
-                                    </div>
+                                </div>
+                                <div class="card-footer me-2">
+                                    <a href="{{ route('index.customer') }}" class="btn btn-danger">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-success ">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </form>
+                <!-- /.card-body -->
             </div>
-        </section>
-
-        <!-- Modal Preview Gambar -->
-        <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content">
-                    <div class="modal-body p-0">
-                        <img src="" id="imgPreviewModal" class="img-fluid w-100">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <!-- /.card -->
     </div>
+
 @endsection
 
 @push('scripts')
