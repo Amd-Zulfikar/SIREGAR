@@ -10,7 +10,7 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
                             <li class="breadcrumb-item active">Customer</li>
-                            <li class="breadcrumb-item active">Edit</li>
+                            <li class="breadcrumb-item active">add</li>
                         </ol>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="card card-secondary">
+                            <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">Tambah Customer</h3>
                                 </div>

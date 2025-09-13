@@ -24,29 +24,12 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
                 <form method="POST" action="{{ route('update.role', ['id' => $role->id]) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <div class="card card-secondary">
+                            <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">Tambah Role</h3>
                                 </div>

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
@@ -21,11 +22,23 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        // Masking password sebelum logging
+        $logData = $request->except('password');
+        $logData['password'] = '********';
+        Log::info('Login attempt', $logData);
+
         // Cek login
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
             $user = Auth::user();
+
+            if ($user->status != 1) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Akun Anda Sedang di Nonaktifkan.',
+                ]);
+            }
 
             // Arahkan ke dashboard sesuai role
             if ($user->role->name === 'admin') {

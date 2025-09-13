@@ -27,16 +27,12 @@ class User extends Authenticatable
         'role_id',
         'email_verification_code',
         'is_verified',
+        'status',
     ];
 
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id');
-    }
-
-    public function account()
-    {
-        return $this->belongsTo(Account::class, 'user_id');
     }
 
     /**

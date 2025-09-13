@@ -14,9 +14,4 @@ class Customer extends Model
         'foto_paraf',
         'status',
     ];
-
-    public function accounts()
-    {
-        return $this->hasMany(Account::class, 'customer_id');
-    }
 }

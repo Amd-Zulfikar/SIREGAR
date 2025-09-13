@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\RoleController;
@@ -56,6 +57,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller account
     Route::post('/admin/account/store', [App\Http\Controllers\Admin\AccountController::class, 'store'])->name('store.account');
     Route::post('/admin/account/update/{id}', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('update.account');
+
+    Route::post('/admin/account/action/{id}', [App\Http\Controllers\Admin\AccountController::class, 'action'])->name('account.action');
 });
 
 Route::middleware(['auth', 'role:drafter'])->group(function () {

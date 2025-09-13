@@ -31,7 +31,7 @@ class AccountController extends Controller
         $data = [
             'roles' => $role,
         ];
-        return view('backend.users.add_user', $data);
+        return view('admin.account.add_account', $data);
     }
 
     public function account_edit($id)
@@ -55,25 +55,46 @@ class AccountController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'role_id' => 'required|string|max:255',
+            'roles' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
         }
 
+        $input = $request->all();
         try {
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
+            $insert = User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'role_id' => $input['roles'],
             ]);
 
-            return redirect()->route('index.customer')->with('success', 'Customer berhasil ditambahkan!');
+            return redirect()->route('index.account')->with('success', 'Account berhasil ditambahkan!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
         }
+    }
+
+
+
+    public function action(Request $request, $id)
+    {
+        $account = User::findOrFail($id);
+
+        // Validasi agar hanya 0/1 yang bisa masuk
+        $status = $request->status == 1 ? 1 : 0;
+
+        $account->status = $status;
+        $account->save();
+
+        return response()->json([
+            'success' => true,
+            'status'  => $account->status,
+            'message' => $status ? 'Akun diaktifkan' : 'Akun dinonaktifkan'
+        ]);
     }
 }

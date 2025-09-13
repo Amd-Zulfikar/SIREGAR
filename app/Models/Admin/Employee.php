@@ -14,9 +14,4 @@ class Employee extends Model
         'foto_paraf',
         'status',
     ];
-
-    public function accounts()
-    {
-        return $this->hasMany(Account::class, 'employee_id');
-    }
 }

@@ -23,6 +23,11 @@
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
     <!-- Toastr -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/toastr/toastr.min.css') }}">
+    <!-- summernote -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.css') }}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -82,9 +87,9 @@
                         </li>
                         <li class="nav-header">INPUT DATA USER</li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'index.employee', 'index.customer') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.role', 'index.employee') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Data User
@@ -114,7 +119,8 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.account') }}"
+                                        class="nav-link {{ request()->routeIs('index.account') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Account</p>
                                     </a>
@@ -262,6 +268,10 @@
     <script src="{{ asset('adminlte/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <!-- Bootstrap Switch -->
     <script src="{{ asset('adminlte/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
+    <!-- Summernote -->
+    <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
     <!-- Page specific script -->
     <script>
         $(function() {

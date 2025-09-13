@@ -20,17 +20,6 @@ class RoleController extends Controller
         ]);
     }
 
-    // public function view () {
-
-    //     try {
-    //         $data = Role::paginate(5);
-    //         return $data;
-    //     }
-    //     catch(Exception $e){
-    //       dd($e->getMessage());
-    //     }
-    // }
-
     public function role_add()
     {
         return view('admin.role.add_role');
@@ -53,7 +42,6 @@ class RoleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'keterangan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -65,7 +53,6 @@ class RoleController extends Controller
             // dd($request->all()); //  cek isi request masuk atau enggak
             Role::create([
                 'name' => $input['name'],
-                'keterangan' => $input['keterangan'],
             ]);
 
             return redirect()->route('index.role')->with('success', 'Role berhasil ditambahkan!');
@@ -78,7 +65,6 @@ class RoleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'keterangan' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -92,7 +78,6 @@ class RoleController extends Controller
             $role = Role::findOrFail($id);
             $role->update([
                 'name' => $input['name'],
-                'keterangan' => $input['keterangan'],
             ]);
 
             return redirect()->route('index.role')->with('success', 'Role berhasil diupdate!');

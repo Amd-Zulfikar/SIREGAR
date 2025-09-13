@@ -35,16 +35,20 @@
                                         <tr>
                                             <th>Nama Pengguna</th>
                                             <th>Role</th>
-                                            <th>Paraf</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         @forelse($accounts as $account)
                                             <tr>
                                                 <td>{{ $account->name }}</td>
-                                                <td>{{ $account->direktur }}</td>
+                                                <td>{{ $account->role->name }}</td>
+                                                <td>{{ $account->email }}</td>
+                                                <td>{{ $account->password }}</td>
                                                 <td>
                                                     <input type="checkbox" class="status-switch"
                                                         data-id="{{ $account->id }}" name="status"
@@ -66,9 +70,10 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Nama Perusahaan</th>
-                                            <th>Nama Direktur</th>
-                                            <th>Paraf</th>
+                                            <th>Nama Pengguna</th>
+                                            <th>Role</th>
+                                            <th>Email</th>
+                                            <th>Password</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>

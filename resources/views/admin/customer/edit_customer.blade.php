@@ -30,7 +30,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
-                            <div class="card card-secondary">
+                            <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">Edit Customer</h3>
                                 </div>
