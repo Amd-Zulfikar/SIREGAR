@@ -128,8 +128,10 @@
                             </ul>
                         </li>
                         <li class="nav-header">INPUT DATA GAMBAR</li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
+                        <li
+                            class="nav-item has-treeview {{ request()->routeIs('index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'menu-open' : '' }}">
+                            <a href="javascript:void(0)"
+                                class="nav-link {{ request()->routeIs('index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Data Master
@@ -138,31 +140,36 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.engine') }}"
+                                        class="nav-link {{ request()->routeIs('index.engine') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Engine</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.brand') }}"
+                                        class="nav-link {{ request()->routeIs('index.brand') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Brand</p>
+                                        <p>Merk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.chassis') }}"
+                                        class="nav-link {{ request()->routeIs('index.chassis') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Chassis</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.vehicle') }}"
+                                        class="nav-link {{ request()->routeIs('index.vehicle') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Vehicle</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.mdata') }}"
+                                        class="nav-link {{ request()->routeIs('index.mdata') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Data</p>
                                     </a>
@@ -170,8 +177,10 @@
                             </ul>
                         </li>
                         <li class="nav-header">INPUT GAMBAR</li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
+                        <li
+                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar') ? 'menu-open' : '' }}">
+                            <a href="javascript:void(0)"
+                                class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Gambar Master
@@ -180,7 +189,8 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('index.mgambar') }}"
+                                        class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Gambar</p>
                                     </a>
@@ -223,19 +233,26 @@
         </aside>
 
         @yield('content')
+        <!--/.col (right) -->
+    </div>
+    <!-- /.row -->
+    </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <div class="float-right d-none d-sm-block">
+            <b>Version</b> 1.1.0
+        </div>
+        <strong>Copyright &copy; 2025 <a href="https://adminlte.io">SiRete</a>.</strong> All rights reserved.
+    </footer>
 
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 1.1.0
-            </div>
-            <strong>Copyright &copy; 2025 <a href="https://adminlte.io">SiRete</a>.</strong> All rights reserved.
-        </footer>
-
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
 

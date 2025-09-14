@@ -57,8 +57,61 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller account
     Route::post('/admin/account/store', [App\Http\Controllers\Admin\AccountController::class, 'store'])->name('store.account');
     Route::post('/admin/account/update/{id}', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('update.account');
-
     Route::post('/admin/account/action/{id}', [App\Http\Controllers\Admin\AccountController::class, 'action'])->name('account.action');
+
+    // route for view controller Account
+    Route::get('/admin/engine', [App\Http\Controllers\Admin\EngineController::class, 'index'])->name('index.engine');
+    Route::get('/admin/engine/add', [App\Http\Controllers\Admin\EngineController::class, 'engine_add'])->name('add.engine');
+    Route::get('/admin/engine/edit/{id},', [App\Http\Controllers\Admin\EngineController::class, 'engine_edit'])->name('edit.engine');
+    // route for function controller
+    Route::post('/admin/engine/store', [App\Http\Controllers\Admin\EngineController::class, 'store'])->name('store.engine');
+    Route::post('/admin/engine/update/{id}', [App\Http\Controllers\Admin\EngineController::class, 'update'])->name('update.engine');
+    Route::post('/admin/engine/action/{id}', [App\Http\Controllers\Admin\EngineController::class, 'action'])->name('engine.action');
+
+    // route for view controller Brand
+    Route::get('/admin/brand', [App\Http\Controllers\Admin\BrandController::class, 'index'])->name('index.brand');
+    Route::get('/admin/brand/add', [App\Http\Controllers\Admin\BrandController::class, 'brand_add'])->name('add.brand');
+    Route::get('/admin/brand/edit/{id},', [App\Http\Controllers\Admin\BrandController::class, 'brand_edit'])->name('edit.brand');
+    // route for function controller brand
+    Route::post('/admin/brand/store', [App\Http\Controllers\Admin\BrandController::class, 'store'])->name('store.brand');
+    Route::post('/admin/brand/update/{id}', [App\Http\Controllers\Admin\BrandController::class, 'update'])->name('update.brand');
+    Route::post('/admin/brand/action/{id}', [App\Http\Controllers\Admin\BrandController::class, 'action'])->name('brand.action');
+
+    // route for view controller Chassis
+    Route::get('/admin/chassis', [App\Http\Controllers\Admin\ChassisController::class, 'index'])->name('index.chassis');
+    Route::get('/admin/chassis/add', [App\Http\Controllers\Admin\ChassisController::class, 'chassis_add'])->name('add.chassis');
+    Route::get('/admin/chassis/edit/{id},', [App\Http\Controllers\Admin\ChassisController::class, 'chassis_edit'])->name('edit.chassis');
+    // route for function controller chassis
+    Route::post('/admin/chassis/store', [App\Http\Controllers\Admin\ChassisController::class, 'store'])->name('store.chassis');
+    Route::post('/admin/chassis/update/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'update'])->name('update.chassis');
+    Route::post('/admin/chassis/action/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'action'])->name('chassis.action');
+
+    // route for view controller Vehicle
+    Route::get('/admin/vehicle', [App\Http\Controllers\Admin\VehicleController::class, 'index'])->name('index.vehicle');
+    Route::get('/admin/vehicle/add', [App\Http\Controllers\Admin\VehicleController::class, 'vehicle_add'])->name('add.vehicle');
+    Route::get('/admin/vehicle/edit/{id},', [App\Http\Controllers\Admin\VehicleController::class, 'vehicle_edit'])->name('edit.vehicle');
+    // route for function controller vehicle
+    Route::post('/admin/vehicle/store', [App\Http\Controllers\Admin\VehicleController::class, 'store'])->name('store.vehicle');
+    Route::post('/admin/vehicle/update/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'update'])->name('update.vehicle');
+    Route::post('/admin/vehicle/action/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'action'])->name('vehicle.action');
+
+    // route for view controller Mdata
+    Route::get('/admin/mdata', [App\Http\Controllers\Admin\MdataController::class, 'index'])->name('index.mdata');
+    Route::get('/admin/mdata/add', [App\Http\Controllers\Admin\MdataController::class, 'mdata_add'])->name('add.mdata');
+    Route::get('/admin/mdata/edit/{id},', [App\Http\Controllers\Admin\MdataController::class, 'mdata_edit'])->name('edit.mdata');
+    // route for function controller mdata
+    Route::post('/admin/mdata/store', [App\Http\Controllers\Admin\MdataController::class, 'store'])->name('store.mdata');
+    Route::post('/admin/mdata/update/{id}', [App\Http\Controllers\Admin\MdataController::class, 'update'])->name('update.mdata');
+    Route::post('/admin/mdata/action/{id}', [App\Http\Controllers\Admin\MdataController::class, 'action'])->name('mdata.action');
+
+    // route for view controller Mgambar
+    Route::get('/admin/mgambar', [App\Http\Controllers\Admin\MgambarController::class, 'index'])->name('index.mgambar');
+    Route::get('/admin/mgambar/add', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_add'])->name('add.mgambar');
+    Route::get('/admin/mgambar/edit/{id},', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_edit'])->name('edit.mgambar');
+    // route for function controller mgambar
+    Route::post('/admin/mgambar/store', [App\Http\Controllers\Admin\MgambarController::class, 'store'])->name('store.mgambar');
+    Route::post('/admin/mgambar/update/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'update'])->name('update.mgambar');
+    Route::post('/admin/mgambar/action/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'action'])->name('mgambar.action');
 });
 
 Route::middleware(['auth', 'role:drafter'])->group(function () {

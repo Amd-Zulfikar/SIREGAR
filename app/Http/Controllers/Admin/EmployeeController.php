@@ -51,7 +51,7 @@ class EmployeeController extends Controller
             'foto_paraf' => 'nullable|array',
             'foto_paraf.*' => 'file|mimes:jpg,jpeg,png|max:2000',
         ]);
-
+ 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
         }
@@ -77,7 +77,7 @@ class EmployeeController extends Controller
 
             return redirect()->route('index.employee')->with('success', 'Pegawai berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
         }
     }
 

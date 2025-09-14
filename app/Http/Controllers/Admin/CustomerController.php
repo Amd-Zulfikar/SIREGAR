@@ -77,7 +77,7 @@ class CustomerController extends Controller
 
             return redirect()->route('index.customer')->with('success', 'Customer berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
         }
     }
 

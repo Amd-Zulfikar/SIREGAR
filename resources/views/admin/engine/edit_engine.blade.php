@@ -13,7 +13,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Role</li>
+                            <li class="breadcrumb-item active">Engine</li>
                             <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div>
@@ -24,14 +24,15 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <form method="POST" action="{{ route('update.role', ['id' => $role->id]) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('update.engine', ['id' => $engine->id]) }}"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12">
                             <!-- general form elements disabled -->
                             <div class="card card-outline card-info">
                                 <div class="card-header">
-                                    <h3 class="card-title">Tambah Role</h3>
+                                    <h3 class="card-title">Edit Engine</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -39,16 +40,16 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="">Nama Role</label>
-                                                <input name="name" type="text" value="{{ $role->name }}"
-                                                    class="form-control" placeholder="Masukan Nama Role" required>
+                                                <label for="">Nama Engine</label>
+                                                <input name="name" type="text" value="{{ $engine->name }}"
+                                                    class="form-control" placeholder="Masukan Nama Engine" required>
                                                 <small>{{ $errors->first('name') }}</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer me-2">
-                                    <a href="{{ route('index.role') }}" class="btn btn-danger">Kembali</a>
+                                    <a href="{{ route('index.engine') }}" class="btn btn-danger">Kembali</a>
                                     <input type="submit" value="update" class="btn btn-success ">
                                 </div>
                 </form>

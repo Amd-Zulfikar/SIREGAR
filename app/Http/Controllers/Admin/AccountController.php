@@ -7,9 +7,10 @@ use App\Models\User;
 use App\Models\Admin\Role;
 use Illuminate\Http\Request;
 use App\Models\Admin\Account;
+use App\Models\Admin\Customer;
 use App\Models\Admin\Employee;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\Customer;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -45,7 +46,7 @@ class AccountController extends Controller
         $data = [
             'title' => 'Edit Data Account',
             'account' => $tbaccount,
-            'accounts' => User::all(),
+            'roles' => Role::all(),
         ];
 
         return view('admin.account.edit_account', $data);
@@ -66,19 +67,54 @@ class AccountController extends Controller
 
         $input = $request->all();
         try {
-            $insert = User::create([
+            User::create([
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
                 'role_id' => $input['roles'],
+                'status'   => 1, // default aktif
             ]);
 
             return redirect()->route('index.account')->with('success', 'Account berhasil ditambahkan!');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
+        } catch (Exception $e) {    
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users,email,' . $id,
+            'roles'    => 'required|exists:tb_roles,id',
+            'password' => 'nullable|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            $user = User::findOrFail($id);
+
+            $data = [
+                'name'    => $request->name,
+                'email'   => $request->email,
+                'role_id' => $request->roles,
+            ];
+
+            // Update password hanya jika diisi
+            if (!empty($request->password)) {
+                $data['password'] = Hash::make($request->password);
+            }
+
+            $user->update($data);
+
+            return redirect()->route('index.account')->with('success', 'Account berhasil diperbarui!');
+        } catch (Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage())->withInput();
+        }
+    }
 
 
     public function action(Request $request, $id)
