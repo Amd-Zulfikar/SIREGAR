@@ -2,6 +2,8 @@
 
 namespace App\Models\Admin;
 
+
+use App\Models\Drafter\Workspace;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
@@ -14,4 +16,9 @@ class Employee extends Model
         'foto_paraf',
         'status',
     ];
+
+    public function workspaces()
+    {
+        return $this->hasMany(Workspace::class, 'employee_id');
+    }
 }

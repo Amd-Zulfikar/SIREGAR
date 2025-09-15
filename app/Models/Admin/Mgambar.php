@@ -2,7 +2,8 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\Mdata;
+
+use App\Models\Drafter\WorkspaceGambar;
 use Illuminate\Database\Eloquent\Model;
 
 class Mgambar extends Model
@@ -15,8 +16,14 @@ class Mgambar extends Model
         'status',
     ];
 
-    public function mdata() 
-    { 
-        return $this->belongsTo(Mdata::class, 'mdata_id'); 
+    public function mdata()
+    {
+        return $this->belongsTo(Mdata::class, 'mdata_id');
+    }
+
+    // Relasi ke WorkspaceGambar
+    public function workspaceGambar()
+    {
+        return $this->hasMany(WorkspaceGambar::class, 'mgambar_id');
     }
 }

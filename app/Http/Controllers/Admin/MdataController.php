@@ -42,27 +42,21 @@ class MdataController extends Controller
 
     public function mdata_edit($id)
     {
-        $tbmdata = Mdata::find($id);
+        $workspace = Workspace::with('workspaceGambar.mgambar')->findOrFail($id);
 
-        if (!$tbmdata) {
-            return redirect()->route('index.mdata')->with('error', 'Mdata tidak ditemukan!');
-        }
+        $customers = Customer::all();
+        $employees = Employee::all();
+        $submissions = Submission::all();
+        $master = Mgambar::all();
+        $varians = \DB::table('tb_varians')->get();
 
-        $data = [
-            'title' => 'Edit Data Mdata',
-            'mdata' => $tbmdata,
-            'engines' => Engine::all(),
-            'brands' => Brand::all(),
-            'chassiss' => Chassis::all(),
-            'vehicles' => Vehicle::all(),
-        ];
-
-        return view('admin.mdata.edit_mdata', $data);
+        // Kirim data ke view edit.blade.php
+        return view('drafter.workspace.edit', compact('workspace', 'customers', 'employees', 'submissions', 'master', 'varians'));
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'engines' => 'required',
             'brands' => 'required',
             'chassiss' => 'required',
@@ -84,14 +78,14 @@ class MdataController extends Controller
             ]);
 
             return redirect()->route('index.mdata')->with('success', 'Master data berhasil ditambahkan!');
-            } catch (Exception $e) {    
-                return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
-            }
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'engines'    => 'required|exists:tb_engines,name',
             'brands'    => 'required|exists:tb_brands,name',
             'chassiss'    => 'required|exists:tb_chassiss,name',
@@ -129,5 +123,4 @@ class MdataController extends Controller
 
         return response()->json(['success' => true, 'status' => $mdata->status]);
     }
-
 }

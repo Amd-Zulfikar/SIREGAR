@@ -89,6 +89,8 @@
                                             <th>Merk</th>
                                             <th>Chassis</th>
                                             <th>Vehicle</th>
+                                            <th>Keterangan</th>
+                                            <th>Gambar Body</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>

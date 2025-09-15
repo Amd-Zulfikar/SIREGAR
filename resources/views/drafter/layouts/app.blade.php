@@ -76,9 +76,9 @@
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('admin.dashboard') ? 'menu-open' : '' }}">
-                            <a href="{{ route('admin.dashboard') }}"
-                                class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('drafter.dashboard') ? 'menu-open' : '' }}">
+                            <a href="{{ route('drafter.dashboard') }}"
+                                class="nav-link {{ request()->routeIs('drafter.dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Dashboard
@@ -86,143 +86,21 @@
                             </a>
                         </li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.workspace') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.workspace') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
-                                    Data User
+                                    Workspace
                                     <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ route('index.role') }}"
-                                        class="nav-link {{ request()->routeIs('index.role') ? 'active' : '' }}">
+                                    <a href="{{ route('index.workspace') }}"
+                                        class="nav-link {{ request()->routeIs('index.workspace') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Role</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.employee') }}"
-                                        class="nav-link {{ request()->routeIs('index.employee') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Pegawai</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.customer') }}"
-                                        class="nav-link {{ request()->routeIs('index.customer') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Customer</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.account') }}"
-                                        class="nav-link {{ request()->routeIs('index.account') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Account</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'menu-open' : '' }}">
-                            <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    Data Master
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('index.submission') }}"
-                                        class="nav-link {{ request()->routeIs('index.submission') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Jenis Pengajuan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.varian') }}"
-                                        class="nav-link {{ request()->routeIs('index.varian') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Jenis Varian</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.engine') }}"
-                                        class="nav-link {{ request()->routeIs('index.engine') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Engine</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.brand') }}"
-                                        class="nav-link {{ request()->routeIs('index.brand') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Merk</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.chassis') }}"
-                                        class="nav-link {{ request()->routeIs('index.chassis') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Chassis</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.vehicle') }}"
-                                        class="nav-link {{ request()->routeIs('index.vehicle') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Vehicle</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ route('index.mdata') }}"
-                                        class="nav-link {{ request()->routeIs('index.mdata') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Master Data</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header">INPUT GAMBAR</li>
-                        <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar') ? 'menu-open' : '' }}">
-                            <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    Gambar Master
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="{{ route('index.mgambar') }}"
-                                        class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Master Gambar</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header">INPUT ORDER</li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-plus-square"></i>
-                                <p>
-                                    Order
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Reservasi</p>
+                                        <p>Ambil Gambar</p>
                                     </a>
                                 </li>
                             </ul>
