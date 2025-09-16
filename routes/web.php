@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\SubmissionController;
+use App\Http\Controllers\Drafter\WorkspaceController;
 
 // Route login
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -140,12 +141,21 @@ Route::middleware(['auth', 'role:drafter'])->group(function () {
     Route::get('/drafter/workspace', [App\Http\Controllers\Drafter\WorkspaceController::class, 'index'])->name('index.workspace');
     Route::get('/drafter/workspace/add', [App\Http\Controllers\Drafter\WorkspaceController::class, 'workspace_add'])->name('add.workspace');
     Route::get('/drafter/workspace/edit/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'workspace_edit'])->name('edit.workspace');
-    Route::get('/drafter/workspace/show/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'workspace_show'])->name('show.workspace');
+    Route::get('/drafter/workspace/show/{id}', [WorkspaceController::class, 'workspace_show'])->name('show.workspace');
     // route for function controller workspace
     Route::post('/drafter/workspace/store', [App\Http\Controllers\Drafter\WorkspaceController::class, 'store'])->name('store.workspace');
     Route::post('/drafter/workspace/update/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'update'])->name('update.workspace');
-    Route::post('/drafter/workspace/select-upload/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'select_upload'])->name('select.upload');
-    Route::post('/drafter/workspace/export/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'export'])->name('export.workspace');
+    Route::post('/drafter/workspace/select-upload', [App\Http\Controllers\Drafter\WorkspaceController::class, 'select_upload'])->name('select.upload');
+    Route::get('drafter/workspace/export/{id}', [WorkspaceController::class, 'export'])->name('export.workspace');
+
+    // AJAX - Multi Filter
+    Route::get('/get-brands', [WorkspaceController::class, 'getBrands'])->name('get.brands');
+    Route::get('/get-chassiss', [WorkspaceController::class, 'getChassiss'])->name('get.chassiss');
+    Route::get('/get-vehicles', [WorkspaceController::class, 'getVehicles'])->name('get.vehicles');
+    Route::get('/get-keterangans', [WorkspaceController::class, 'getKeterangans'])->name('get.keterangans');
+
+    // AJAX - Preview foto_body
+    Route::get('/preview-gambar', [WorkspaceController::class, 'previewGambar'])->name('preview.gambar');
 });
 
 Route::middleware(['auth', 'role:checker'])->group(function () {

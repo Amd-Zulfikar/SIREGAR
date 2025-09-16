@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('tb_workspace_gambar', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('workspace_id')->constrained('tb_workspace')->onDelete('cascade');
-            $table->foreignId('mgambar_id')->constrained('tb_mgambar')->onDelete('cascade');
-            $table->integer('no_halaman');
-            $table->integer('jumlah_gambar');
-            $table->string('file_path')->nullable(); // Hasil overlay foto_body
+            $table->foreignId('workspace_id')->constrained('tb_workspaces')->onDelete('cascade');
+            $table->unsignedBigInteger('engine');
+            $table->unsignedBigInteger('brand');
+            $table->unsignedBigInteger('chassis');
+            $table->unsignedBigInteger('vehicle');
+            $table->unsignedBigInteger('keterangan');
+            $table->json('foto_body');
             $table->timestamps();
         });
     }

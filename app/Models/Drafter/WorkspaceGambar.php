@@ -2,6 +2,7 @@
 
 namespace App\Models\Drafter;
 
+use App\Models\Admin\Mdata;
 use App\Models\Admin\Mgambar;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,10 +12,12 @@ class WorkspaceGambar extends Model
 
     protected $fillable = [
         'workspace_id',
-        'mgambar_id',
-        'no_halaman',
-        'jumlah_gambar',
-        'file_path',
+        'engine',
+        'brand',
+        'chassis',
+        'vehicle',
+        'keterangan',
+        'foto_body',
     ];
 
     // Relasi ke Workspace
@@ -27,5 +30,10 @@ class WorkspaceGambar extends Model
     public function mgambar()
     {
         return $this->belongsTo(Mgambar::class, 'mgambar_id');
+    }
+
+    public function mdata()
+    {
+        return $this->belongsTo(Mdata::class, 'engine', 'id');
     }
 }

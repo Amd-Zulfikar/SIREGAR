@@ -28,6 +28,7 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
 
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

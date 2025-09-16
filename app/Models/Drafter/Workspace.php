@@ -2,6 +2,8 @@
 
 namespace App\Models\Drafter;
 
+use App\Models\Admin\Mdata;
+use App\Models\Admin\Varian;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Employee;
 use App\Models\Admin\Submission;
@@ -16,6 +18,7 @@ class Workspace extends Model
         'customer_id',
         'employee_id',
         'submission_id',
+        'varian_id',
         'keterangan',
     ];
 
@@ -37,9 +40,15 @@ class Workspace extends Model
         return $this->belongsTo(Submission::class, 'submission_id');
     }
 
+    // Relasi ke Varian
+    public function varian()
+    {
+        return $this->belongsTo(Varian::class, 'varian_id');
+    }
+
     // Relasi ke WorkspaceGambar (multi-gambar)
     public function workspaceGambar()
     {
-        return $this->hasMany(WorkspaceGambar::class, 'workspace_id');
+        return $this->hasMany(WorkspaceGambar::class, 'workspace_id', 'id');
     }
 }

@@ -50,40 +50,43 @@
                                     </thead>
                                     <tbody>
 
-                                        @forelse($workspaces as $index)
+                                        @foreach ($workspaces as $index => $workspace)
                                             <tr>
                                                 <td>{{ $workspaces->firstItem() + $index }}</td>
                                                 <td>{{ $workspace->no_transaksi }}</td>
                                                 <td>{{ $workspace->customer->name ?? '-' }}</td>
-                                                <td>{{ $workspace->employee->name ?? '-' }}</td>
-                                                <td>{{ $workspace->submission->judul ?? '-' }}</td>
+                                                <td>
+                                                    @if ($workspace->workspaceGambar->isNotEmpty())
+                                                        @php $gambar = $workspace->workspaceGambar->first(); @endphp
+                                                        {{ ($gambar->mdata->engine->name ?? '-') .
+                                                            ' ' .
+                                                            ($gambar->mdata->brand->name ?? '-') .
+                                                            ' ' .
+                                                            ($gambar->mdata->chassis->name ?? '-') .
+                                                            ' ' .
+                                                            ($gambar->mdata->vehicle->name ?? '-') }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td>{{ $workspace->submission->name ?? '-' }}</td>
                                                 <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
                                                 <td>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.workspace', $workspace->id) }}">
-                                                        <i class="fas fa-pencil-alt">
-                                                        </i>
-                                                        Edit
+                                                        <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('show.workspace', $workspace->id) }}">
-                                                        <i class="fas fa-pencil-alt">
-                                                        </i>
-                                                        Preview
+                                                        <i class="fas fa-eye"></i> Preview
                                                     </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('export.workspace', $workspace->id) }}">
-                                                        <i class="fas fa-pencil-alt">
-                                                        </i>
-                                                        Cetak
+                                                        <i class="fas fa-print"></i> Cetak
                                                     </a>
                                                 </td>
                                             </tr>
-                                        @empty
-                                            <tr>
-                                                <td>Data Note Found!</td>
-                                            </tr>
-                                        @endforelse
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>

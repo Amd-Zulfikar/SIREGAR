@@ -15,28 +15,28 @@ class Mdata extends Model
         'status',
     ];
 
-    public function engine() 
-    { 
-        return $this->belongsTo(Engine::class, 'engine_id'); 
+    public function engine()
+    {
+        return $this->belongsTo(Engine::class, 'engine_id');
     }
 
-    public function brand()  
-    { 
-        return $this->belongsTo(Brand::class,  'brand_id'); 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class,  'brand_id');
     }
 
     public function chassis()
-    { 
-        return $this->belongsTo(Chassis::class, 'chassis_id'); 
+    {
+        return $this->belongsTo(Chassis::class, 'chassis_id');
     }
 
     public function vehicle()
-    { 
-        return $this->belongsTo(Vehicle::class, 'vehicle_id'); 
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
 
-    public function mgambar()
-    { 
-        return $this->belongsTo(Mgambar::class, 'mdata_id'); 
+    public function mgambars()
+    {
+        return $this->hasMany(Mgambar::class, 'mdata_id');
     }
 }

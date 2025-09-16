@@ -2,6 +2,7 @@
 
 namespace App\Models\Admin;
 
+use App\Models\Drafter\Workspace;
 use Illuminate\Database\Eloquent\Model;
 
 class Varian extends Model
