@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Drafter;
 
-use Nette\Utils\Image;
+
+use Intervention\Image\ImageManagerStatic as Image;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Mdata;
 use App\Models\Admin\Engine;
@@ -13,6 +14,7 @@ use App\Models\Admin\Mgambar;
 use App\Models\Admin\Vehicle;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Employee;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Admin\Submission;
 use App\Models\Drafter\Workspace;
 use Illuminate\Support\Facades\Log;
@@ -49,58 +51,109 @@ class WorkspaceController extends Controller
             'varians',
             'engines'
         ));
-    } 
-
-    public function workspace_show($id)
-    {
-        $workspace = Workspace::with(['workspaceGambar'])->findOrFail($id);
-
-        return view('drafter.workspace.show_workspace', compact('workspace'));
     }
 
-    public function print($id)
+    // Preview overlay
+    public function previewOverlay($id)
     {
-        $workspace = Workspace::with(['workspaceGambar.mgambar'])->findOrFail($id);
+        $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])->findOrFail($id);
 
-        $overlayedImages = [];
+        $images = $this->generateOverlayImages($workspace);
 
-        foreach ($workspace->workspaceGambar as $item) {
-    if ($item->foto_body) {
-        $fotos = json_decode($item->foto_body, true);
-
-        foreach ($fotos as $foto) {
-            $path = storage_path('app/public/body/' . $foto);
-
-            if (file_exists($path)) {
-                $img = Image::make($path);
-
-                // contoh overlay teks
-                $img->text("Workspace: {$workspace->id}", 50, 50, function ($font) {
-                    $font->file(public_path('fonts/arial.ttf'));
-                    $font->size(28);
-                    $font->color('#ff0000');
-                    $font->align('center');
-                    $font->valign('top');
-                });
-
-                // simpan ke storage/temp
-                $filename = 'overlay_' . uniqid() . '.jpg';
-                $savePath = storage_path('app/public/temp/' . $filename);
-                $img->save($savePath);
-
-                $overlayedImages[] = $filename;
-            }
-        }
+        return view('drafter.workspace.overlay_preview', compact('workspace', 'images'));
     }
-}
 
-        $pdf = PDF::loadView('admin.workspace.print', [
+    // Export overlay ke PDF
+    public function exportOverlayPDF($id)
+    {
+        $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])->findOrFail($id);
+
+        $overlayedImages = $this->generateOverlayImages($workspace);
+
+        $pdf = Pdf::loadView('drafter.workspace.overlay_pdf', [
             'workspace' => $workspace,
             'overlayedImages' => $overlayedImages,
-        ]);
+        ])->setPaper('a4', 'portrait');
 
-        return $pdf->stream("workspace-{$workspace->id}.pdf");
+        return $pdf->download("workspace_overlay_{$workspace->id}.pdf");
     }
+
+    // Generate overlay images
+    private function generateOverlayImages($workspace)
+    {
+        $overlayedImages = [];
+
+        foreach ($workspace->workspaceGambar as $gambar) {
+            $fotos = json_decode($gambar->foto_body, true);
+            if (!$fotos) continue;
+
+            foreach ($fotos as $foto) {
+                $path = storage_path("app/public/{$foto}");
+                if (!file_exists($path)) continue;
+
+                $img = Image::make($path);
+
+                $scaleX = $img->width() / 1087;
+                $scaleY = $img->height() / 768;
+                $fontSize = 18 * (($scaleX + $scaleY) / 2);
+
+                // Overlay teks
+                $img->text($workspace->customer->name, 50 * $scaleX, 50 * $scaleY, function ($font) use ($fontSize) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size($fontSize);
+                    $font->color('#000');
+                });
+
+                $img->text($workspace->varian->name, 50 * $scaleX, 100 * $scaleY, function ($font) use ($fontSize) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size($fontSize);
+                    $font->color('#000');
+                });
+
+                $img->text($workspace->employee->name, 50 * $scaleX, 150 * $scaleY, function ($font) use ($fontSize) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size($fontSize);
+                    $font->color('#000');
+                });
+
+                $img->text($workspace->customer->direktur, 50 * $scaleX, 200 * $scaleY, function ($font) use ($fontSize) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size($fontSize);
+                    $font->color('#000');
+                });
+
+                $img->text($workspace->created_at->format('d-m-Y'), 50 * $scaleX, 250 * $scaleY, function ($font) use ($fontSize) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size($fontSize);
+                    $font->color('#000');
+                });
+
+                // Paraf Drafter
+                if ($workspace->employee->foto_paraf) {
+                    $paraf = Image::make(storage_path("app/public/{$workspace->employee->foto_paraf}"))->resize(80, 80);
+                    $img->insert($paraf, 'top-left', 300 * $scaleX, 150 * $scaleY);
+                }
+
+                // Paraf Disetujui
+                if ($workspace->customer->foto_paraf) {
+                    $parafCust = Image::make(storage_path("app/public/{$workspace->customer->foto_paraf}"))->resize(80, 80);
+                    $img->insert($parafCust, 'top-left', 300 * $scaleX, 200 * $scaleY);
+                }
+
+                // Simpan sementara
+                $filename = 'overlay_' . uniqid() . '.png';
+                $savePath = storage_path("app/public/tmp/{$filename}");
+                $img->save($savePath);
+
+                if (file_exists($savePath)) {
+                    $overlayedImages[] = $savePath;
+                }
+            }
+        }
+
+        return $overlayedImages;
+    }
+
 
     // AJAX get brands by engine
     public function getBrands(Request $request)

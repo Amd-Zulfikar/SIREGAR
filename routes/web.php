@@ -141,13 +141,13 @@ Route::middleware(['auth', 'role:drafter'])->group(function () {
     Route::get('/drafter/workspace', [App\Http\Controllers\Drafter\WorkspaceController::class, 'index'])->name('index.workspace');
     Route::get('/drafter/workspace/add', [App\Http\Controllers\Drafter\WorkspaceController::class, 'workspace_add'])->name('add.workspace');
     Route::get('/drafter/workspace/edit/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'workspace_edit'])->name('edit.workspace');
-    Route::get('/drafter/workspace/show/{id}', [WorkspaceController::class, 'workspace_show'])->name('show.workspace');
+    Route::get('/drafter/workspace/overlay/{id}', [WorkspaceController::class, 'previewOverlay'])->name('overlay.workspace');
+    Route::get('drafter/workspace/export/{id}', [WorkspaceController::class, 'exportOverlayPDF'])->name('export.overlay.workspace');
     // route for function controller workspace
     Route::post('/drafter/workspace/store', [App\Http\Controllers\Drafter\WorkspaceController::class, 'store'])->name('store.workspace');
     Route::post('/drafter/workspace/update/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'update'])->name('update.workspace');
     Route::post('/drafter/workspace/select-upload', [App\Http\Controllers\Drafter\WorkspaceController::class, 'select_upload'])->name('select.upload');
-    Route::get('drafter/workspace/export/{id}', [WorkspaceController::class, 'export'])->name('export.workspace');
-    Route::get('drafter/workspace/{id}/print', [WorkspaceController::class, 'print'])->name('workspace.print');
+
     // AJAX - Multi Filter
     Route::get('/get-brands', [WorkspaceController::class, 'getBrands'])->name('get.brands');
     Route::get('/get-chassiss', [WorkspaceController::class, 'getChassiss'])->name('get.chassiss');

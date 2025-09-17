@@ -77,12 +77,8 @@
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
                                                     <a class="btn btn-info btn-sm"
-                                                        href="{{ route('show.workspace', $workspace->id) }}">
+                                                        href="{{ route('overlay.workspace', $workspace->id) }}">
                                                         <i class="fas fa-eye"></i> Preview
-                                                    </a>
-                                                    <a class="btn btn-info btn-sm"
-                                                        href="{{ route('export.workspace', $workspace->id) }}">
-                                                        <i class="fas fa-print"></i> Cetak
                                                     </a>
                                                 </td>
                                             </tr>

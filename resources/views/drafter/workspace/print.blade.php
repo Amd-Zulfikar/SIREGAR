@@ -1,21 +1,20 @@
-{{-- resources/views/admin/workspace/print.blade.php --}}
 <!DOCTYPE html>
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <title>Workspace {{ $workspace->id }}</title>
+    <title>Workspace Overlay PDF</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: Arial, sans-serif;
         }
 
-        .image {
-            margin-bottom: 20px;
+        .image-container {
+            page-break-after: always;
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        .image img {
+        img {
             max-width: 100%;
             height: auto;
         }
@@ -23,17 +22,19 @@
 </head>
 
 <body>
-    <h2>Workspace #{{ $workspace->id }}</h2>
+
+    <h2>Workspace No: {{ $workspace->no_transaksi }}</h2>
     <p>Customer: {{ $workspace->customer->name ?? '-' }}</p>
-    <p>Employee: {{ $workspace->employee->name ?? '-' }}</p>
+    <p>Drafter: {{ $workspace->employee->name ?? '-' }}</p>
+    <p>Varian: {{ $workspace->varian->name ?? '-' }}</p>
+    <p>Tanggal: {{ $workspace->created_at->format('d-m-Y') }}</p>
 
-    <hr>
-
-    @foreach ($overlayedImages as $img)
-        <div class="image">
-            <img src="{{ public_path('storage/temp/' . $img) }}" alt="Overlay Image">
+    @foreach ($overlayedImages as $image)
+        <div class="image-container">
+            <img src="{{ $image }}" alt="Overlay Image">
         </div>
     @endforeach
+
 </body>
 
 </html>
