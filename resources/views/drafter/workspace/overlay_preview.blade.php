@@ -1,42 +1,41 @@
-{{-- resources/views/drafter/workspace/overlay_preview.blade.php --}}
 @extends('drafter.layouts.app')
 
 @section('content')
     <div class="content-wrapper">
+        {{-- Header --}}
         <section class="content-header">
-            <div class="container-fluid">
-                <h4>Preview Overlay Workspace</h4>
-                <a href="{{ route('index.workspace') }}" class="btn btn-danger mb-2">Kembali</a>
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <h1>Preview Overlay - {{ $workspace->kode_transaksi }}</h1>
+
+                {{-- Tombol cetak PDF --}}
+                <a href="{{ route('workspace.overlay.pdf', $workspace->id) }}" target="_blank" class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Cetak PDF
+                </a>
             </div>
         </section>
 
+        {{-- Konten --}}
         <section class="content">
             <div class="container-fluid">
-                <div class="row">
-                    @foreach ($images as $index => $img)
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <img src="{{ $img }}" class="card-img-top"
-                                    style="height:300px; object-fit:contain;">
-                                <div class="card-body text-center">
-                                    {{-- Cetak per foto --}}
-                                    <a href="{{ route('export.overlay.workspace', $workspace->id) }}?foto={{ $index }}"
-                                        class="btn btn-primary btn-sm mb-1" target="_blank">
-                                        Cetak Foto Ini
-                                    </a>
+                @if (count($images) > 0)
+                    <div class="row">
+                        @foreach ($images as $img)
+                            <div class="col-md-6 mb-4">
+                                <div class="card shadow-sm">
+                                    <div class="card-body text-center">
+                                        <img src="{{ asset($img) }}" class="img-fluid rounded" alt="Overlay Image"
+                                            style="max-height: 800px;">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                {{-- Cetak Semua --}}
-                <div class="text-right mt-3">
-                    <a href="{{ route('export.overlay.workspace', $workspace->id) }}" class="btn btn-success"
-                        target="_blank">
-                        Cetak Semua Foto
-                    </a>
-                </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Tidak ada gambar overlay yang dapat ditampilkan.
+                    </div>
+                @endif
             </div>
         </section>
     </div>

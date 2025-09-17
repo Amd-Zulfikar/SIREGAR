@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Drafter;
 
 
-use Intervention\Image\ImageManagerStatic as Image;
+use Intervention\Image\ImageManager;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Mdata;
 use App\Models\Admin\Engine;
@@ -56,11 +56,15 @@ class WorkspaceController extends Controller
     // Preview overlay
     public function previewOverlay($id)
     {
-        $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])->findOrFail($id);
+        $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])
+            ->findOrFail($id);
 
-        $images = $this->generateOverlayImages($workspace);
+        $overlayedImages = $this->generateOverlayImages($workspace);
 
-        return view('drafter.workspace.overlay_preview', compact('workspace', 'images'));
+        return view('drafter.workspace.overlay_preview', [
+            'workspace' => $workspace,
+            'images' => $overlayedImages,
+        ]);
     }
 
     // Export overlay ke PDF
@@ -78,10 +82,11 @@ class WorkspaceController extends Controller
         return $pdf->download("workspace_overlay_{$workspace->id}.pdf");
     }
 
-    // Generate overlay images
     private function generateOverlayImages($workspace)
     {
         $overlayedImages = [];
+
+        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
 
         foreach ($workspace->workspaceGambar as $gambar) {
             $fotos = json_decode($gambar->foto_body, true);
@@ -89,70 +94,76 @@ class WorkspaceController extends Controller
 
             foreach ($fotos as $foto) {
                 $path = storage_path("app/public/{$foto}");
-                if (!file_exists($path)) continue;
+                if (!file_exists($path)) {
+                    Log::warning("Foto tidak ditemukan", ['path' => $path]);
+                    continue;
+                }
 
-                $img = Image::make($path);
+                $img = $manager->read($path);
 
                 $scaleX = $img->width() / 1087;
                 $scaleY = $img->height() / 768;
                 $fontSize = 18 * (($scaleX + $scaleY) / 2);
 
-                // Overlay teks
-                $img->text($workspace->customer->name, 50 * $scaleX, 50 * $scaleY, function ($font) use ($fontSize) {
-                    $font->file(public_path('fonts/arial.ttf'));
+                // --- Overlay Teks ---
+                $img->text($workspace->employee->name, 200 * $scaleX, 700 * $scaleY, function ($font) use ($fontSize) {
+                    $font->filename(public_path('fonts/arial.ttf'));
                     $font->size($fontSize);
                     $font->color('#000');
                 });
 
-                $img->text($workspace->varian->name, 50 * $scaleX, 100 * $scaleY, function ($font) use ($fontSize) {
-                    $font->file(public_path('fonts/arial.ttf'));
+                $img->text($workspace->customer->direktur, 800 * $scaleX, 700 * $scaleY, function ($font) use ($fontSize) {
+                    $font->filename(public_path('fonts/arial.ttf'));
                     $font->size($fontSize);
                     $font->color('#000');
                 });
 
-                $img->text($workspace->employee->name, 50 * $scaleX, 150 * $scaleY, function ($font) use ($fontSize) {
-                    $font->file(public_path('fonts/arial.ttf'));
+                $img->text($workspace->customer->name, 500 * $scaleX, 50 * $scaleY, function ($font) use ($fontSize) {
+                    $font->filename(public_path('fonts/arial.ttf'));
                     $font->size($fontSize);
                     $font->color('#000');
                 });
 
-                $img->text($workspace->customer->direktur, 50 * $scaleX, 200 * $scaleY, function ($font) use ($fontSize) {
-                    $font->file(public_path('fonts/arial.ttf'));
+                $img->text($workspace->created_at->format('d/m/y'), 900 * $scaleX, 50 * $scaleY, function ($font) use ($fontSize) {
+                    $font->filename(public_path('fonts/arial.ttf'));
                     $font->size($fontSize);
                     $font->color('#000');
                 });
 
-                $img->text($workspace->created_at->format('d-m-Y'), 50 * $scaleX, 250 * $scaleY, function ($font) use ($fontSize) {
-                    $font->file(public_path('fonts/arial.ttf'));
+                $img->text($workspace->varian->name, 500 * $scaleX, 100 * $scaleY, function ($font) use ($fontSize) {
+                    $font->filename(public_path('fonts/arial.ttf'));
                     $font->size($fontSize);
                     $font->color('#000');
                 });
 
-                // Paraf Drafter
+                // --- Paraf Drafter ---
                 if ($workspace->employee->foto_paraf) {
-                    $paraf = Image::make(storage_path("app/public/{$workspace->employee->foto_paraf}"))->resize(80, 80);
-                    $img->insert($paraf, 'top-left', 300 * $scaleX, 150 * $scaleY);
+                    $paraf = $manager->read(storage_path("app/public/{$workspace->employee->foto_paraf}"))->resize(80, 80);
+                    $img->place($paraf, 'top-left', intval(300 * $scaleX), intval(650 * $scaleY));
                 }
 
-                // Paraf Disetujui
+                // --- Paraf Customer ---
                 if ($workspace->customer->foto_paraf) {
-                    $parafCust = Image::make(storage_path("app/public/{$workspace->customer->foto_paraf}"))->resize(80, 80);
-                    $img->insert($parafCust, 'top-left', 300 * $scaleX, 200 * $scaleY);
+                    $parafCust = $manager->read(storage_path("app/public/{$workspace->customer->foto_paraf}"))->resize(80, 80);
+                    $img->place($parafCust, 'top-left', intval(900 * $scaleX), intval(650 * $scaleY));
                 }
 
-                // Simpan sementara
+                // --- Simpan hasil ---
                 $filename = 'overlay_' . uniqid() . '.png';
                 $savePath = storage_path("app/public/tmp/{$filename}");
                 $img->save($savePath);
 
                 if (file_exists($savePath)) {
-                    $overlayedImages[] = $savePath;
+                    $overlayedImages[] = "storage/tmp/{$filename}";
                 }
             }
         }
 
         return $overlayedImages;
     }
+
+
+
 
 
     // AJAX get brands by engine
