@@ -78,9 +78,9 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
+                                            {{-- <tr>
                                                 <td colspan="4">Data Not Found!</td>
-                                            </tr>
+                                            </tr> --}}
                                         @endforelse
                                     </tbody>
                                     <tfoot>

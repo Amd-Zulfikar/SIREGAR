@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Drafter;
 
+use Nette\Utils\Image;
 use App\Models\Admin\Brand;
 use App\Models\Admin\Mdata;
 use App\Models\Admin\Engine;
@@ -48,21 +49,57 @@ class WorkspaceController extends Controller
             'varians',
             'engines'
         ));
-    }
+    } 
 
     public function workspace_show($id)
     {
-        $workspace = Workspace::with([
-            'customer',
-            'employee',
-            'submission',
-            'workspaceGambar.mdata.engine',
-            'workspaceGambar.mdata.brand',
-            'workspaceGambar.mdata.chassis',
-            'workspaceGambar.mdata.vehicle'
-        ])->findOrFail($id);
+        $workspace = Workspace::with(['workspaceGambar'])->findOrFail($id);
 
         return view('drafter.workspace.show_workspace', compact('workspace'));
+    }
+
+    public function print($id)
+    {
+        $workspace = Workspace::with(['workspaceGambar.mgambar'])->findOrFail($id);
+
+        $overlayedImages = [];
+
+        foreach ($workspace->workspaceGambar as $item) {
+    if ($item->foto_body) {
+        $fotos = json_decode($item->foto_body, true);
+
+        foreach ($fotos as $foto) {
+            $path = storage_path('app/public/body/' . $foto);
+
+            if (file_exists($path)) {
+                $img = Image::make($path);
+
+                // contoh overlay teks
+                $img->text("Workspace: {$workspace->id}", 50, 50, function ($font) {
+                    $font->file(public_path('fonts/arial.ttf'));
+                    $font->size(28);
+                    $font->color('#ff0000');
+                    $font->align('center');
+                    $font->valign('top');
+                });
+
+                // simpan ke storage/temp
+                $filename = 'overlay_' . uniqid() . '.jpg';
+                $savePath = storage_path('app/public/temp/' . $filename);
+                $img->save($savePath);
+
+                $overlayedImages[] = $filename;
+            }
+        }
+    }
+}
+
+        $pdf = PDF::loadView('admin.workspace.print', [
+            'workspace' => $workspace,
+            'overlayedImages' => $overlayedImages,
+        ]);
+
+        return $pdf->stream("workspace-{$workspace->id}.pdf");
     }
 
     // AJAX get brands by engine

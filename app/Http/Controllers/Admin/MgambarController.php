@@ -51,6 +51,7 @@ class MgambarController extends Controller
 
     public function store(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'mdata_id' => 'required',
             'keterangan' => 'required',
@@ -86,6 +87,31 @@ class MgambarController extends Controller
             return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
         }
     }
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $fotoFiles = [];
+
+    //         if ($request->hasFile('foto_body')) {
+    //             foreach ($request->file('foto_body') as $file) {
+    //                 $filename = time() . '_' . preg_replace('/[^A-Za-z0-9\_\-\.]/', '_', $file->getClientOriginalName());
+    //                 $file->storeAs('body', $filename, 'public');
+    //                 $fotoFiles[] = $filename;
+    //             }
+    //         }
+
+    //         $mgambar = Mgambar::create([
+    //             'mdata_id'   => $request->mdata_id,
+    //             'keterangan' => $request->keterangan,
+    //             'foto_body'  => !empty($fotoFiles) ? json_encode($fotoFiles) : null,
+    //             'status'     => 1,
+    //         ]);
+
+    //         dd($mgambar); // 🔥 cek apakah berhasil insert
+    //     } catch (\Exception $e) {
+    //         dd($e->getMessage()); // 🔥 tampilkan error aslinya
+    //     }
+    // }
 
     public function update(Request $request, $id)
     {
