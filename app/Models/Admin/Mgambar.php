@@ -16,6 +16,10 @@ class Mgambar extends Model
         'status',
     ];
 
+    protected $casts = [
+        'foto_body' => 'array',
+    ];
+
     public function mdata()
     {
         return $this->belongsTo(Mdata::class, 'mdata_id');

@@ -13,14 +13,15 @@
                 <form id="form-workspace" method="POST" action="{{ route('store.workspace') }}">
                     @csrf
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-12">
                             <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">Ambil Gambar</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <!-- Kolom 1 -->
+                                        <div class="col-12 col-md-4">
                                             <div class="form-group">
                                                 <label>Jenis Pengajuan</label>
                                                 <select id="submissions" class="form-control select2">
@@ -63,7 +64,9 @@
                                                     class="form-control" placeholder="Masukan Jumlah Gambar" required>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+
+                                        <!-- Kolom 2 -->
+                                        <div class="col-12 col-md-4">
                                             <div class="form-group">
                                                 <label>Engine</label>
                                                 <select id="engines" class="form-control select2">
@@ -102,7 +105,9 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+
+                                        <!-- Kolom 3 -->
+                                        <div class="col-12 col-md-4">
                                             <div class="form-group">
                                                 <label>Varian</label>
                                                 <select name="varian_id" id="varians" class="form-control select2">
@@ -115,20 +120,22 @@
 
                                             <div class="form-group">
                                                 <label>Preview Foto</label>
-                                                <div class="preview_form_1 border p-2" style="min-height:300px;"></div>
+                                                <div class="preview_form_1 border p-2" style="min-height:230px;"></div>
                                             </div>
 
-                                            <button type="button" id="btn-tambah-rincian"
-                                                class="btn btn-primary mt-2">Tambah
-                                                Rincian</button>
+                                            <button type="button" id="btn-tambah-rincian" class="btn btn-primary mt-2">
+                                                Tambah Rincian
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Rincian Data -->
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-12">
                             <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">Rincian Data</h3>
@@ -137,19 +144,19 @@
                                     <table id="tbl-detail" class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
+                                                <th>No Halaman</th>
+                                                <th>Jumlah Gambar</th>
                                                 <th>Engine</th>
                                                 <th>Brand</th>
                                                 <th>Chassis</th>
                                                 <th>Vehicle</th>
                                                 <th>Keterangan</th>
+                                                <th>Varian</th>
                                                 <th>Gambar</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-
-                                        </tbody>
+                                        <tbody></tbody>
                                     </table>
                                     <br>
                                     <button type="button" id="btn-simpan-ws" class="btn btn-success float-right">Simpan
@@ -166,7 +173,7 @@
 
     <!-- Modal Preview -->
     <div class="modal fade" id="modalPreview">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-body p-0 text-center">
                     <img src="" id="imgPreviewModal" class="img-fluid" alt="Preview">
@@ -182,7 +189,10 @@
 @push('scripts')
     <script>
         $(function() {
-            $('.select2').select2();
+            $('.select2').select2({
+                width: '100%'
+            });
+
             let rincianData = [];
             let counter = 1;
 
@@ -238,7 +248,7 @@
                 });
             });
 
-            // Preview gambar
+            // Preview gambar di form utama
             $('#keterangans').change(function() {
                 let selected = $(this).find(':selected').data('foto');
                 let preview = $('.preview_form_1');
@@ -247,7 +257,7 @@
                     let fotos = (typeof selected === "string") ? JSON.parse(selected) : selected;
                     fotos.forEach(f => {
                         let img = $(
-                            `<img src="/storage/body/${f}" class="img-thumbnail m-1" style="width:400px; cursor:pointer;">`
+                            `<img src="/storage/body/${f}" class="img-thumbnail m-1 img-fluid" style="cursor:pointer;">`
                         );
                         img.on('click', function() {
                             $('#imgPreviewModal').attr('src', '/storage/body/' + f);
@@ -260,21 +270,26 @@
                 }
             });
 
-            // Tambah rincian
             $('#btn-tambah-rincian').click(function() {
                 let engine = $('#engines').val(),
                     brand = $('#brands').val(),
                     chassis = $('#chassiss').val(),
                     vehicle = $('#vehicles').val(),
-                    keterangan = $('#keterangans').val();
+                    keterangan = $('#keterangans').val(),
+                    halaman_gambar = $('#halaman_gambar').val(),
+                    jumlah_gambar = $('#jumlah_gambar').val(),
+                    varian_id = $('#varians').val(),
+                    varianText = $('#varians option:selected').text();
+
                 let engineText = $('#engines option:selected').text(),
                     brandText = $('#brands option:selected').text(),
                     chassisText = $('#chassiss option:selected').text(),
                     vehicleText = $('#vehicles option:selected').text(),
-                    keteranganText = $('#keterangans option:selected').text();
-                let fotoBody = $('#keterangans option:selected').data('foto');
+                    keteranganText = $('#keterangans option:selected').text(),
+                    fotoBody = $('#keterangans option:selected').data('foto');
 
-                if (!engine || !brand || !chassis || !vehicle || !keterangan) {
+                if (!engine || !brand || !chassis || !vehicle || !keterangan || !halaman_gambar || !
+                    jumlah_gambar || !varian_id) {
                     alert("Lengkapi semua filter!");
                     return;
                 }
@@ -290,22 +305,39 @@
                     vehicleText,
                     keterangan,
                     keteranganText,
+                    halaman_gambar,
+                    jumlah_gambar,
+                    varian_id,
+                    varianText,
                     fotoBody
                 });
 
-                let rowHtml = `<tr data-index="${counter-1}">
-            <td>${counter}</td>
-            <td>${engineText}</td>
-            <td>${brandText}</td>
-            <td>${chassisText}</td>
-            <td>${vehicleText}</td>
-            <td>${keteranganText}</td>
-            <td>${fotoBody.map(f=>`<img src="/storage/body/${f}" class="img-thumbnail mb-1" style="width:50px; cursor:pointer;" data-preview="${f}">`).join('')}</td>
-            <td><button class="btn btn-danger btn-sm btn-hapus-rincian">Hapus</button></td>
-        </tr>`;
+                let rowHtml = `<tr data-index="${rincianData.length - 1}">
+                    <td>${halaman_gambar}</td>
+                    <td>${jumlah_gambar}</td>
+                    <td>${engineText}</td>
+                    <td>${brandText}</td>
+                    <td>${chassisText}</td>
+                    <td>${vehicleText}</td>
+                    <td>${keteranganText}</td>
+                    
+                    <td>${varianText}</td>
+                    <td>${fotoBody.map(f => 
+                        `<img src="/storage/body/${f}" class="img-thumbnail mb-1" style="width:50px;height:50px;cursor:pointer;" data-preview="${f}">`
+                    ).join('')}</td>
+                    <td><button class="btn btn-danger btn-sm btn-hapus-rincian">Hapus</button></td>
+                </tr>`;
+
                 $('#tbl-detail tbody').append(rowHtml);
-                counter++;
                 $('.preview_form_1').empty();
+            });
+
+            // Klik thumbnail di tabel rincian untuk preview modal
+            $('#tbl-detail tbody').on('click', 'img[data-preview]', function() {
+                let src = $(this).data('preview');
+                $('#imgPreviewModal').attr('src', '/storage/body/' + src);
+                let modal = new bootstrap.Modal(document.getElementById('modalPreview'));
+                modal.show();
             });
 
             // Hapus rincian
@@ -325,8 +357,8 @@
             $('#btn-simpan-ws').click(function() {
                 let employee_id = $('#employees').val(),
                     customer_id = $('#customers').val(),
-                    submission_id = $('#submissions').val();
-                varian_id = $('#varians').val();
+                    submission_id = $('#submissions').val(),
+                    varian_id = $('#varians').val();
 
                 if (!employee_id || !customer_id || !submission_id || !varian_id || rincianData.length ==
                     0) {

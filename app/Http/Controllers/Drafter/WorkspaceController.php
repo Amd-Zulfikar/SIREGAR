@@ -212,10 +212,11 @@ class WorkspaceController extends Controller
             $q->where('vehicle_id', $request->vehicle_id);
         })->get(['id', 'keterangan', 'foto_body']);
 
+        // Cast sudah otomatis, cukup pastikan foto_body array
         $mgambars->transform(function ($item) {
-            $fotos = json_decode($item->foto_body, true);
-            if (!$fotos) $fotos = [$item->foto_body];
-            $item->foto_body = $fotos;
+            if (!is_array($item->foto_body)) {
+                $item->foto_body = $item->foto_body ? [$item->foto_body] : [];
+            }
             return $item;
         });
 

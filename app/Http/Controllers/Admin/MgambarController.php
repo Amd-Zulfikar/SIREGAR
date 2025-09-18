@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use Exception;
 use App\Models\Admin\Mdata;
-use Illuminate\Http\Request;
 use App\Models\Admin\Mgambar;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,43 +24,32 @@ class MgambarController extends Controller
 
     public function mgambar_add()
     {
-        $mdata = Mdata::all();
-
-        $data = [
-            'mdatas' => $mdata,
-        ];
-        return view('admin.mgambar.add_mgambar', $data);
+        $mdatas = Mdata::all();
+        return view('admin.mgambar.add_mgambar', compact('mdatas'));
     }
 
     public function mgambar_edit($id)
     {
-        $tbgambar = Mgambar::find($id);
+        $mgambar = Mgambar::findOrFail($id);
+        $mdatas = Mdata::all();
 
-        if (!$tbgambar) {
-            return redirect()->route('index.mgambar')->with('error', 'Gambar tidak ditemukan!');
-        }
-
-        $data = [
-            'title' => 'Edit Data Gambar',
-            'mgambar' => $tbgambar,
-            'mdatas' => Mdata::all(),
-        ];
-
-        return view('admin.mgambar.edit_mgambar', $data);
+        return view('admin.mgambar.edit_mgambar', compact('mgambar', 'mdatas'));
     }
 
     public function store(Request $request)
     {
-        
         $validator = Validator::make($request->all(), [
-            'mdata_id' => 'required',
-            'keterangan' => 'required',
-            'foto_body' => 'nullable|array',
+            'mdata_id'   => 'required',
+            'keterangan' => 'required|string|max:255',
+            'foto_body'  => 'nullable|array',
             'foto_body.*' => 'file|mimes:jpg,jpeg,png|max:2000',
         ]);
- 
+
         if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Data gagal disimpan!');
         }
 
         try {
@@ -68,78 +57,50 @@ class MgambarController extends Controller
 
             if ($request->hasFile('foto_body')) {
                 foreach ($request->file('foto_body') as $file) {
-                    $filename = time() . '_' . preg_replace('/[^A-Za-z0-9\_\-\.]/', '_', $file->getClientOriginalName());
-
+                    $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
                     $file->storeAs('body', $filename, 'public');
                     $fotoFiles[] = $filename;
                 }
             }
 
             Mgambar::create([
-            'mdata_id'   => $request->mdata_id,
-            'keterangan' => $request->keterangan,
-            'foto_body'  => !empty($fotoFiles) ? json_encode($fotoFiles) : null,
-            'status'     => 1,
-        ]   );
+                'mdata_id'   => $request->mdata_id,
+                'keterangan' => $request->keterangan,
+                'foto_body'  => $fotoFiles, // array langsung, Laravel cast ke JSON
+                'status'     => 1,
+            ]);
 
-            return redirect()->route('index.mgambar')->with('success', 'Master Gambar berhasil ditambahkan!');
+            return redirect()->route('index.mgambar')
+                ->with('success', 'Master Gambar berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-    // public function store(Request $request)
-    // {
-    //     try {
-    //         $fotoFiles = [];
-
-    //         if ($request->hasFile('foto_body')) {
-    //             foreach ($request->file('foto_body') as $file) {
-    //                 $filename = time() . '_' . preg_replace('/[^A-Za-z0-9\_\-\.]/', '_', $file->getClientOriginalName());
-    //                 $file->storeAs('body', $filename, 'public');
-    //                 $fotoFiles[] = $filename;
-    //             }
-    //         }
-
-    //         $mgambar = Mgambar::create([
-    //             'mdata_id'   => $request->mdata_id,
-    //             'keterangan' => $request->keterangan,
-    //             'foto_body'  => !empty($fotoFiles) ? json_encode($fotoFiles) : null,
-    //             'status'     => 1,
-    //         ]);
-
-    //         dd($mgambar); // 🔥 cek apakah berhasil insert
-    //     } catch (\Exception $e) {
-    //         dd($e->getMessage()); // 🔥 tampilkan error aslinya
-    //     }
-    // }
 
     public function update(Request $request, $id)
     {
         $mgambar = Mgambar::findOrFail($id);
 
-        // Validasi input
         $request->validate([
-            'mdatas'        => 'required|exists:tb_mdata,id',
-            'keterangans'   => 'required|string|max:255',
-            'foto_body.*'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'mdatas'      => 'required|exists:tb_mdata,id',
+            'keterangans' => 'required|string|max:255',
+            'foto_body.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Update relasi dan keterangan
         $mgambar->mdata_id   = $request->mdatas;
         $mgambar->keterangan = $request->keterangans;
 
-        // Ambil file lama dari DB
-        $oldFiles = $mgambar->foto_body ? json_decode($mgambar->foto_body, true) : [];
+        // File lama dari DB sudah array karena $casts
+        $oldFiles = $mgambar->foto_body ?? [];
 
-        // Ambil file lama yang masih dipertahankan dari form
+        // File lama yang masih dipertahankan dari form
         $existingFiles = $request->existing_files ?? [];
 
         // Hapus file lama yang tidak dipertahankan
-        if ($oldFiles) {
-            foreach ($oldFiles as $file) {
-                if (!in_array($file, $existingFiles) && Storage::disk('public')->exists('body/' . $file)) {
-                    Storage::disk('public')->delete('body/' . $file);
-                }
+        foreach ($oldFiles as $file) {
+            if (!in_array($file, $existingFiles) && Storage::disk('public')->exists('body/' . $file)) {
+                Storage::disk('public')->delete('body/' . $file);
             }
         }
 
@@ -153,14 +114,15 @@ class MgambarController extends Controller
             }
         }
 
-        // Gabungkan file lama yang masih ada + file baru
-        $mgambar->foto_body = json_encode(array_merge($existingFiles, $newFiles));
+        // Gabungkan file lama yang dipertahankan + file baru
+        $mgambar->foto_body = array_merge($existingFiles, $newFiles);
 
         $mgambar->save();
 
-        return redirect()->route('index.mgambar')->with('success', 'Data gambar berhasil diperbarui.');
+        return redirect()->route('index.mgambar')
+            ->with('success', 'Data gambar berhasil diperbarui.');
     }
-    
+
     public function action(Request $request, $id)
     {
         $mgambar = Mgambar::findOrFail($id);

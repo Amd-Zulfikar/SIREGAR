@@ -10,7 +10,7 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
                             <a type="button" class="btn btn-block bg-gradient-primary"
-                                onclick="location.href='{{ route('add.workspace') }}'">Tambah Data</a>
+                                onclick="location.href='{{ route('add.workspace') }}'">Ambil Gambar</a>
                         </ol>
                     </div>
                     <div class="col-sm-6">

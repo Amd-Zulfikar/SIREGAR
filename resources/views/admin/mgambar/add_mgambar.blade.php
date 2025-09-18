@@ -32,7 +32,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Pilih Data</label>
-                                                <select name="mdata_id" class="form-control select2" style="width: 100%;">
+                                                <select name="mdata_id" class="form-control select2" style="width: 100%;"
+                                                    required>
                                                     <option selected disabled>Pilih Data</option>
                                                     @foreach ($mdatas as $mdata)
                                                         <option value="{{ $mdata->id }}">
@@ -43,27 +44,26 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                <small>{{ $errors->first('mdata_id') }}</small>
+                                                <small class="text-danger">{{ $errors->first('mdata_id') }}</small>
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="">Nama Body</label>
+                                                <label>Nama Body</label>
                                                 <input name="keterangan" type="text" class="form-control"
                                                     placeholder="Contoh: TAMPAK UTAMA (BOX SLIDING)" required>
-                                                <small>{{ $errors->first('keterangan') }}</small>
+                                                <small class="text-danger">{{ $errors->first('keterangan') }}</small>
                                             </div>
-
                                         </div>
 
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label for="foto_body">Upload Foto Body</label>
+                                                <label>Upload Foto Body</label>
                                                 <div class="custom-file">
                                                     <input type="file" name="foto_body[]" id="foto_body"
                                                         class="custom-file-input" multiple>
                                                     <label class="custom-file-label" for="foto_body">Choose files</label>
                                                 </div>
-                                                <small>{{ $errors->first('foto_body') }}</small>
+                                                <small class="text-danger">{{ $errors->first('foto_body') }}</small>
                                             </div>
 
                                             <div class="form-group">
@@ -104,9 +104,8 @@
 @push('scripts')
     <script>
         $(function() {
-            //Initialize Select2 Elements
             $('.select2').select2()
-        })
+        });
 
         if (typeof bsCustomFileInput !== 'undefined') {
             bsCustomFileInput.init();
@@ -120,16 +119,12 @@
                 Array.from(files).forEach(file => {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        const img = $('<div class="col-4 mb-2"><img src="' + e.target
-                            .result +
-                            '" class="img-thumbnail" style="width:100%; cursor:pointer;"></div>'
-                        );
-
+                        const img = $('<div class="col-4 mb-2"><img src="' + e.target.result +
+                            '" class="img-thumbnail" style="width:100%; cursor:pointer;"></div>');
                         img.find('img').on('click', function() {
                             $('#imgPreviewModal').attr('src', e.target.result);
                             $('#modalPreview').modal('show');
                         });
-
                         $('#previews').append(img);
                     }
                     reader.readAsDataURL(file);

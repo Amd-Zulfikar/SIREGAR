@@ -54,11 +54,11 @@
                                                 <td>{{ $mgambar->keterangan }}</td>
                                                 <td>
                                                     @if ($mgambar->foto_body)
-                                                        @php $fotos = json_decode($mgambar->foto_body, true); @endphp
-                                                        @foreach ($fotos as $foto)
-                                                            <img src="{{ asset('storage/body/' . $foto) }}" alt="Foto Body"
-                                                                width="80" class="img-thumbnail preview-img"
-                                                                data-src="{{ asset('storage/body/' . $foto) }}">
+                                                        @foreach ($mgambar->foto_body as $file)
+                                                            <img src="{{ asset('storage/body/' . $file) }}" alt="Foto Body"
+                                                                class="img-thumbnail preview-img"
+                                                                style="width:100px; margin:5px; cursor:pointer;"
+                                                                data-src="{{ asset('storage/body/' . $file) }}">
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">No Image</span>
