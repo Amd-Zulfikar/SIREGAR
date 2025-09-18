@@ -290,7 +290,7 @@
 
                 if (!engine || !brand || !chassis || !vehicle || !keterangan || !halaman_gambar || !
                     jumlah_gambar || !varian_id) {
-                    alert("Lengkapi semua filter!");
+                    alert("Lengkapi semua data!");
                     return;
                 }
 
