@@ -20,6 +20,7 @@ class Workspace extends Model
         'submission_id',
         'varian_id',
         'keterangan',
+        'jumlah_gambar',
     ];
 
     // Relasi ke Customer

@@ -2,9 +2,10 @@
 
 @section('content')
     <div class="content-wrapper">
+
         <section class="content-header">
             <div class="container-fluid">
-                <h4>Tambah Workspace</h4>
+                <a href="{{ route('index.workspace') }}" class="btn bg-gradient-primary">KEMBALI</a>
             </div>
         </section>
 
@@ -54,7 +55,7 @@
 
                                             <div class="form-group">
                                                 <label for="halaman_gambar">Halaman gambar</label>
-                                                <input name="halaman_gambar" id="halaman_gambar" type="text"
+                                                <input name="rincian[0][halaman_gambar]" id="halaman_gambar" type="text"
                                                     class="form-control" placeholder="Masukan No.Halaman" required>
                                             </div>
 
@@ -124,7 +125,7 @@
                                             </div>
 
                                             <button type="button" id="btn-tambah-rincian" class="btn btn-primary mt-2">
-                                                Tambah Rincian
+                                                Tambah Data
                                             </button>
                                         </div>
                                     </div>
@@ -150,7 +151,7 @@
                                                 <th>Brand</th>
                                                 <th>Chassis</th>
                                                 <th>Vehicle</th>
-                                                <th>Keterangan</th>
+                                                <th>Jenis Body</th>
                                                 <th>Varian</th>
                                                 <th>Gambar</th>
                                                 <th>Aksi</th>
@@ -159,9 +160,9 @@
                                         <tbody></tbody>
                                     </table>
                                     <br>
-                                    <button type="button" id="btn-simpan-ws" class="btn btn-success float-right">Simpan
-                                        Workspace</button>
-                                    <a href="{{ route('index.workspace') }}" class="btn btn-danger">Kembali</a>
+                                    <button type="button" id="btn-simpan-ws" class="btn btn-success float-right">Ambil
+                                        Gambar</button>
+
                                 </div>
                             </div>
                         </div>
@@ -358,7 +359,8 @@
                 let employee_id = $('#employees').val(),
                     customer_id = $('#customers').val(),
                     submission_id = $('#submissions').val(),
-                    varian_id = $('#varians').val();
+                    varian_id = $('#varians').val(),
+                    jumlah_gambar = $('#jumlah_gambar').val(); // ✅ tambahin ambil dari input
 
                 if (!employee_id || !customer_id || !submission_id || !varian_id || rincianData.length ==
                     0) {
@@ -375,6 +377,7 @@
                         customer_id,
                         submission_id,
                         varian_id,
+                        jumlah_gambar, // ✅ dikirim ke controller
                         rincian: rincianData
                     },
                     success: function(res) {
@@ -393,6 +396,7 @@
                     }
                 });
             });
+
         });
     </script>
 @endpush

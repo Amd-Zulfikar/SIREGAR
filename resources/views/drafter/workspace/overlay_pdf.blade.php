@@ -1,29 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>Workspace PDF</title>
+    <title>Overlay PDF Single</title>
     <style>
-        .page {
-            page-break-after: always;
-            text-align: center;
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
         }
 
         img {
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
 </head>
 
 <body>
-    <h4>Workspace: {{ $workspace->no_transaksi ?? $workspace->id }}</h4>
-    @foreach ($overlayedImages as $img)
-        <div class="page">
-            <img src="{{ $img }}" alt="Overlay">
-        </div>
-    @endforeach
+    <img src="{{ $image }}" alt="Overlayed Image">
 </body>
 
 </html>

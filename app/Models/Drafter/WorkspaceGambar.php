@@ -18,6 +18,8 @@ class WorkspaceGambar extends Model
         'vehicle',
         'keterangan',
         'foto_body',
+        'halaman_gambar',
+
     ];
 
     // Relasi ke Workspace
@@ -35,5 +37,25 @@ class WorkspaceGambar extends Model
     public function mdata()
     {
         return $this->belongsTo(Mdata::class, 'engine', 'id');
+    }
+
+    public function engineModel()
+    {
+        return $this->belongsTo(\App\Models\Admin\Engine::class, 'engine');
+    }
+
+    public function brandModel()
+    {
+        return $this->belongsTo(\App\Models\Admin\Brand::class, 'brand');
+    }
+
+    public function chassisModel()
+    {
+        return $this->belongsTo(\App\Models\Admin\Chassis::class, 'chassis');
+    }
+
+    public function vehicleModel()
+    {
+        return $this->belongsTo(\App\Models\Admin\Vehicle::class, 'vehicle');
     }
 }

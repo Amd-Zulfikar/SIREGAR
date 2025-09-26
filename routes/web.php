@@ -145,7 +145,7 @@ Route::middleware(['auth', 'role:drafter'])->group(function () {
     Route::get('drafter/workspace/export/{id}', [WorkspaceController::class, 'exportOverlayPDF'])->name('export.overlay.workspace');
     // route for function controller workspace
     Route::post('/drafter/workspace/store', [App\Http\Controllers\Drafter\WorkspaceController::class, 'store'])->name('store.workspace');
-    Route::post('/drafter/workspace/update/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'update'])->name('update.workspace');
+    Route::put('/drafter/workspace/update/{id}', [App\Http\Controllers\Drafter\WorkspaceController::class, 'update'])->name('update.workspace');
     Route::post('/drafter/workspace/select-upload', [App\Http\Controllers\Drafter\WorkspaceController::class, 'select_upload'])->name('select.upload');
 
     // AJAX - Multi Filter

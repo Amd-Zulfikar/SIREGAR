@@ -42,7 +42,7 @@
                                             <th>No</th>
                                             <th>No Transaksi</th>
                                             <th>Customer</th>
-                                            <th>Drafter</th>
+                                            <th>Gambar</th>
                                             <th>Submission</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
@@ -57,14 +57,10 @@
                                                 <td>{{ $workspace->customer->name ?? '-' }}</td>
                                                 <td>
                                                     @if ($workspace->workspaceGambar->isNotEmpty())
-                                                        @php $gambar = $workspace->workspaceGambar->first(); @endphp
-                                                        {{ ($gambar->mdata->engine->name ?? '-') .
-                                                            ' ' .
-                                                            ($gambar->mdata->brand->name ?? '-') .
-                                                            ' ' .
-                                                            ($gambar->mdata->chassis->name ?? '-') .
-                                                            ' ' .
-                                                            ($gambar->mdata->vehicle->name ?? '-') }}
+                                                        @php
+                                                            $gambar = $workspace->workspaceGambar->first();
+                                                        @endphp
+                                                        {{ ($gambar->brandModel->name ?? '-') . ' ' . ($gambar->chassisModel->name ?? '-') . ' ' . ($gambar->vehicleModel->name ?? '-') }}
                                                     @else
                                                         -
                                                     @endif
@@ -89,7 +85,7 @@
                                             <th>No</th>
                                             <th>No Transaksi</th>
                                             <th>Customer</th>
-                                            <th>Drafter</th>
+                                            <th>Gambar</th>
                                             <th>Submission</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
