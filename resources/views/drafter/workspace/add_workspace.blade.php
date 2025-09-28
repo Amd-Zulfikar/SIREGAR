@@ -5,10 +5,11 @@
 
         <section class="content-header">
             <div class="container-fluid">
-                <a href="{{ route('index.workspace') }}" class="btn bg-gradient-primary">KEMBALI</a>
+                <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary"><i
+                        class="fa-solid fa-circle-left"></i> Kembali</a>
             </div>
         </section>
-
+ 
         <section class="content">
             <div class="container-fluid">
                 <form id="form-workspace" method="POST" action="{{ route('store.workspace') }}">
@@ -121,10 +122,11 @@
 
                                             <div class="form-group">
                                                 <label>Preview Foto</label>
-                                                <div class="preview_form_1 border p-2" style="min-height:230px;"></div>
+                                                <div class="preview_form_1 border p-2" style="min-height:243px;"></div>
                                             </div>
 
-                                            <button type="button" id="btn-tambah-rincian" class="btn btn-primary mt-2">
+                                            <button type="button" id="btn-tambah-rincian" class="btn btn-outline-primary">
+                                                <i class="fa-solid fa-folder-plus"></i>
                                                 Tambah Data
                                             </button>
                                         </div>
@@ -360,7 +362,7 @@
                     customer_id = $('#customers').val(),
                     submission_id = $('#submissions').val(),
                     varian_id = $('#varians').val(),
-                    jumlah_gambar = $('#jumlah_gambar').val(); // ✅ tambahin ambil dari input
+                    jumlah_gambar = $('#jumlah_gambar').val();
 
                 if (!employee_id || !customer_id || !submission_id || !varian_id || rincianData.length ==
                     0) {
@@ -377,22 +379,27 @@
                         customer_id,
                         submission_id,
                         varian_id,
-                        jumlah_gambar, // ✅ dikirim ke controller
+                        jumlah_gambar,
                         rincian: rincianData
                     },
                     success: function(res) {
                         if (!res.error) {
-                            alert(res.message);
-                            rincianData = [];
-                            counter = 1;
-                            $('#tbl-detail tbody').empty();
-                            $('#form-workspace')[0].reset();
-                            $('.select2').val(null).trigger('change');
-                        } else alert(res.message);
+                            // Tampilkan toastr dulu
+                            toastr.success(res.message);
+
+                            // Redirect ke index workspace setelah 1 detik
+                            setTimeout(function() {
+                                window.location.href =
+                                    "{{ route('index.workspace') }}";
+                            }, 1000); // 1000ms = 1 detik delay supaya toastr kelihatan
+                        } else {
+                            toastr.error(res.message);
+                        }
                     },
                     error: function(err) {
                         console.error(err);
-                        alert("Terjadi error saat menyimpan workspace. Cek log Laravel!");
+                        toastr.error(
+                            "Terjadi error saat menyimpan workspace. Cek log Laravel!");
                     }
                 });
             });

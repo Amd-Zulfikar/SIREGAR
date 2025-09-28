@@ -10,7 +10,7 @@ class VarianController extends Controller
 {
     public function index()
     {
-        $varians = Varian::paginate(5);
+        $varians = Varian::orderBy('created_at', 'desc')->get();
 
         return view('admin.varian.index', [
             'title' => 'Data varians',

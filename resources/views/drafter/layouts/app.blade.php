@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SiReGar App')</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}"> --}}
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- Theme style -->
@@ -41,7 +42,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                            class="fa-solid fa-bars-staggered"></i></a>
                 </li>
             </ul>
         </nav>
@@ -80,7 +81,7 @@
                             class="nav-item has-treeview {{ request()->routeIs('drafter.dashboard') ? 'menu-open' : '' }}">
                             <a href="{{ route('drafter.dashboard') }}"
                                 class="nav-link {{ request()->routeIs('drafter.dashboard') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon fa-solid fa-house"></i>
                                 <p>
                                     Dashboard
                                 </p>
@@ -90,10 +91,10 @@
                             class="nav-item has-treeview {{ request()->routeIs('index.workspace') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
                                 class="nav-link {{ request()->routeIs('index.workspace') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fa-solid fa-notes-medical"></i>
                                 <p>
                                     Workspace
-                                    <i class="fas fa-angle-left right"></i>
+                                    <i class="fa-solid fa-caret-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -113,9 +114,10 @@
             <!-- /.sidebar -->
 
             <div class="sidebar-custom">
-                <a href="#" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+                <a href="#" class="btn btn-link"><i class="fa-solid fa-user-gear"></i></a>
                 <a href="#" class="btn btn-secondary hide-on-collapse pos-right"
-                    onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">logout</a>
+                    onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();"><i
+                        class="fa-solid fa-right-from-bracket"></i></a>
             </div>
             <form id="logout-form-admin" action="{{ route('logout') }}" method="POST" style="display:none;">
                 @csrf
@@ -185,12 +187,18 @@
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
-                "lengthChange": false,
+                "lengthChange": true, // ubah ke true supaya muncul dropdown halaman
                 "autoWidth": false,
-                "paging": false, // disable DataTables paging
-                "info": false, // disable info "Showing 1 to X of Y"
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                "paging": true, // aktifkan paging
+                "info": true, // tampilkan info "Showing 1 to X of Y"
+                "pageLength": 10, // default 10 baris per halaman
+                "lengthMenu": [
+                    [5, 10, 25, 50, 100],
+                    [5, 10, 25, 50, 100]
+                ], // isi dropdown
+                // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
@@ -202,6 +210,7 @@
             });
         });
     </script>
+
 
     <script>
         $(function() {

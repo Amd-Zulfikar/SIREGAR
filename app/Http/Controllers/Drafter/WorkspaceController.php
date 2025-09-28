@@ -118,16 +118,22 @@ class WorkspaceController extends Controller
                     'chassis'    => $row['chassis'],
                     'vehicle'    => $row['vehicle'],
                     'keterangan' => $row['keterangan'],
+                    'varian_id'  => $row['varian_id'],
                     'halaman_gambar' => $row['halaman_gambar'] ?? null,
+                    'jumlah_gambar'  => $row['jumlah_gambar'] ?? 0,
                     'foto_body'  => json_encode($row['fotoBody'] ?? $row['foto_body'] ?? []),
                 ]);
             }
 
-            return response()->json(['error' => false, 'message' => 'Workspace berhasil disimpan!']);
+            return response()->json([
+                'error' => false,
+                'message' => 'Workspace berhasil disimpan!',
+            ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return response()->json(['error' => true, 'message' => $e->getMessage()]);
-        }
+            return redirect()->back()
+                         ->with('error', 'Terjadi kesalahan saat menyimpan workspace: ' . $e->getMessage());
+        } 
     }
 
     public function workspace_edit($id)
@@ -165,7 +171,8 @@ class WorkspaceController extends Controller
                 'submission_id' => $workspace->submission_id ?? null,
                 'employee_id'   => $workspace->employee_id ?? null,
                 'customer_id'   => $workspace->customer_id ?? null,
-                'varian_id'     => $workspace->varian_id ?? null,
+                'varian_id'     => $g->varian_id,
+                'varianText'    => optional($g->varian)->name ?? '-',
 
                 // Foto
                 'fotoBody'      => is_string($g->foto_body)
@@ -211,6 +218,7 @@ class WorkspaceController extends Controller
                 'brand'          => $r['brand'] ?? null,
                 'chassis'        => $r['chassis'] ?? null,
                 'vehicle'        => $r['vehicle'] ?? null,
+                'varian_id'      => $r['varian_id'] ?? null,
                 'keterangan'     => $r['keterangan'] ?? null,
                 'foto_body'      => json_encode($r['fotoBody'] ?? []),
             ]);
@@ -400,7 +408,7 @@ class WorkspaceController extends Controller
                         'size_percent' => 0.006,
                     ],
                     [
-                        'text' => $workspace->varian->name ?? '-',
+                        'text' => optional($gambar->varianModel)->name ?? '-',
                         'x' => 918,
                         'y' => 675,
                         'size_percent' => 0.007,

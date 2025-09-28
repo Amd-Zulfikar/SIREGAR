@@ -3,6 +3,7 @@
 namespace App\Models\Drafter;
 
 use App\Models\Admin\Mdata;
+use App\Models\Admin\Varian;
 use App\Models\Admin\Mgambar;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,8 @@ class WorkspaceGambar extends Model
         'keterangan',
         'foto_body',
         'halaman_gambar',
+        'jumlah_gambar',
+        'varian_id',
 
     ];
 
@@ -34,9 +37,23 @@ class WorkspaceGambar extends Model
         return $this->belongsTo(Mgambar::class, 'mgambar_id');
     }
 
+    public function keteranganModel() {
+    return $this->belongsTo(Mgambar::class, 'keterangan');
+}
+
     public function mdata()
     {
         return $this->belongsTo(Mdata::class, 'engine', 'id');
+    }
+
+    public function varian()
+    {
+        return $this->belongsTo(Varian::class, 'varian_id');
+    }
+    
+    public function varianModel()
+    {
+        return $this->belongsTo(Varian::class, 'varian_id');
     }
 
     public function engineModel()

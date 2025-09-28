@@ -128,7 +128,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/mgambar/edit/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_edit'])->name('edit.mgambar');
     // route for function controller mgambar
     Route::post('/admin/mgambar/store', [App\Http\Controllers\Admin\MgambarController::class, 'store'])->name('store.mgambar');
-    Route::post('/admin/mgambar/update/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'update'])->name('update.mgambar');
+    Route::put('/admin/mgambar/update/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'update'])->name('update.mgambar');
     Route::post('/admin/mgambar/action/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'action'])->name('mgambar.action');
 });
 

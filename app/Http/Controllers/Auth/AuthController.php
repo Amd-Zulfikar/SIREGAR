@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -22,14 +23,20 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        // Masking password sebelum logging
+        $remember = $request->has('remember');
+
         $logData = $request->except('password');
         $logData['password'] = '********';
         Log::info('Login attempt', $logData);
 
-        // Cek login
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            if ($remember) {
+                Cookie::queue('remember_email', $request->email, 60*24*30);
+            } else {
+                Cookie::queue(Cookie::forget('remember_email'));
+            }
 
             $user = Auth::user();
 
@@ -40,13 +47,19 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Arahkan ke dashboard sesuai role
-            if ($user->role->name === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->role->name === 'drafter') {
-                return redirect()->route('drafter.dashboard');
-            } elseif ($user->role->name === 'checker') {
-                return redirect()->route('checker.dashboard');
+            // Redirect sesuai role
+            switch ($user->role->name) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'drafter':
+                    return redirect()->route('drafter.dashboard');
+                case 'checker':
+                    return redirect()->route('checker.dashboard');
+                default:
+                    Auth::logout();
+                    return back()->withErrors([
+                        'email' => 'Role tidak dikenali.',
+                    ]);
             }
         }
 
@@ -54,6 +67,7 @@ class AuthController extends Controller
             'email' => 'Email atau password salah.',
         ]);
     }
+
 
     public function logout(Request $request)
     {

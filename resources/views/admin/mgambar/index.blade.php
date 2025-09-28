@@ -37,7 +37,7 @@
                                             <th>Merk</th>
                                             <th>Chassis</th>
                                             <th>Vehicle</th>
-                                            <th>Keterangan</th>
+                                            <th>Jenis Body</th>
                                             <th>Gambar Body</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
@@ -89,7 +89,7 @@
                                             <th>Merk</th>
                                             <th>Chassis</th>
                                             <th>Vehicle</th>
-                                            <th>Keterangan</th>
+                                            <th>Jenis Body</th>
                                             <th>Gambar Body</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
@@ -158,7 +158,7 @@
                         alert("Gagal update status! (" + xhr.status + ")");
                     }
                 });
-            });
+            }); 
 
             // Toastr untuk flash session
             var successMessage = "{{ session('success') ?? '' }}";

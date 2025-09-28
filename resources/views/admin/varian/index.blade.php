@@ -72,9 +72,9 @@
                                     </tfoot>
                                 </table>
                                 <!-- Laravel Pagination -->
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $varians->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- /.card -->
                         </div>

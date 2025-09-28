@@ -9,8 +9,10 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
-                                onclick="location.href='{{ route('add.workspace') }}'">Ambil Gambar</a>
+                            <a type="button" class="btn btn-block btn-outline-primary"
+                                onclick="location.href='{{ route('add.workspace') }}'"><i
+                                    class="fa-solid fa-pen-to-square"></i>
+                                Ambil Gambar</a>
                         </ol>
                     </div>
                     <div class="col-sm-6">
@@ -43,7 +45,7 @@
                                             <th>No Transaksi</th>
                                             <th>Customer</th>
                                             <th>Gambar</th>
-                                            <th>Submission</th>
+                                            <th>Pengajuan</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -68,11 +70,11 @@
                                                 <td>{{ $workspace->submission->name ?? '-' }}</td>
                                                 <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
                                                 <td>
-                                                    <a class="btn btn-info btn-sm"
+                                                    <a class="btn btn-outline-info"
                                                         href="{{ route('edit.workspace', $workspace->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
-                                                    <a class="btn btn-info btn-sm"
+                                                    <a class="btn btn-outline-info"
                                                         href="{{ route('overlay.workspace', $workspace->id) }}">
                                                         <i class="fas fa-eye"></i> Preview
                                                     </a>
@@ -86,16 +88,16 @@
                                             <th>No Transaksi</th>
                                             <th>Customer</th>
                                             <th>Gambar</th>
-                                            <th>Submission</th>
+                                            <th>Pengajuan</th>
                                             <th>Tanggal</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
                                 </table>
                                 <!-- Laravel Pagination -->
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $workspaces->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- /.card -->
                         </div>

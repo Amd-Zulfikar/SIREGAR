@@ -27,15 +27,6 @@ class MgambarController extends Controller
         $mdatas = Mdata::all();
         return view('admin.mgambar.add_mgambar', compact('mdatas'));
     }
-
-    public function mgambar_edit($id)
-    {
-        $mgambar = Mgambar::findOrFail($id);
-        $mdatas = Mdata::all();
-
-        return view('admin.mgambar.edit_mgambar', compact('mgambar', 'mdatas'));
-    }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -78,6 +69,13 @@ class MgambarController extends Controller
         }
     }
 
+    public function mgambar_edit($id)
+    {
+        $mgambar = Mgambar::findOrFail($id);
+        $mdatas = Mdata::all();
+
+        return view('admin.mgambar.edit_mgambar', compact('mgambar', 'mdatas'));
+    }
     public function update(Request $request, $id)
     {
         $mgambar = Mgambar::findOrFail($id);

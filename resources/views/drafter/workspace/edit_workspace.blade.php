@@ -4,7 +4,7 @@
     <div class="content-wrapper">
         <section class="content-header">
             <div class="container-fluid">
-                <a href="{{ route('index.workspace') }}" class="btn bg-gradient-primary">KEMBALI</a>
+                <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary">KEMBALI</a>
             </div>
         </section>
 
@@ -122,14 +122,14 @@
 
                                             <div class="form-group">
                                                 <label>Preview Foto (klik thumbnail untuk preview)</label>
-                                                <div class="preview_form_1 border p-2" style="min-height:230px;"></div>
+                                                <div class="preview_form_1 border p-2" style="min-height:240px;"></div>
                                             </div>
 
                                             <button type="button" id="btn-tambah-rincian"
-                                                class="btn btn-primary mt-2">Tambah Data
+                                                class="btn btn-outline-primary">Tambah Data
                                             </button>
                                             <button type="button" id="btn-update-rincian"
-                                                class="btn btn-warning mt-2">Update
+                                                class="btn btn-outline-warning">Update
                                                 Rincian
                                             </button>
                                         </div>
@@ -158,6 +158,7 @@
                                                 <th>Chassis</th>
                                                 <th>Vehicle</th>
                                                 <th>Keterangan</th>
+                                                <th>Varian</th>
                                                 <th>Gambar</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -223,12 +224,13 @@
                     <tr data-index="${idx}">
                         <td><input type="checkbox" class="select-rincian"></td>
                         <td>${r.halaman_gambar || '-'}</td>
-                        <td>${r.jumlah_gambar !== undefined && r.jumlah_gambar !== null ? r.jumlah_gambar : '-'}</td>
+                        <td>${r.jumlah_gambar !== undefined && r.jumlah_gambar !== null ? String(r.jumlah_gambar).padStart(2, '0') : '-'}</td>
                         <td>${r.engineText || '-'}</td>
                         <td>${r.brandText || '-'}</td>
                         <td>${r.chassisText || '-'}</td>
                         <td>${r.vehicleText || '-'}</td>
                         <td>${r.keteranganText || '-'}</td>
+                        <td>${r.varianText || '-'}</td>
                         <td>${thumbs}</td>
                         <td><button class="btn btn-danger btn-sm btn-hapus-rincian">Hapus</button></td>
                     </tr>
@@ -377,7 +379,10 @@
                     const r = rincianData[idx];
 
                     $('#halaman_gambar').val(r.halaman_gambar || '');
-                    $('#jumlah_gambar').val(r.jumlah_gambar || '');
+                    let jml = r.jumlah_gambar !== undefined && r.jumlah_gambar !== null ?
+                        String(r.jumlah_gambar).padStart(2, '0') :
+                        '';
+                    $('#jumlah_gambar').val(jml);
                     $('#submissions').val(r.submission_id || '').trigger('change');
                     $('#employees').val(r.employee_id || '').trigger('change');
                     $('#customers').val(r.customer_id || '').trigger('change');
@@ -422,6 +427,7 @@
                     employee_id: $('#employees').val(),
                     customer_id: $('#customers').val(),
                     varian_id: $('#varians').val(),
+                    varianText: $('#varians option:selected').text() || '-',
                 });
 
                 renderTable();
@@ -454,6 +460,7 @@
                     employee_id: $('#employees').val(),
                     customer_id: $('#customers').val(),
                     varian_id: $('#varians').val(),
+                    varianText: $('#varians option:selected').text() || '-',
                 };
 
                 renderTable();

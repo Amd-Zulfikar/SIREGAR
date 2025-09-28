@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SiReGar App')</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}"> --}}
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
     <!-- Theme style -->
@@ -33,14 +34,13 @@
 <body class="hold-transition sidebar-mini layout-fixed">
     <!-- Site wrapper -->
     <div class="wrapper">
-
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                            class="fa-solid fa-bars-staggered"></i></a>
                 </li>
             </ul>
         </nav>
@@ -52,7 +52,7 @@
             <a href="{{ asset('adminlte/index3.html') }}" class="brand-link">
                 <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">SIRETE</span>
+                <span class="brand-text font-weight-light">SIREGAR</span>
             </a>
 
             <!-- Sidebar -->
@@ -79,9 +79,17 @@
                             class="nav-item has-treeview {{ request()->routeIs('admin.dashboard') ? 'menu-open' : '' }}">
                             <a href="{{ route('admin.dashboard') }}"
                                 class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <i class="nav-icon fa-solid fa-house"></i>
                                 <p>
                                     Dashboard
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa-solid fa-cart-shopping"></i>
+                                <p>
+                                    Transaksi
                                 </p>
                             </a>
                         </li>
@@ -89,10 +97,10 @@
                             class="nav-item has-treeview {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
                                 class="nav-link {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fa-solid fa-users"></i>
                                 <p>
                                     Data User
-                                    <i class="fas fa-angle-left right"></i>
+                                    <i class="fa-solid fa-caret-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -130,10 +138,10 @@
                             class="nav-item has-treeview {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
                                 class="nav-link {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fa-solid fa-file-signature"></i>
                                 <p>
                                     Data Master
-                                    <i class="fas fa-angle-left right"></i>
+                                    <i class="fa-solid fa-caret-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -193,7 +201,7 @@
                             class="nav-item has-treeview {{ request()->routeIs('index.mgambar') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
                                 class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="nav-icon fa-solid fa-images"></i>
                                 <p>
                                     Gambar Master
                                     <i class="fas fa-angle-left right"></i>
@@ -209,24 +217,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-header">INPUT ORDER</li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon far fa-plus-square"></i>
-                                <p>
-                                    Order
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Reservasi</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -234,9 +224,10 @@
             <!-- /.sidebar -->
 
             <div class="sidebar-custom">
-                <a href="#" class="btn btn-link"><i class="fas fa-cogs"></i></a>
+                <a href="#" class="btn btn-link"><i class="fa-solid fa-user-gear"></i></a>
                 <a href="#" class="btn btn-secondary hide-on-collapse pos-right"
-                    onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();">logout</a>
+                    onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();"><i
+                        class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </div>
             <form id="logout-form-admin" action="{{ route('logout') }}" method="POST" style="display:none;">
                 @csrf
@@ -257,7 +248,7 @@
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 1.1.0
         </div>
-        <strong>Copyright &copy; 2025 <a href="https://adminlte.io">SiRete</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2025 <a href="https://adminlte.io">SiReGar</a>.</strong> All rights reserved.
     </footer>
 
     <!-- Control Sidebar -->
@@ -306,12 +297,45 @@
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
-                "lengthChange": false,
+                "lengthChange": true, // ubah ke true supaya muncul dropdown halaman
                 "autoWidth": false,
-                "paging": false, // disable DataTables paging
-                "info": false, // disable info "Showing 1 to X of Y"
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                "paging": true, // aktifkan paging
+                "info": true, // tampilkan info "Showing 1 to X of Y"
+                "pageLength": 10, // default 10 baris per halaman
+                "lengthMenu": [
+                    [5, 10, 25, 50, 100],
+                    [5, 10, 25, 50, 100]
+                ],
+                "order": [
+                    [0, "desc"]
+                ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+            // $("#example1").DataTable({
+            //     "dom": 'Bfrtip', // tombol di atas table
+            //     "responsive": true,
+            //     "lengthChange": false, // tidak ada dropdown default di kiri
+            //     "autoWidth": false,
+            //     "pageLength": 25,
+            //     "buttons": [{
+            //             extend: 'colvis',
+            //             columns: ':not(.noVis)'
+            //         },
+            //         {
+            //             extend: 'copy'
+            //         },
+            //         {
+            //             extend: 'csv'
+            //         },
+            //         {
+            //             extend: 'excel'
+            //         },
+            //         {
+            //             extend: 'pageLength'
+            //         }
+            //     ]
+            // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
