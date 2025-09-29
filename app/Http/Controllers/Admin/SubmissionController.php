@@ -10,7 +10,7 @@ class SubmissionController extends Controller
 {
     public function index()
     {
-        $submissions = Submission::paginate(5);
+        $submissions = Submission::orderBy('created_at', 'desc')->get();
 
         return view('admin.submission.index', [
             'title' => 'Data submissions',
@@ -21,6 +21,20 @@ class SubmissionController extends Controller
     public function submission_add()
     {
         return view('admin.submission.add_submission');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $input = $request->all();
+        Submission::create([
+            'name' => $input['name'],
+        ]);
+
+        return redirect()->route('index.submission')->with('success', 'Data berhasil disimpan!');
     }
 
     public function submission_edit($id)
@@ -40,20 +54,6 @@ class SubmissionController extends Controller
         return view('admin.submission.edit_submission', $data);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);
-
-        $input = $request->all();
-        Submission::create([
-            'name' => $input['name'],
-        ]);
-
-        return redirect()->route('index.submission')->with('success', 'Data berhasil disimpan!');
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -71,5 +71,17 @@ class SubmissionController extends Controller
         ]);
 
         return redirect()->route('index.submission')->with('success', 'Data berhasil diupdate!');
+    }
+
+    public function delete($id)
+    {
+        $tbsubmission = Submission::find($id);
+        if (!$tbsubmission) {
+            return redirect()->route('index.submission')->with('error', 'Submission tidak ditemukan!');
+        }
+
+        $tbsubmission->delete();
+
+        return redirect()->route('index.submission')->with('success', 'Data berhasil dihapus!');
     }
 }

@@ -9,7 +9,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.varian') }}'">Tambah Data</a>
                         </ol>
                     </div>
@@ -56,6 +56,10 @@
                                                         </i>
                                                         Edit
                                                     </a>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-url="{{ route('delete.varian', $varian->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                         </tr>
                                     @empty
@@ -91,6 +95,26 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
 
             // Toastr untuk flash session
             var successMessage = "{{ session('success') ?? '' }}";

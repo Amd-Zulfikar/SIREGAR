@@ -66,10 +66,15 @@
                                                         data-off-color="danger" data-on-color="success">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.customer', $customer->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
+
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-url="{{ route('delete.customer', $customer->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -148,6 +153,26 @@
                     },
                     error: function(xhr) {
                         alert("Gagal update status! (" + xhr.status + ")");
+                    }
+                });
+            });
+
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
                     }
                 });
             });

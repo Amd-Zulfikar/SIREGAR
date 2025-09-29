@@ -16,7 +16,7 @@ class MdataController extends Controller
 {
     public function index()
     {
-        $mdatas = Mdata::paginate(5);
+        $mdatas = Mdata::with(['engine', 'brand', 'chassis', 'vehicle'])->orderBy('created_at', 'desc')->get();
 
         return view('admin.mdata.index', [
             'title' => 'Data mdatas',
@@ -26,7 +26,7 @@ class MdataController extends Controller
 
     public function mdata_add()
     {
-        $engine = Engine::all();
+        $engine = Engine::active()->get();
         $brand = Brand::all();
         $chassis = Chassis::all();
         $vehicle = Vehicle::all();
@@ -42,16 +42,20 @@ class MdataController extends Controller
 
     public function mdata_edit($id)
     {
-        $workspace = Workspace::with('workspaceGambar.mgambar')->findOrFail($id);
+        $mdata = Mdata::findOrFail($id);
+        $engine = Engine::active()->get();
+        $brand = Brand::all();
+        $chassis = Chassis::all();
+        $vehicle = Vehicle::all();
 
-        $customers = Customer::all();
-        $employees = Employee::all();
-        $submissions = Submission::all();
-        $master = Mgambar::all();
-        $varians = \DB::table('tb_varians')->get();
-
-        // Kirim data ke view edit.blade.php
-        return view('drafter.workspace.edit', compact('workspace', 'customers', 'employees', 'submissions', 'master', 'varians'));
+        $data = [
+            'mdata' => $mdata,
+            'engines' => $engine,
+            'brands' => $brand,
+            'chassiss' => $chassis,
+            'vehicles' => $vehicle,
+        ];
+        return view('admin.mdata.edit_mdata', $data);
     }
 
     public function store(Request $request)

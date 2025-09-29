@@ -97,9 +97,9 @@
                             </a>
                         </li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.role', 'index.employee', 'index.customer', 'index.account') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-users"></i>
                                 <p>
                                     Data User
@@ -109,28 +109,28 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('index.role') }}"
-                                        class="nav-link {{ request()->routeIs('index.role') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.role', 'add.role', 'edit.role') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Role</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.employee') }}"
-                                        class="nav-link {{ request()->routeIs('index.employee') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.employee', 'add.employee', 'edit.employee') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Pegawai</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.customer') }}"
-                                        class="nav-link {{ request()->routeIs('index.customer') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.customer', 'add.customer', 'edit.customer') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Customer</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.account') }}"
-                                        class="nav-link {{ request()->routeIs('index.account') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.account', 'add.account', 'edit.account') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Account</p>
                                     </a>
@@ -138,9 +138,9 @@
                             </ul>
                         </li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.submission', 'index.varian', 'index.engine', 'index.brand', 'index.chassis', 'index.vehicle', 'index.mdata') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-file-signature"></i>
                                 <p>
                                     Data Master
@@ -150,49 +150,49 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('index.submission') }}"
-                                        class="nav-link {{ request()->routeIs('index.submission') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.submission', 'add.submission', 'edit.submission') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Jenis Pengajuan</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.varian') }}"
-                                        class="nav-link {{ request()->routeIs('index.varian') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.varian', 'add.varian', 'edit.varian') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Jenis Varian</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.engine') }}"
-                                        class="nav-link {{ request()->routeIs('index.engine') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.engine', 'add.engine', 'edit.engine') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Engine</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.brand') }}"
-                                        class="nav-link {{ request()->routeIs('index.brand') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.brand', 'add.brand', 'edit.brand') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Merk</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.chassis') }}"
-                                        class="nav-link {{ request()->routeIs('index.chassis') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.chassis', 'add.chassis', 'edit.chassis') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Chassis</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.vehicle') }}"
-                                        class="nav-link {{ request()->routeIs('index.vehicle') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.vehicle', 'add.vehicle', 'edit.vehicle') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Vehicle</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ route('index.mdata') }}"
-                                        class="nav-link {{ request()->routeIs('index.mdata') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.mdata', 'add.mdata', 'edit.mdata') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Data</p>
                                     </a>
@@ -201,9 +201,9 @@
                         </li>
                         <li class="nav-header">INPUT GAMBAR</li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-images"></i>
                                 <p>
                                     Gambar Master
@@ -213,7 +213,7 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="{{ route('index.mgambar') }}"
-                                        class="nav-link {{ request()->routeIs('index.mgambar') ? 'active' : '' }}">
+                                        class="nav-link {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Gambar</p>
                                     </a>

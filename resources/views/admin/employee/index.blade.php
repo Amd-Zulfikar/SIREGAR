@@ -66,11 +66,11 @@
                                                         data-off-color="danger" data-on-color="success">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.employee', $employee->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
-                                                    <button type="button" class="btn btn-outline-danger btn-delete"
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
                                                         data-url="{{ route('delete.employee', $employee->id) }}">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>

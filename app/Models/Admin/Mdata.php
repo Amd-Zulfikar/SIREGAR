@@ -39,4 +39,5 @@ class Mdata extends Model
     {
         return $this->hasMany(Mgambar::class, 'mdata_id');
     }
+    
 }

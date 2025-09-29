@@ -136,7 +136,7 @@ class EmployeeController extends Controller
         $employee->save();
 
         return response()->json(['success' => true, 'status' => $employee->status]);
-    }
+    } 
 
     public function delete($id)
     {

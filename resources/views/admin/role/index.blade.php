@@ -50,13 +50,13 @@
                                                     {{ $role->name }}
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.role', $role->id) }}">
                                                         <i class="fas fa-pencil-alt">
                                                         </i>
                                                         Edit
                                                     </a>
-                                                    <button type="button" class="btn btn-outline-danger btn-delete"
+                                                    <button type="button" class="btn btn-danger btn-sm"
                                                         data-url="{{ route('delete.role', $role->id) }}">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>

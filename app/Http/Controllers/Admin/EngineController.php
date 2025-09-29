@@ -12,7 +12,7 @@ class EngineController extends Controller
 {
     public function index()
     {
-        $engines = Engine::paginate(5);
+        $engines = Engine::orderBy('created_at', 'desc')->get();
 
         return view('admin.engine.index', [
             'title' => 'Data engines',
@@ -23,22 +23,6 @@ class EngineController extends Controller
     public function engine_add()
     {
         return view('admin.engine.add_engine');
-    }
-
-    public function engine_edit($id)
-    {
-        $tbengine = Engine::find($id);
-
-        if (!$tbengine) {
-            return redirect()->route('index.engine')->with('error', 'Engine tidak ditemukan!');
-        }
-
-        $data = [
-            'title' => 'Edit Data Engine', 
-            'engine' => $tbengine, 
-            'engines' => Engine::all()];
-
-        return view('admin.engine.edit_engine', $data);
     }
 
     public function store(Request $request)
@@ -62,6 +46,22 @@ class EngineController extends Controller
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
         }
+    }
+
+    public function engine_edit($id)
+    {
+        $tbengine = Engine::find($id);
+
+        if (!$tbengine) {
+            return redirect()->route('index.engine')->with('error', 'Engine tidak ditemukan!');
+        }
+
+        $data = [
+            'title' => 'Edit Data Engine', 
+            'engine' => $tbengine, 
+            'engines' => Engine::all()];
+
+        return view('admin.engine.edit_engine', $data);
     }
  
     public function update(Request $request, $id)
@@ -92,14 +92,20 @@ class EngineController extends Controller
         }
     }
 
-
-    public function action(Request $request, $id)
+    public function delete($id)
     {
-        $engine = Engine::findOrFail($id);
-        $engine->status = $request->status;
-        $engine->save();
+        $engine = Engine::find($id);
 
-        return response()->json(['success' => true, 'status' => $engine->status]);
+        if (!$engine) {
+            return redirect()->route('index.engine')->with('error', 'Engine tidak ditemukan!');
+        }
+
+        try {
+            $engine->delete();
+            return redirect()->route('index.engine')->with('success', 'Engine berhasil dihapus!');
+        } catch (Exception $e) {
+            return redirect()->route('index.engine')->with('error', 'Data tidak terhapus! Terjadi kesalahan: '. $e->getMessage());
+        }
     }
     
 }

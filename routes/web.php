@@ -31,21 +31,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller transaction
     Route::post('/admin/transaction/store', [App\Http\Controllers\Admin\TransactionController::class, 'store'])->name('store.transaction');
 
-    // route for view controller submission
-    Route::get('/admin/submission', [SubmissionController::class, 'index'])->name('index.submission');
-    Route::get('/admin/submission/add', [SubmissionController::class, 'submission_add'])->name('add.submission');
-    Route::get('/admin/submission/edit/{id}', [SubmissionController::class, 'submission_edit'])->name('edit.submission');
-    // route for function controller submission
-    Route::post('/admin/submission/store', [SubmissionController::class, 'store'])->name('store.submission');
-    Route::post('/admin/submission/update/{id}', [SubmissionController::class, 'update'])->name('update.submission');
-
-    // route for function controller varian
-    Route::get('/admin/varian', [App\Http\Controllers\Admin\VarianController::class, 'index'])->name('index.varian');
-    Route::get('/admin/varian/add', [App\Http\Controllers\Admin\VarianController::class, 'varian_add'])->name('add.varian');
-    Route::get('/admin/varian/edit/{id}', [App\Http\Controllers\Admin\VarianController::class, 'varian_edit'])->name('edit.varian');
-    // route for function controller varian
-    Route::post('/admin/varian/store', [App\Http\Controllers\Admin\VarianController::class, 'store'])->name('store.varian');
-    Route::post('/admin/varian/update/{id}', [App\Http\Controllers\Admin\VarianController::class, 'update'])->name('update.varian');
+    
 
     // route for view controller role
     Route::get('/admin/role', [RoleController::class, 'index'])->name('index.role');
@@ -60,18 +46,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('index.employee');
     Route::get('/admin/employee/add', [EmployeeController::class, 'employee_add'])->name('add.employee');
     Route::get('/admin/employee/edit/{id}', [EmployeeController::class, 'employee_edit'])->name('edit.employee');
+    Route::get('/admin/employee/delete/{id}', [EmployeeController::class, 'delete'])->name('delete.employee');
     // route for function controller employee
     Route::post('/admin/employee/store', [EmployeeController::class, 'store'])->name('store.employee');
     Route::post('/admin/employee/update/{id}', [EmployeeController::class, 'update'])->name('update.employee');
     Route::post('/admin/employee/action/{id}', [EmployeeController::class, 'action'])
         ->name('employee.action');
-    Route::get('/admin/employee/delete/{id}', [EmployeeController::class, 'delete'])->name('delete.employee');
-
 
     // route for view controller Customer
     Route::get('/admin/customer', [CustomerController::class, 'index'])->name('index.customer');
     Route::get('/admin/customer/add', [CustomerController::class, 'customer_add'])->name('add.customer');
     Route::get('/admin/customer/edit/{id}', [CustomerController::class, 'customer_edit'])->name('edit.customer');
+    Route::get('/admin/customer/delete/{id}', [CustomerController::class, 'delete'])->name('delete.customer');
     // route for function controller customer
     Route::post('/admin/customer/store', [CustomerController::class, 'store'])->name('store.customer');
     Route::post('/admin/customer/update/{id}', [CustomerController::class, 'update'])->name('update.customer');
@@ -87,10 +73,30 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/account/update/{id}', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('update.account');
     Route::post('/admin/account/action/{id}', [App\Http\Controllers\Admin\AccountController::class, 'action'])->name('account.action');
 
+    // route for view controller submission
+    Route::get('/admin/submission', [SubmissionController::class, 'index'])->name('index.submission');
+    Route::get('/admin/submission/add', [SubmissionController::class, 'submission_add'])->name('add.submission');
+    Route::get('/admin/submission/edit/{id}', [SubmissionController::class, 'submission_edit'])->name('edit.submission');
+    Route::get('/admin/submission/delete/{id}', [SubmissionController::class, 'delete'])->name('delete.submission');
+
+    // route for function controller submission
+    Route::post('/admin/submission/store', [SubmissionController::class, 'store'])->name('store.submission');
+    Route::post('/admin/submission/update/{id}', [SubmissionController::class, 'update'])->name('update.submission');
+    
+    // route for function controller varian
+    Route::get('/admin/varian', [App\Http\Controllers\Admin\VarianController::class, 'index'])->name('index.varian');
+    Route::get('/admin/varian/add', [App\Http\Controllers\Admin\VarianController::class, 'varian_add'])->name('add.varian');
+    Route::get('/admin/varian/edit/{id}', [App\Http\Controllers\Admin\VarianController::class, 'varian_edit'])->name('edit.varian');
+    Route::get('/admin/varian/delete/{id}', [App\Http\Controllers\Admin\VarianController::class, 'delete'])->name('delete.varian');
+    // route for function controller varian
+    Route::post('/admin/varian/store', [App\Http\Controllers\Admin\VarianController::class, 'store'])->name('store.varian');
+    Route::post('/admin/varian/update/{id}', [App\Http\Controllers\Admin\VarianController::class, 'update'])->name('update.varian');
+
     // route for view controller Engine
     Route::get('/admin/engine', [App\Http\Controllers\Admin\EngineController::class, 'index'])->name('index.engine');
     Route::get('/admin/engine/add', [App\Http\Controllers\Admin\EngineController::class, 'engine_add'])->name('add.engine');
     Route::get('/admin/engine/edit/{id}', [App\Http\Controllers\Admin\EngineController::class, 'engine_edit'])->name('edit.engine');
+    Route::get('/admin/engine/delete/{id}', [App\Http\Controllers\Admin\EngineController::class, 'delete'])->name('delete.engine');
     // route for function controller engine
     Route::post('/admin/engine/store', [App\Http\Controllers\Admin\EngineController::class, 'store'])->name('store.engine');
     Route::post('/admin/engine/update/{id}', [App\Http\Controllers\Admin\EngineController::class, 'update'])->name('update.engine');

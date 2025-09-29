@@ -45,10 +45,10 @@
                                     <tbody>
                                         @forelse($mdatas as $mdata)
                                             <tr>
-                                                <td>{{ $mdata->engine->name }}</td>
-                                                <td>{{ $mdata->brand->name }}</td>
-                                                <td>{{ $mdata->chassis->name }}</td>
-                                                <td>{{ $mdata->vehicle->name }}</td>
+                                                <td>{{ $mdata->engine->name ?? '-' }}</td>
+                                                <td>{{ $mdata->brand->name ?? '-' }}</td>
+                                                <td>{{ $mdata->chassis->name ?? '-' }}</td>
+                                                <td>{{ $mdata->vehicle->name ?? '-' }}</td>
                                                 <td>
                                                     <input type="checkbox" class="status-switch"
                                                         data-id="{{ $mdata->id }}" name="status"
@@ -80,9 +80,9 @@
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $mdatas->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

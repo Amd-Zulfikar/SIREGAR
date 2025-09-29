@@ -7,7 +7,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.account') }}'">Tambah Data</a>
                         </ol>
                     </div>

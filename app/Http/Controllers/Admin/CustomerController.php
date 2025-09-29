@@ -137,4 +137,23 @@ class CustomerController extends Controller
 
         return response()->json(['success' => true, 'status' => $customer->status]);
     }
+
+    public function delete($id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        // Hapus file foto_paraf dari storage
+        if ($customer->foto_paraf) {
+            $fotoFiles = json_decode($customer->foto_paraf, true);
+            foreach ($fotoFiles as $file) {
+                if (Storage::disk('public')->exists('paraf/' . $file)) {
+                    Storage::disk('public')->delete('paraf/' . $file);
+                }
+            }
+        }
+
+        $customer->delete();
+
+        return redirect()->route('index.customer')->with('success', 'Customer berhasil dihapus!');
+    }
 }

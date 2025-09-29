@@ -42,7 +42,7 @@ class WorkspaceController extends Controller
     // Add workspace form
     public function workspace_add()
     {
-        $customers   = Customer::all();
+        $customers   = Customer::active()->get();
         $employees = Employee::active()->get();
         $submissions = Submission::all();
         $varians = Varian::all();

@@ -23,6 +23,20 @@ class VarianController extends Controller
         return view('admin.varian.add_varian');
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $input = $request->all();
+        Varian::create([
+            'name' => $input['name'],
+        ]);
+
+        return redirect()->route('index.varian')->with('success', 'Data berhasil disimpan!');
+    }
+
     public function varian_edit($id)
     {
         $tbvarian = Varian::find($id);
@@ -38,20 +52,6 @@ class VarianController extends Controller
         ];
 
         return view('admin.varian.edit_varian', $data);
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-        ]);
-
-        $input = $request->all();
-        Varian::create([
-            'name' => $input['name'],
-        ]);
-
-        return redirect()->route('index.varian')->with('success', 'Data berhasil disimpan!');
     }
 
     public function update(Request $request, $id)
@@ -71,5 +71,17 @@ class VarianController extends Controller
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil diupdate!');
+    }
+
+    public function delete($id)
+    {
+        $tbvarian = Varian::find($id);
+        if (!$tbvarian) {
+            return redirect()->route('index.varian')->with('error', 'Varian tidak ditemukan!');
+        }
+
+        $tbvarian->delete();
+
+        return redirect()->route('index.varian')->with('success', 'Data berhasil dihapus!');
     }
 }

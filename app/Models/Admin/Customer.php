@@ -21,4 +21,8 @@ class Customer extends Model
     {
         return $this->hasMany(Workspace::class, 'customer_id');
     }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }
