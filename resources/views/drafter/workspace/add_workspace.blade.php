@@ -9,7 +9,7 @@
                         class="fa-solid fa-circle-left"></i> Kembali</a>
             </div>
         </section>
- 
+
         <section class="content">
             <div class="container-fluid">
                 <form id="form-workspace" method="POST" action="{{ route('store.workspace') }}">

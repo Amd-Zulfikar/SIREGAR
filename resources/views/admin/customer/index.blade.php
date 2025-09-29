@@ -7,7 +7,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.customer') }}'">Tambah Data</a>
                         </ol>
                     </div>
@@ -66,7 +66,7 @@
                                                         data-off-color="danger" data-on-color="success">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-info btn-sm"
+                                                    <a class="btn btn-outline-info"
                                                         href="{{ route('edit.customer', $customer->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
@@ -89,9 +89,9 @@
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $customers->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

@@ -29,6 +29,7 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
 
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -85,8 +86,10 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
+                        <li
+                            class="nav-item has-treeview {{ request()->routeIs('index.transaction') ? 'menu-open' : '' }}">
+                            <a href="{{ route('index.transaction') }}"
+                                class="nav-link {{ request()->routeIs('index.transaction') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-cart-shopping"></i>
                                 <p>
                                     Transaksi
@@ -204,7 +207,7 @@
                                 <i class="nav-icon fa-solid fa-images"></i>
                                 <p>
                                     Gambar Master
-                                    <i class="fas fa-angle-left right"></i>
+                                    <i class="fa-solid fa-caret-left right"></i>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -292,6 +295,9 @@
     <script src="{{ asset('adminlte/plugins/summernote/summernote-bs4.min.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
+    <!-- Tambahin di layouts/app.blade.php -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Page specific script -->
     <script>
         $(function() {
@@ -306,35 +312,8 @@
                     [5, 10, 25, 50, 100],
                     [5, 10, 25, 50, 100]
                 ],
-                "order": [
-                    [0, "desc"]
-                ]
+                "order": []
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-            // $("#example1").DataTable({
-            //     "dom": 'Bfrtip', // tombol di atas table
-            //     "responsive": true,
-            //     "lengthChange": false, // tidak ada dropdown default di kiri
-            //     "autoWidth": false,
-            //     "pageLength": 25,
-            //     "buttons": [{
-            //             extend: 'colvis',
-            //             columns: ':not(.noVis)'
-            //         },
-            //         {
-            //             extend: 'copy'
-            //         },
-            //         {
-            //             extend: 'csv'
-            //         },
-            //         {
-            //             extend: 'excel'
-            //         },
-            //         {
-            //             extend: 'pageLength'
-            //         }
-            //     ]
-            // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
             $('#example2').DataTable({
                 "paging": true,

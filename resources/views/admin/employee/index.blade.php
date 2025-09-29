@@ -7,7 +7,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.employee') }}'">Tambah Data</a>
                         </ol>
                     </div>
@@ -66,10 +66,14 @@
                                                         data-off-color="danger" data-on-color="success">
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-info btn-sm"
+                                                    <a class="btn btn-outline-info"
                                                         href="{{ route('edit.employee', $employee->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
+                                                    <button type="button" class="btn btn-outline-danger btn-delete"
+                                                        data-url="{{ route('delete.employee', $employee->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -89,9 +93,9 @@
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $employees->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -148,6 +152,26 @@
                     },
                     error: function(xhr) {
                         alert("Gagal update status! (" + xhr.status + ")");
+                    }
+                });
+            });
+
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
                     }
                 });
             });

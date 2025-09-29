@@ -16,9 +16,14 @@ class Employee extends Model
         'foto_paraf',
         'status',
     ];
+    public $timestamps = true;
 
     public function workspaces()
     {
         return $this->hasMany(Workspace::class, 'employee_id');
+    }
+    public function scopeActive($query)
+    {
+        return $query->where('status', 1);
     }
 }

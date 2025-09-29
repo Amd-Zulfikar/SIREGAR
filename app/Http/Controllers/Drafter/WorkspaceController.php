@@ -43,7 +43,7 @@ class WorkspaceController extends Controller
     public function workspace_add()
     {
         $customers   = Customer::all();
-        $employees   = Employee::all();
+        $employees = Employee::active()->get();
         $submissions = Submission::all();
         $varians = Varian::all();
         $engines     = Engine::all();
@@ -132,15 +132,15 @@ class WorkspaceController extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
             return redirect()->back()
-                         ->with('error', 'Terjadi kesalahan saat menyimpan workspace: ' . $e->getMessage());
-        } 
+                ->with('error', 'Terjadi kesalahan saat menyimpan workspace: ' . $e->getMessage());
+        }
     }
 
     public function workspace_edit($id)
     {
         $workspace = Workspace::with(['workspaceGambar.engineModel', 'workspaceGambar.brandModel', 'workspaceGambar.chassisModel', 'workspaceGambar.vehicleModel'])->findOrFail($id);
 
-        $employees = Employee::all();
+        $employees = Employee::active()->get();
         $customers = Customer::all();
         $submissions = Submission::all();
         $engines = Engine::all();

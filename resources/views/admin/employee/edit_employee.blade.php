@@ -97,11 +97,10 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="card-footer">
-                                        <a href="{{ route('index.employee') }}" class="btn btn-danger">Kembali</a>
-                                        <input type="submit" value="Simpan" class="btn btn-success">
-                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ route('index.employee') }}" class="btn btn-outline-danger">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>

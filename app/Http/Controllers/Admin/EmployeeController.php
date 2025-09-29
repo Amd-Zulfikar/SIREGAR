@@ -13,7 +13,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employee::paginate(5);
+        $employees = Employee::orderBy('created_at', 'desc')->get();
 
         return view('admin.employee.index', [
             'title' => 'Data Employees',
@@ -26,23 +26,6 @@ class EmployeeController extends Controller
         return view('admin.employee.add_employee');
     }
 
-    public function employee_edit($id)
-    {
-        $tbemployee = Employee::find($id);
-
-        if (!$tbemployee) {
-            return redirect()->route('index.employee')->with('error', 'Employee tidak ditemukan!');
-        }
-
-        $data = [
-            'title' => 'Edit Data Employee',
-            'employee' => $tbemployee,
-            'employees' => Employee::all(),
-        ];
-
-        return view('admin.employee.edit_employee', $data);
-    }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -51,7 +34,7 @@ class EmployeeController extends Controller
             'foto_paraf' => 'nullable|array',
             'foto_paraf.*' => 'file|mimes:jpg,jpeg,png|max:2000',
         ]);
- 
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
         }
@@ -77,17 +60,25 @@ class EmployeeController extends Controller
 
             return redirect()->route('index.employee')->with('success', 'Pegawai berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function action(Request $request, $id)
+    public function employee_edit($id)
     {
-        $employee = Employee::findOrFail($id);
-        $employee->status = $request->status;
-        $employee->save();
+        $tbemployee = Employee::find($id);
 
-        return response()->json(['success' => true, 'status' => $employee->status]);
+        if (!$tbemployee) {
+            return redirect()->route('index.employee')->with('error', 'Employee tidak ditemukan!');
+        }
+
+        $data = [
+            'title' => 'Edit Data Employee',
+            'employee' => $tbemployee,
+            'employees' => Employee::all(),
+        ];
+
+        return view('admin.employee.edit_employee', $data);
     }
 
     public function update(Request $request, $id)
@@ -136,5 +127,33 @@ class EmployeeController extends Controller
         $employee->save();
 
         return redirect()->route('index.employee')->with('success', 'Data pegawai berhasil diupdate.');
+    }
+
+    public function action(Request $request, $id)
+    {
+        $employee = Employee::findOrFail($id);
+        $employee->status = $request->status;
+        $employee->save();
+
+        return response()->json(['success' => true, 'status' => $employee->status]);
+    }
+
+    public function delete($id)
+    {
+        $employee = Employee::findOrFail($id);
+
+        // Hapus file foto_paraf dari storage
+        if ($employee->foto_paraf) {
+            $fotoFiles = json_decode($employee->foto_paraf, true);
+            foreach ($fotoFiles as $file) {
+                if (Storage::disk('public')->exists('paraf/' . $file)) {
+                    Storage::disk('public')->delete('paraf/' . $file);
+                }
+            }
+        }
+
+        $employee->delete();
+
+        return redirect()->route('index.employee')->with('success', 'Data pegawai berhasil dihapus.');
     }
 }

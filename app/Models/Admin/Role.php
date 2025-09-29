@@ -10,6 +10,7 @@ class Role extends Model
     protected $table = 'tb_roles';
 
     protected $fillable = ['name'];
+    public $timestamps = true;
 
     public function users()
     {

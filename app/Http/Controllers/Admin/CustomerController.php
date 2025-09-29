@@ -13,7 +13,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::paginate(5);
+        $customers = Customer::orderBy('created_at', 'desc')->get();
 
         return view('admin.customer.index', [
             'title' => 'Data customers',
@@ -24,23 +24,6 @@ class CustomerController extends Controller
     public function customer_add()
     {
         return view('admin.customer.add_customer');
-    }
-
-    public function customer_edit($id)
-    {
-        $tbcustomer = Customer::find($id);
-
-        if (!$tbcustomer) {
-            return redirect()->route('index.customer')->with('error', 'Customer tidak ditemukan!');
-        }
-
-        $data = [
-            'title' => 'Edit Data Customer',
-            'customer' => $tbcustomer,
-            'customers' => Customer::all(),
-        ];
-
-        return view('admin.customer.edit_customer', $data);
     }
 
     public function store(Request $request)
@@ -77,17 +60,25 @@ class CustomerController extends Controller
 
             return redirect()->route('index.customer')->with('success', 'Customer berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function action(Request $request, $id)
+    public function customer_edit($id)
     {
-        $customer = Customer::findOrFail($id);
-        $customer->status = $request->status;
-        $customer->save();
+        $tbcustomer = Customer::find($id);
 
-        return response()->json(['success' => true, 'status' => $customer->status]);
+        if (!$tbcustomer) {
+            return redirect()->route('index.customer')->with('error', 'Customer tidak ditemukan!');
+        }
+
+        $data = [
+            'title' => 'Edit Data Customer',
+            'customer' => $tbcustomer,
+            'customers' => Customer::all(),
+        ];
+
+        return view('admin.customer.edit_customer', $data);
     }
 
     public function update(Request $request, $id)
@@ -136,5 +127,14 @@ class CustomerController extends Controller
         $customer->save();
 
         return redirect()->route('index.customer')->with('success', 'Data pegawai berhasil diupdate.');
+    }
+
+    public function action(Request $request, $id)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->status = $request->status;
+        $customer->save();
+
+        return response()->json(['success' => true, 'status' => $customer->status]);
     }
 }

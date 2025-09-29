@@ -12,7 +12,7 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::paginate(5);
+        $roles = Role::orderBy('created_at', 'desc')->get();
 
         return view('admin.role.index', [
             'title' => 'Data Roles',
@@ -24,20 +24,6 @@ class RoleController extends Controller
     {
         return view('admin.role.add_role');
     }
-
-    public function role_edit($id)
-    {
-        $tbrole = Role::find($id);
-
-        if (!$tbrole) {
-            return redirect()->route('index.role')->with('error', 'Role tidak ditemukan!');
-        }
-
-        $data = ['title' => 'Edit Data Role', 'role' => $tbrole, 'roles' => Role::all()];
-
-        return view('admin.role.edit_role', $data);
-    }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -57,8 +43,21 @@ class RoleController extends Controller
 
             return redirect()->route('index.role')->with('success', 'Role berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    public function role_edit($id)
+    {
+        $tbrole = Role::find($id);
+
+        if (!$tbrole) {
+            return redirect()->route('index.role')->with('error', 'Role tidak ditemukan!');
+        }
+
+        $data = ['title' => 'Edit Data Role', 'role' => $tbrole, 'roles' => Role::all()];
+
+        return view('admin.role.edit_role', $data);
     }
 
     public function update(Request $request, string $id)
@@ -83,6 +82,20 @@ class RoleController extends Controller
             return redirect()->route('index.role')->with('success', 'Role berhasil diupdate!');
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan.');
+        }
+    }
+
+    public function delete($id)
+    {
+        try {
+            $role = Role::findOrFail($id);
+            $role->delete();
+
+            return redirect()->route('index.role')
+                ->with('success', 'Role berhasil dihapus!');
+        } catch (Exception $e) {
+            return redirect()->route('index.role')
+                ->with('error', 'Data gagal dihapus! ' . $e->getMessage());
         }
     }
 }

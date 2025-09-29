@@ -9,7 +9,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.role') }}'">Tambah Data</a>
                         </ol>
                     </div>
@@ -50,12 +50,16 @@
                                                     {{ $role->name }}
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-info btn-sm"
+                                                    <a class="btn btn-outline-info"
                                                         href="{{ route('edit.role', $role->id) }}">
                                                         <i class="fas fa-pencil-alt">
                                                         </i>
                                                         Edit
                                                     </a>
+                                                    <button type="button" class="btn btn-outline-danger btn-delete"
+                                                        data-url="{{ route('delete.role', $role->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                         </tr>
                                     @empty
@@ -72,9 +76,9 @@
                                     </tfoot>
                                 </table>
                                 <!-- Laravel Pagination -->
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $roles->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                             <!-- /.card -->
                         </div>
@@ -91,6 +95,27 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+
 
             // Toastr untuk flash session
             var successMessage = "{{ session('success') ?? '' }}";

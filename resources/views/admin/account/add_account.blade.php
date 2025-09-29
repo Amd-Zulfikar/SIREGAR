@@ -35,7 +35,7 @@
                                                 <input name="name" type="text" class="form-control"
                                                     placeholder="Masukan Nama Pengguna" required>
                                                 <small>{{ $errors->first('name') }}</small>
-                                            </div> 
+                                            </div>
                                             <div class="form-group">
                                                 <label>Pilih Role</label>
                                                 <select name="roles" class="form-control select2" style="width: 100%;">

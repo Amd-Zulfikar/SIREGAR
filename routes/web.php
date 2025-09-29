@@ -24,6 +24,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.dashboard.index');
     })->name('admin.dashboard');
 
+    // route for view controller transaction
+    Route::get('/admin/transaction', [App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('index.transaction');
+    Route::get('/admin/transaction/add', [App\Http\Controllers\Admin\TransactionController::class, 'transaction_add'])->name('add.transaction');
+
+    // route for function controller transaction
+    Route::post('/admin/transaction/store', [App\Http\Controllers\Admin\TransactionController::class, 'store'])->name('store.transaction');
+
     // route for view controller submission
     Route::get('/admin/submission', [SubmissionController::class, 'index'])->name('index.submission');
     Route::get('/admin/submission/add', [SubmissionController::class, 'submission_add'])->name('add.submission');
@@ -47,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller role
     Route::post('/admin/role/store', [RoleController::class, 'store'])->name('store.role');
     Route::post('/admin/role/update/{id}', [RoleController::class, 'update'])->name('update.role');
+    Route::get('/admin/role/delete/{id}', [RoleController::class, 'delete'])->name('delete.role');
 
     // route for view controller Employee
     Route::get('/admin/employee', [EmployeeController::class, 'index'])->name('index.employee');
@@ -57,6 +65,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/employee/update/{id}', [EmployeeController::class, 'update'])->name('update.employee');
     Route::post('/admin/employee/action/{id}', [EmployeeController::class, 'action'])
         ->name('employee.action');
+    Route::get('/admin/employee/delete/{id}', [EmployeeController::class, 'delete'])->name('delete.employee');
+
 
     // route for view controller Customer
     Route::get('/admin/customer', [CustomerController::class, 'index'])->name('index.customer');
