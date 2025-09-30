@@ -18,7 +18,7 @@ class AccountController extends Controller
 {
     public function index()
     {
-        $accounts = User::paginate(5);
+        $accounts = User::orderBy('id', 'DESC')->get();
 
         return view('admin.account.index', [
             'title' => 'Data accounts',
@@ -54,12 +54,18 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'roles' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|string|max:255',
+                'roles' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8',
+            ],
+            [
+                'email.unique' => 'Email sudah ada, silahkan gunakan email lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
@@ -76,19 +82,25 @@ class AccountController extends Controller
             ]);
 
             return redirect()->route('index.account')->with('success', 'Account berhasil ditambahkan!');
-        } catch (Exception $e) {    
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users,email,' . $id,
-            'roles'    => 'required|exists:tb_roles,id',
-            'password' => 'nullable|string|min:8',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|string|email|max:255|unique:users,email,' . $id,
+                'roles'    => 'required|exists:tb_roles,id',
+                'password' => 'nullable|string|min:8',
+            ],
+            [
+                'email.unique' => 'Email sudah ada, silahkan gunakan email lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();

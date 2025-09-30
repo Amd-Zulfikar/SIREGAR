@@ -12,7 +12,7 @@ class ChassisController extends Controller
 {
     public function index()
     {
-        $chassiss = Chassis::paginate(5);
+        $chassiss = Chassis::orderBy('created_at', 'desc')->get();
 
         return view('admin.chassis.index', [
             'title' => 'Data chassiss',
@@ -23,17 +23,24 @@ class ChassisController extends Controller
     public function chassis_add()
     {
         $data = [
-            'title' => 'Tambah Data Chassis', 
-            'chassiss' => Chassis::all()];
+            'title' => 'Tambah Data Chassis',
+            'chassiss' => Chassis::all()
+        ];
 
         return view('admin.chassis.add_chassis', $data);
     }
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_chassiss,name',
+            ],
+            [
+                'name.unique' => 'Chassis sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan! Periksa input Anda.');
@@ -48,7 +55,7 @@ class ChassisController extends Controller
 
             return redirect()->route('index.chassis')->with('success', 'Chassis berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
@@ -67,9 +74,15 @@ class ChassisController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_chassiss,name',
+            ],
+            [
+                'name.unique' => 'Chassis sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal diupdate! Periksa input Anda.');
@@ -89,7 +102,7 @@ class ChassisController extends Controller
 
             return redirect()->route('index.chassis')->with('success', 'Chassis berhasil diupdate!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak terupdate! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak terupdate! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 

@@ -5,7 +5,9 @@
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
-                    <div class="col-sm-6"></div>
+                    <div class="col-sm-6">
+                        <h1>Tambah Master Data</h1>
+                    </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -32,23 +34,31 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Pilih Engine</label>
-                                                <select name="engines" class="form-control select2" style="width: 100%;">
+                                                <select name="engines"
+                                                    class="form-control select2 @error('engines') is-invalid @enderror"
+                                                    style="width: 100%;">
                                                     <option selected disabled>Pilih Engine</option>
                                                     @foreach ($engines as $engine)
                                                         <option value="{{ $engine->id }}">{{ $engine->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <small>{{ $errors->first('engines') }}</small>
+                                                @error('engines')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                             <div class="form-group">
                                                 <label>Pilih Merk</label>
-                                                <select name="brands" class="form-control select2" style="width: 100%;">
+                                                <select name="brands"
+                                                    class="form-control select2 @error('brands') is-invalid @enderror"
+                                                    style="width: 100%;">
                                                     <option selected disabled>Pilih Merk</option>
                                                     @foreach ($brands as $brand)
                                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                                     @endforeach
                                                 </select>
-                                                <small>{{ $errors->first('brands') }}</small>
+                                                @error('brands')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
 
@@ -56,7 +66,8 @@
                                             <div class="form-group">
                                                 <div class="form-group">
                                                     <label>Pilih Chassis</label>
-                                                    <select name="chassiss" class="form-control select2"
+                                                    <select name="chassiss"
+                                                        class="form-control select2 @error('chassiss') is-invalid @enderror"
                                                         style="width: 100%;">
                                                         <option selected disabled>Pilih Chassis</option>
                                                         @foreach ($chassiss as $chassis)
@@ -64,11 +75,14 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <small>{{ $errors->first('chassiss') }}</small>
+                                                    @error('chassiss')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Pilih Jenis Kendaraan</label>
-                                                    <select name="vehicles" class="form-control select2"
+                                                    <select name="vehicles"
+                                                        class="form-control select2 @error('vehicles') is-invalid @enderror"
                                                         style="width: 100%;">
                                                         <option selected disabled>Pilih Jenis Kendaraan</option>
                                                         @foreach ($vehicles as $vehicle)
@@ -76,18 +90,22 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                    <small>{{ $errors->first('vehicles') }}</small>
+                                                    @error('vehicles')
+                                                        <small class="text-danger">{{ $message }}</small>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="card-footer me-2">
-                                        <a href="{{ route('index.mdata') }}" class="btn btn-danger">Kembali</a>
-                                        <input type="submit" value="Simpan" class="btn btn-success">
-                                    </div>
+
+                                </div>
+                                <div class="card-footer me-2">
+                                    <a href="{{ route('index.mdata') }}" class="btn btn-outline-danger mr-2">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </form>
 
             </div>
@@ -101,5 +119,12 @@
             //Initialize Select2 Elements
             $('.select2').select2()
         })
+
+        // Toastr untuk flash session
+        var successMessage = "{{ session('success') ?? '' }}";
+        var errorMessage = "{{ session('error') ?? '' }}";
+
+        if (successMessage) toastr.success(successMessage);
+        if (errorMessage) toastr.error(errorMessage);
     </script>
 @endpush

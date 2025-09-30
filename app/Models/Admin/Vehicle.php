@@ -9,12 +9,11 @@ class Vehicle extends Model
 {
     protected $table = 'tb_vehicles';
     protected $fillable = [
-        'name', 
-        'status'
+        'name',
     ];
 
-    public function mdata() 
-    { 
-        return $this->hasMany(Mdata::class, 'vehicle_id'); 
+    public function mdata()
+    {
+        return $this->hasMany(Mdata::class, 'vehicle_id');
     }
 }

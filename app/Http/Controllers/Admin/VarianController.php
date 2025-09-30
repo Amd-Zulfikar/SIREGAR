@@ -25,9 +25,14 @@ class VarianController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_varians,name',
+            ],
+            [
+                'name.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         $input = $request->all();
         Varian::create([
@@ -56,9 +61,14 @@ class VarianController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_varians,name',
+            ],
+            [
+                'name.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         $tbvarian = Varian::find($id);
         if (!$tbvarian) {

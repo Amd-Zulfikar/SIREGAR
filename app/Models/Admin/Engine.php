@@ -8,7 +8,7 @@ class Engine extends Model
 {
     protected $table = 'tb_engines';
     protected $fillable = [
-        'name', 
+        'name',
     ];
 
     public function mdata()

@@ -122,6 +122,7 @@
 
             if (successMessage) toastr.success(successMessage);
             if (errorMessage) toastr.error(errorMessage);
+
         });
     </script>
 @endpush

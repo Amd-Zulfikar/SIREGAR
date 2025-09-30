@@ -8,13 +8,11 @@ class Brand extends Model
 {
     protected $table = 'tb_brands';
     protected $fillable = [
-        'name', 
-        'status',
+        'name',
     ];
 
     public function mdata()
     {
         return $this->hasMany(Mdata::class, 'brand_id');
     }
-
 }

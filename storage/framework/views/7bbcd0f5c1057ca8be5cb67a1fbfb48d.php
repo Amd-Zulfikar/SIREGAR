@@ -1,1 +1,0 @@
-<?php /**PATH D:\CODING\REKAYASA\SIREGAR\resources\views\cheker\dashboard\index.blade.php ENDPATH**/ ?>

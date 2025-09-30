@@ -80,9 +80,9 @@
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $accounts->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

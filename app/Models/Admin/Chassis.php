@@ -8,12 +8,11 @@ class Chassis extends Model
 {
     protected $table = 'tb_chassiss';
     protected $fillable = [
-        'name', 
-        'status',
+        'name',
     ];
 
-    public function mdata() 
-    { 
-        return $this->hasMany(Mdata::class, 'chassis_id'); 
+    public function mdata()
+    {
+        return $this->hasMany(Mdata::class, 'chassis_id');
     }
 }

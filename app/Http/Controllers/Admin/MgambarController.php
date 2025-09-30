@@ -14,7 +14,7 @@ class MgambarController extends Controller
 {
     public function index()
     {
-        $mgambars = Mgambar::with('mdata')->paginate(5);
+        $mgambars = Mgambar::with('mdata')->orderBy('created_at', 'desc')->get();
 
         return view('admin.mgambar.index', [
             'title' => 'Data Gambar',
@@ -24,7 +24,7 @@ class MgambarController extends Controller
 
     public function mgambar_add()
     {
-        $mdatas = Mdata::all();
+        $mdatas = Mdata::orderBy('created_at', 'desc')->get();
         return view('admin.mgambar.add_mgambar', compact('mdatas'));
     }
     public function store(Request $request)
@@ -72,10 +72,11 @@ class MgambarController extends Controller
     public function mgambar_edit($id)
     {
         $mgambar = Mgambar::findOrFail($id);
-        $mdatas = Mdata::all();
+        $mdatas = Mdata::orderBy('created_at', 'desc')->get();
 
         return view('admin.mgambar.edit_mgambar', compact('mgambar', 'mdatas'));
     }
+
     public function update(Request $request, $id)
     {
         $mgambar = Mgambar::findOrFail($id);

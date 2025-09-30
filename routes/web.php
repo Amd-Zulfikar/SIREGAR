@@ -31,7 +31,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller transaction
     Route::post('/admin/transaction/store', [App\Http\Controllers\Admin\TransactionController::class, 'store'])->name('store.transaction');
 
-    
+
 
     // route for view controller role
     Route::get('/admin/role', [RoleController::class, 'index'])->name('index.role');
@@ -82,7 +82,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller submission
     Route::post('/admin/submission/store', [SubmissionController::class, 'store'])->name('store.submission');
     Route::post('/admin/submission/update/{id}', [SubmissionController::class, 'update'])->name('update.submission');
-    
+
     // route for function controller varian
     Route::get('/admin/varian', [App\Http\Controllers\Admin\VarianController::class, 'index'])->name('index.varian');
     Route::get('/admin/varian/add', [App\Http\Controllers\Admin\VarianController::class, 'varian_add'])->name('add.varian');
@@ -106,6 +106,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/brand', [App\Http\Controllers\Admin\BrandController::class, 'index'])->name('index.brand');
     Route::get('/admin/brand/add', [App\Http\Controllers\Admin\BrandController::class, 'brand_add'])->name('add.brand');
     Route::get('/admin/brand/edit/{id}', [App\Http\Controllers\Admin\BrandController::class, 'brand_edit'])->name('edit.brand');
+    Route::get('/admin/brand/delete/{id}', [App\Http\Controllers\Admin\BrandController::class, 'delete'])->name('delete.brand');
     // route for function controller brand
     Route::post('/admin/brand/store', [App\Http\Controllers\Admin\BrandController::class, 'store'])->name('store.brand');
     Route::post('/admin/brand/update/{id}', [App\Http\Controllers\Admin\BrandController::class, 'update'])->name('update.brand');
@@ -115,15 +116,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/chassis', [App\Http\Controllers\Admin\ChassisController::class, 'index'])->name('index.chassis');
     Route::get('/admin/chassis/add', [App\Http\Controllers\Admin\ChassisController::class, 'chassis_add'])->name('add.chassis');
     Route::get('/admin/chassis/edit/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'chassis_edit'])->name('edit.chassis');
+    Route::get('/admin/chassis/delete/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'delete'])->name('delete.chassis');
     // route for function controller chassis
     Route::post('/admin/chassis/store', [App\Http\Controllers\Admin\ChassisController::class, 'store'])->name('store.chassis');
     Route::post('/admin/chassis/update/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'update'])->name('update.chassis');
-    Route::post('/admin/chassis/action/{id}', [App\Http\Controllers\Admin\ChassisController::class, 'action'])->name('chassis.action');
 
     // route for view controller Vehicle
     Route::get('/admin/vehicle', [App\Http\Controllers\Admin\VehicleController::class, 'index'])->name('index.vehicle');
     Route::get('/admin/vehicle/add', [App\Http\Controllers\Admin\VehicleController::class, 'vehicle_add'])->name('add.vehicle');
     Route::get('/admin/vehicle/edit/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'vehicle_edit'])->name('edit.vehicle');
+    Route::get('/admin/vehicle/delete/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'delete'])->name('delete.vehicle');
     // route for function controller vehicle
     Route::post('/admin/vehicle/store', [App\Http\Controllers\Admin\VehicleController::class, 'store'])->name('store.vehicle');
     Route::post('/admin/vehicle/update/{id}', [App\Http\Controllers\Admin\VehicleController::class, 'update'])->name('update.vehicle');
@@ -133,6 +135,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/mdata', [App\Http\Controllers\Admin\MdataController::class, 'index'])->name('index.mdata');
     Route::get('/admin/mdata/add', [App\Http\Controllers\Admin\MdataController::class, 'mdata_add'])->name('add.mdata');
     Route::get('/admin/mdata/edit/{id}', [App\Http\Controllers\Admin\MdataController::class, 'mdata_edit'])->name('edit.mdata');
+    Route::get('/admin/mdata/copy/{id}', [App\Http\Controllers\Admin\MdataController::class, 'mdata_copy'])->name('copy.mdata');
+    Route::get('/admin/mdata/delete/{id}', [App\Http\Controllers\Admin\MdataController::class, 'delete'])->name('delete.mdata');
     // route for function controller mdata
     Route::post('/admin/mdata/store', [App\Http\Controllers\Admin\MdataController::class, 'store'])->name('store.mdata');
     Route::post('/admin/mdata/update/{id}', [App\Http\Controllers\Admin\MdataController::class, 'update'])->name('update.mdata');

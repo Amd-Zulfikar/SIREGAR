@@ -97,9 +97,9 @@
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
+                                {{-- <div class="mt-2">
                                     {{ $mgambars->links('pagination::bootstrap-4') }}
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,7 @@
                         alert("Gagal update status! (" + xhr.status + ")");
                     }
                 });
-            }); 
+            });
 
             // Toastr untuk flash session
             var successMessage = "{{ session('success') ?? '' }}";

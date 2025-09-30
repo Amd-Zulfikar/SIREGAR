@@ -12,7 +12,7 @@ class VehicleController extends Controller
 {
     public function index()
     {
-        $vehicles = Vehicle::paginate(5);
+        $vehicles = Vehicle::orderBy('created_at', 'desc')->get();
 
         return view('admin.vehicle.index', [
             'title' => 'Data vehicles',
@@ -25,45 +25,17 @@ class VehicleController extends Controller
         return view('admin.vehicle.add_vehicle');
     }
 
-    public function vehicle_edit($id)
-    {
-        $tbvehicle = Vehicle::find($id);
-
-        if (!$tbvehicle) {
-            return redirect()->route('index.vehicle')->with('error', 'Vehicle tidak ditemukan!');
-        }
-
-        $data = [
-            'title' => 'Edit Data Vehicle', 
-            'vehicle' => $tbvehicle, 
-            'vehicles' => Vehicle::all()];
-
-        return view('admin.vehicle.edit_vehicle', $data);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $vehicle = Vehicle::find($id);
-
-        if (!$vehicle) {
-            return redirect()->route('index.vehicle')->with('error', 'Vehicle tidak ditemukan!');
-        }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $vehicle->name = $request->input('name');
-        $vehicle->save();
-
-        return redirect()->route('index.vehicle')->with('success', 'Vehicle berhasil diperbarui!');
-    }
-
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_vehicles,name',
+            ],
+            [
+                'name.unique' => 'Jenis Kendaraan sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan! Periksa input Anda.');
@@ -78,16 +50,63 @@ class VehicleController extends Controller
 
             return redirect()->route('index.vehicle')->with('success', 'Jenis kendaraan berhasil ditambahkan!');
         } catch (Exception $e) {
-            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: '. $e->getMessage());
+            return redirect()->back()->with('error', 'Data tidak tersimpan! Terjadi kesalahan: ' . $e->getMessage());
         }
     }
 
-    public function action(Request $request, $id)
+    public function vehicle_edit($id)
     {
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->status = $request->status;
+        $tbvehicle = Vehicle::find($id);
+
+        if (!$tbvehicle) {
+            return redirect()->route('index.vehicle')->with('error', 'Vehicle tidak ditemukan!');
+        }
+
+        $data = [
+            'title' => 'Edit Data Vehicle',
+            'vehicle' => $tbvehicle,
+            'vehicles' => Vehicle::all()
+        ];
+
+        return view('admin.vehicle.edit_vehicle', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return redirect()->route('index.vehicle')->with('error', 'Vehicle tidak ditemukan!');
+        }
+
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_vehicles,name',
+            ],
+            [
+                'name.unique' => 'Jenis Kendaraan sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
+
+        $vehicle->name = $request->input('name');
         $vehicle->save();
 
-        return redirect()->route('index.vehicle')->with('success', 'Status vehicle berhasil diubah!');
+        return redirect()->route('index.vehicle')->with('success', 'Vehicle berhasil diperbarui!');
+    }
+
+    public function delete($id)
+    {
+        $vehicle = Vehicle::find($id);
+
+        if (!$vehicle) {
+            return redirect()->route('index.vehicle')->with('error', 'Vehicle tidak ditemukan!');
+        }
+
+        try {
+            $vehicle->delete();
+            return redirect()->route('index.vehicle')->with('success', 'Vehicle berhasil dihapus!');
+        } catch (Exception $e) {
+            return redirect()->route('index.vehicle')->with('error', 'Gagal menghapus vehicle! Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }

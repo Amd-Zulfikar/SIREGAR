@@ -9,8 +9,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
-                                onclick="location.href='{{ route('add.transaction') }}'">Tambah
+                            <a type="button" class="btn btn-block bg-gradient-primary" onclick="location.href='#'">Tambah
                                 Transaksi</a>
                         </ol>
                     </div>

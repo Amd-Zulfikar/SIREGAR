@@ -25,9 +25,14 @@ class SubmissionController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_submissions,name',
+            ],
+            [
+                'name.unique' => 'Pengajuan sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         $input = $request->all();
         Submission::create([
@@ -56,9 +61,14 @@ class SubmissionController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_submissions,name',
+            ],
+            [
+                'name.unique' => 'Pengajuan sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         $tbsubmission = Submission::find($id);
         if (!$tbsubmission) {

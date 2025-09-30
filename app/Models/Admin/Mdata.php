@@ -12,7 +12,6 @@ class Mdata extends Model
         'brand_id',
         'chassis_id',
         'vehicle_id',
-        'status',
     ];
 
     public function engine()
@@ -39,5 +38,4 @@ class Mdata extends Model
     {
         return $this->hasMany(Mgambar::class, 'mdata_id');
     }
-    
 }
