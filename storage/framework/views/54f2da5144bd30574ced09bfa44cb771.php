@@ -19,14 +19,14 @@
 
         <section class="content">
             <div class="container-fluid">
-                <form method="POST" action="<?php echo e(route('update.mgambar', [$mgambar->id])); ?>" enctype="multipart/form-data">
+                
+                <form method="POST" action="<?php echo e(route('store.mgambar')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
-                    <?php echo method_field('PUT'); ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-outline card-info">
                                 <div class="card-header">
-                                    <h3 class="card-title">Edit Gambar Body</h3>
+                                    <h3 class="card-title">Salin Gambar Body (Data Baru)</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
@@ -34,7 +34,17 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Pilih Data</label>
-                                                <select name="mdatas" class="form-control select2" style="width: 100%;">
+                                                
+                                                <select name="mdata_id"
+                                                    class="form-control select2 <?php $__errorArgs = ['mdata_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                                                    required>
                                                     <option selected disabled>Pilih Data</option>
                                                     <?php $__currentLoopData = $mdatas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mdata): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option value="<?php echo e($mdata->id); ?>"
@@ -47,14 +57,15 @@
                                                         </option>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
-                                                <small class="text-danger"><?php echo e($errors->first('mdatas')); ?></small>
+                                                <small class="text-danger"><?php echo e($errors->first('mdata_id')); ?></small>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Nama Body</label>
-                                                <input name="keterangans" type="text" class="form-control"
-                                                    value="<?php echo e(old('keterangans', $mgambar->keterangan)); ?>" required>
-                                                <small class="text-danger"><?php echo e($errors->first('keterangans')); ?></small>
+                                                
+                                                <input name="keterangan" type="text" class="form-control"
+                                                    value="<?php echo e(old('keterangan', $mgambar->keterangan)); ?>" required>
+                                                <small class="text-danger"><?php echo e($errors->first('keterangan')); ?></small>
                                             </div>
                                         </div>
 
@@ -68,7 +79,8 @@
                                                         class="custom-file-input" multiple>
                                                     <label class="custom-file-label" for="foto_body">Choose files</label>
                                                 </div>
-                                                <small class="text-muted">Biarkan kosong jika tidak ingin menambahkan foto
+                                                <small class="text-muted">Gambar lama tidak akan tersimpan. Silakan upload
+                                                    jika ingin menggunakan gambar
                                                     baru.</small>
                                             </div>
 
@@ -78,9 +90,9 @@
                                                 <div id="newPreviewContainer" class="d-flex flex-wrap mb-2"></div>
                                             </div>
 
-                                            <!-- Foto Lama dengan Hapus -->
+                                            <!-- Foto Lama (Hanya untuk preview visual) -->
                                             <div class="form-group">
-                                                <label>Preview Foto Lama</label>
+                                                <label>Preview Foto Lama (Tidak Tersimpan)</label>
                                                 <div id="oldPreviewContainer" class="d-flex flex-wrap">
                                                     <?php if($mgambar->foto_body): ?>
                                                         <?php $__currentLoopData = $mgambar->foto_body; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -89,13 +101,7 @@
                                                                     class="img-thumbnail old-preview-img"
                                                                     style="width:80px; height:80px; object-fit:cover; cursor:pointer;"
                                                                     data-src="<?php echo e(asset('storage/body/' . $file)); ?>">
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 remove-old-img-btn"
-                                                                    data-filename="<?php echo e($file); ?>">
-                                                                    &times;
-                                                                </button>
-                                                                <input type="hidden" name="existing_files[]"
-                                                                    value="<?php echo e($file); ?>">
+                                                                
                                                             </div>
                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     <?php else: ?>
@@ -109,7 +115,7 @@
 
                                 <div class="card-footer">
                                     <a href="<?php echo e(route('index.mgambar')); ?>" class="btn btn-outline-danger">Kembali</a>
-                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
+                                    <input type="submit" value="Copy & Paste" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -156,6 +162,14 @@
             $('#foto_body').on('change', function() {
                 let files = this.files;
                 $('#newPreviewContainer').empty(); // hapus preview lama
+
+                // Perbarui label custom file
+                let fileNames = [];
+                for (let i = 0; i < files.length; i++) {
+                    fileNames.push(files[i].name);
+                }
+                $(this).next('.custom-file-label').html(fileNames.join(', ') || 'Choose files');
+
                 for (let i = 0; i < files.length; i++) {
                     let reader = new FileReader();
                     reader.onload = function(e) {
@@ -179,8 +193,15 @@
                     reader.readAsDataURL(files[i]);
                 }
             });
+
+            // Toastr untuk flash session
+            var successMessage = "<?php echo e(session('success') ?? ''); ?>";
+            var errorMessage = "<?php echo e(session('error') ?? ''); ?>";
+
+            if (successMessage) toastr.success(successMessage);
+            if (errorMessage) toastr.error(errorMessage);
         });
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/admin/mgambar/edit_mgambar.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/admin/mgambar/copy_mgambar.blade.php ENDPATH**/ ?>

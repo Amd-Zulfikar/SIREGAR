@@ -6,13 +6,13 @@
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
                             <a type="button" class="btn btn-block btn-outline-primary"
-                                onclick="location.href='<?php echo e(route('add.mgambar')); ?>'">Tambah Data</a>
+                                onclick="location.href='<?php echo e(route('add.employee')); ?>'">Tambah Data</a>
                         </ol>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Master Gambar</li>
+                            <li class="breadcrumb-item active">Employee</li>
                         </ol>
                     </div>
                 </div>
@@ -25,69 +25,67 @@
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-edit"></i>Gambar Master</h3>
+                                <h3 class="card-title"><i class="fas fa-edit"></i> Data Pegawai</h3>
                             </div>
                             <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Engine</th>
-                                            <th>Merk</th>
-                                            <th>Chassis</th>
-                                            <th>Vehicle</th>
-                                            <th>Jenis Body</th>
-                                            <th>Gambar Body</th>
+                                            <th>Pegawai</th>
+                                            <th>Contact</th>
+                                            <th>Paraf</th>
+                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
-                                        <?php $__empty_1 = true; $__currentLoopData = $mgambars; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mgambar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                        <?php $__empty_1 = true; $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employee): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                             <tr>
-                                                <td><?php echo e($mgambar->mdata->engine->name ?? '-'); ?></td>
-                                                <td><?php echo e($mgambar->mdata->brand->name ?? '-'); ?></td>
-                                                <td><?php echo e($mgambar->mdata->chassis->name ?? '-'); ?></td>
-                                                <td><?php echo e($mgambar->mdata->vehicle->name ?? '-'); ?></td>
-                                                <td><?php echo e($mgambar->keterangan); ?></td>
+                                                <td><?php echo e($employee->name); ?></td>
+                                                <td><?php echo e($employee->contact); ?></td>
                                                 <td>
-                                                    <?php if($mgambar->foto_body): ?>
-                                                        <?php $__currentLoopData = $mgambar->foto_body; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                            <img src="<?php echo e(asset('storage/body/' . $file)); ?>" alt="Foto Body"
+                                                    <?php if($employee->foto_paraf): ?>
+                                                        <?php $files = json_decode($employee->foto_paraf, true); ?>
+                                                        <?php $__currentLoopData = $files; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <img src="<?php echo e(asset('storage/paraf/' . $file)); ?>"
+                                                                style="width:50px; height:50px; object-fit:cover; cursor:pointer;"
                                                                 class="img-thumbnail preview-img"
-                                                                style="width:100px; margin:5px; cursor:pointer;"
-                                                                data-src="<?php echo e(asset('storage/body/' . $file)); ?>">
+                                                                data-src="<?php echo e(asset('storage/paraf/' . $file)); ?>">
+                                                            <!-- MODIFIED -->
                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                     <?php else: ?>
-                                                        <span class="text-muted">No Image</span>
+                                                        <span>Tidak ada file</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-light btn-sm"
-                                                        href="<?php echo e(route('copy.mgambar', $mgambar->id)); ?>">
-                                                        <i class="fa-solid fa-copy"></i> Copas
-                                                    </a>
+                                                    <input type="checkbox" class="status-switch"
+                                                        data-id="<?php echo e($employee->id); ?>" name="status"
+                                                        <?php echo e($employee->status ? 'checked' : ''); ?> data-bootstrap-switch
+                                                        data-off-color="danger" data-on-color="success">
+                                                </td>
+                                                <td>
                                                     <a class="btn btn-info btn-sm"
-                                                        href="<?php echo e(route('edit.mgambar', $mgambar->id)); ?>">
+                                                        href="<?php echo e(route('edit.employee', $employee->id)); ?>">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
                                                     <button type="button" class="btn btn-danger btn-sm btn-delete"
-                                                        data-url="<?php echo e(route('delete.mgambar', $mgambar->id)); ?>">
+                                                        data-url="<?php echo e(route('delete.employee', $employee->id)); ?>">
                                                         <i class="fas fa-trash"></i> Delete
                                                     </button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                                            
+                                            <tr>
+                                                <td colspan="4">Data Not Found!</td>
+                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Engine</th>
-                                            <th>Merk</th>
-                                            <th>Chassis</th>
-                                            <th>Vehicle</th>
-                                            <th>Jenis Body</th>
-                                            <th>Gambar Body</th>
+                                            <th>Pegawai</th>
+                                            <th>Contact</th>
+                                            <th>Paraf</th>
+                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
@@ -126,6 +124,34 @@
                 $('#modalPreview').modal('show');
             });
 
+            // 🔥 Inisialisasi bootstrapSwitch
+            $("input[data-bootstrap-switch]").each(function() {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
+            });
+
+            // 🔥 Event ON/OFF
+            $(document).on('switchChange.bootstrapSwitch', '.status-switch', function(event, state) {
+                let id = $(this).data('id');
+                let newStatus = state ? 1 : 0;
+
+                $.ajax({
+                    url: "<?php echo e(url('admin/employee/action')); ?>/" + id,
+                    method: "POST",
+                    data: {
+                        status: newStatus,
+                        _token: "<?php echo e(csrf_token()); ?>"
+                    },
+                    success: function(res) {
+                        if (res.success) {
+                            console.log("Status updated:", res.status);
+                        }
+                    },
+                    error: function(xhr) {
+                        alert("Gagal update status! (" + xhr.status + ")");
+                    }
+                });
+            });
+
             $('.btn-delete').click(function(e) {
                 e.preventDefault();
                 let url = $(this).data('url');
@@ -156,4 +182,4 @@
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/admin/mgambar/index.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/admin/employee/index.blade.php ENDPATH**/ ?>

@@ -108,6 +108,13 @@
             //Initialize Select2 Elements
             $('.select2').select2()
         })
+
+        // Toastr untuk flash session
+        var successMessage = "<?php echo e(session('success') ?? ''); ?>";
+        var errorMessage = "<?php echo e(session('error') ?? ''); ?>";
+
+        if (successMessage) toastr.success(successMessage);
+        if (errorMessage) toastr.error(errorMessage);
     </script>
 <?php $__env->stopPush(); ?>
 

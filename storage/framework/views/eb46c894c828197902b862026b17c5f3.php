@@ -5,7 +5,8 @@
             <div class="container-fluid">
                 <div class="col-12 col-sm-12">
                     <div>
-                        <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary">KEMBALI</a>
+                        <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-circle-left"></i> Kembali</a>
                     </div>
                     <br>
                     <div class="card card-primary card-outline card-outline-tabs">
@@ -62,12 +63,12 @@
                                     </div>
                                 </div>
 
-                                <!-- Tab Detail Gambar (isi kolom dulu: max 4 per kolom; 4 kolom per blok) -->
+
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
 
                                     <?php
-                                        // normalisasi input jadi array
+                                        // normalisasi input jadi array (logika ini tetap dipertahankan)
                                         if (is_null($images)) {
                                             $imagesArr = [];
                                         } elseif (is_array($images)) {
@@ -82,46 +83,32 @@
                                         }
 
                                         $total = count($imagesArr);
-                                        $maxPerCol = 4; // maksimal 4 gambar per kolom (vertikal)
-                                        $colsPerBlock = 4; // 4 kolom per blok (seperti contoh)
-                                        $blockSize = $maxPerCol * $colsPerBlock; // 16
-                                        $blocks = $total ? array_chunk($imagesArr, $blockSize) : [];
                                     ?>
 
                                     <div class="container-fluid">
                                         <?php if($total === 0): ?>
                                             <div class="text-muted">Tidak ada gambar.</div>
                                         <?php else: ?>
-                                            <?php $__currentLoopData = $blocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $block): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <div class="row mb-4">
-                                                    <?php for($col = 0; $col < $colsPerBlock; $col++): ?>
-                                                        <div
-                                                            class="col-6 col-md-4 col-lg-3 d-flex flex-column align-items-center">
-                                                            <?php for($row = 0; $row < $maxPerCol; $row++): ?>
-                                                                <?php
-                                                                    $index = $col * $maxPerCol + $row;
-                                                                ?>
-
-                                                                <?php if(isset($block[$index])): ?>
-                                                                    <div class="mb-3 w-100 d-flex justify-content-center">
-                                                                        <img src="<?php echo e(asset($block[$index])); ?>"
-                                                                            class="img-fluid overlay-img"
-                                                                            data-preview="<?php echo e(asset($block[$index])); ?>"
-                                                                            alt="Overlay Image">
-                                                                    </div>
-                                                                <?php endif; ?>
-                                                            <?php endfor; ?>
+                                            
+                                            <div class="row">
+                                                
+                                                <div class="col-12 d-flex flex-column align-items-center">
+                                                    <?php $__currentLoopData = $imagesArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imagePath): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        
+                                                        <div class="mb-3 w-75 w-md-50 d-flex justify-content-center">
+                                                            <img src="<?php echo e(asset($imagePath)); ?>" class="img-fluid overlay-img"
+                                                                data-preview="<?php echo e(asset($imagePath)); ?>" alt="Overlay Image">
                                                         </div>
-                                                    <?php endfor; ?>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </div>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
 
                                     <div class="mb-3 d-flex justify-content-between align-items-center">
                                         <a href="<?php echo e(route('export.overlay.workspace', $workspace->id)); ?>" target="_blank"
                                             class="btn btn-danger">
-                                            <i class="fa-solid fa-file-pdf"></i></i>
+                                            <i class="fa-solid fa-file-pdf"></i>Download
                                         </a>
                                     </div>
                                 </div>

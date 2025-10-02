@@ -87,6 +87,14 @@
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item has-treeview ">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fa-solid fa-cart-shopping"></i>
+                                <p>
+                                    Transaksi
+                                </p>
+                            </a>
+                        </li>
                         <li
                             class="nav-item has-treeview {{ request()->routeIs('index.workspace') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
@@ -117,7 +125,7 @@
                 <a href="#" class="btn btn-link"><i class="fa-solid fa-user-gear"></i></a>
                 <a href="#" class="btn btn-secondary hide-on-collapse pos-right"
                     onclick="event.preventDefault(); document.getElementById('logout-form-admin').submit();"><i
-                        class="fa-solid fa-right-from-bracket"></i></a>
+                        class="fa-solid fa-right-from-bracket"></i> Logout</a>
             </div>
             <form id="logout-form-admin" action="{{ route('logout') }}" method="POST" style="display:none;">
                 @csrf

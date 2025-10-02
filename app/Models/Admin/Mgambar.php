@@ -13,7 +13,6 @@ class Mgambar extends Model
         'mdata_id',
         'foto_body',
         'keterangan',
-        'status',
     ];
 
     protected $casts = [
@@ -25,7 +24,6 @@ class Mgambar extends Model
         return $this->belongsTo(Mdata::class, 'mdata_id');
     }
 
-    // Relasi ke WorkspaceGambar
     public function workspaceGambar()
     {
         return $this->hasMany(WorkspaceGambar::class, 'mgambar_id');

@@ -7,7 +7,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='{{ route('add.mgambar') }}'">Tambah Data</a>
                         </ol>
                     </div>
@@ -39,7 +39,6 @@
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
                                             <th>Gambar Body</th>
-                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -65,16 +64,18 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <input type="checkbox" class="status-switch"
-                                                        data-id="{{ $mgambar->id }}" name="status"
-                                                        {{ $mgambar->status ? 'checked' : '' }} data-bootstrap-switch
-                                                        data-off-color="danger" data-on-color="success">
-                                                </td>
-                                                <td>
+                                                    <a class="btn btn-light btn-sm"
+                                                        href="{{ route('copy.mgambar', $mgambar->id) }}">
+                                                        <i class="fa-solid fa-copy"></i> Copas
+                                                    </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.mgambar', $mgambar->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-url="{{ route('delete.mgambar', $mgambar->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @empty
@@ -91,7 +92,6 @@
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
                                             <th>Gambar Body</th>
-                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
@@ -108,7 +108,7 @@
         </section>
 
         <!-- Modal Preview -->
-        <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true"> <!-- MODIFIED -->
+        <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
                     <div class="modal-body p-0">
@@ -132,30 +132,22 @@
                 $('#modalPreview').modal('show');
             });
 
-            // 🔥 Inisialisasi bootstrapSwitch
-            $("input[data-bootstrap-switch]").each(function() {
-                $(this).bootstrapSwitch('state', $(this).prop('checked'));
-            });
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
 
-            // 🔥 Event ON/OFF
-            $(document).on('switchChange.bootstrapSwitch', '.status-switch', function(event, state) {
-                let id = $(this).data('id');
-                let newStatus = state ? 1 : 0;
-
-                $.ajax({
-                    url: "{{ url('admin/mgambar/action') }}/" + id,
-                    method: "POST",
-                    data: {
-                        status: newStatus,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(res) {
-                        if (res.success) {
-                            console.log("Status updated:", res.status);
-                        }
-                    },
-                    error: function(xhr) {
-                        alert("Gagal update status! (" + xhr.status + ")");
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
                     }
                 });
             });

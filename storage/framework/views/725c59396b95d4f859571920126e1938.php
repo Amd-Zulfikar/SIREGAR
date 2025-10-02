@@ -73,8 +73,8 @@
                                     </div>
                                 </div>
                                 <div class="card-footer me-2">
-                                    <a href="<?php echo e(route('index.mgambar')); ?>" class="btn btn-danger">Kembali</a>
-                                    <input type="submit" value="Simpan" class="btn btn-success">
+                                    <a href="<?php echo e(route('index.mgambar')); ?>" class="btn btn-outline-danger">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -129,7 +129,7 @@
                     reader.readAsDataURL(file);
                 });
             }
-        }); 
+        });
     </script>
 <?php $__env->stopPush(); ?>
 

@@ -70,11 +70,11 @@
                                                 <td>{{ $workspace->submission->name ?? '-' }}</td>
                                                 <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
                                                 <td>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.workspace', $workspace->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="{{ route('overlay.workspace', $workspace->id) }}">
                                                         <i class="fas fa-eye"></i> Preview
                                                     </a>

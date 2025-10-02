@@ -23,31 +23,26 @@ class Workspace extends Model
         'jumlah_gambar',
     ];
 
-    // Relasi ke Customer
     public function customer()
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    // Relasi ke Employee (Drafter)
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
     }
 
-    // Relasi ke Submission
     public function submission()
     {
         return $this->belongsTo(Submission::class, 'submission_id');
     }
 
-    // Relasi ke Varian
     public function varian()
     {
         return $this->belongsTo(Varian::class, 'varian_id');
     }
 
-    // Relasi ke WorkspaceGambar (multi-gambar)
     public function workspaceGambar()
     {
         return $this->hasMany(WorkspaceGambar::class, 'workspace_id', 'id');

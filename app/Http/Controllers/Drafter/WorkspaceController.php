@@ -25,7 +25,6 @@ use Intervention\Image\Drivers\Imagick\Driver as ImagickDriver;
 
 class WorkspaceController extends Controller
 {
-    // List workspace
     public function index()
     {
         $workspaces = Workspace::with([
@@ -39,14 +38,13 @@ class WorkspaceController extends Controller
         return view('drafter.workspace.index', compact('workspaces'));
     }
 
-    // Add workspace form
     public function workspace_add()
     {
-        $customers   = Customer::active()->get();
-        $employees = Employee::active()->get();
-        $submissions = Submission::all();
-        $varians = Varian::all();
-        $engines     = Engine::all();
+        $customers   = Customer::active()->orderBy('name', 'asc')->get();
+        $employees = Employee::active()->orderBy('name', 'asc')->get();
+        $submissions = Submission::orderBy('name', 'asc')->get();
+        $varians = Varian::orderBy('name', 'asc')->get();
+        $engines     = Engine::orderBy('name', 'asc')->get();
 
         return view('drafter.workspace.add_workspace', compact(
             'customers',
@@ -57,7 +55,6 @@ class WorkspaceController extends Controller
         ));
     }
 
-    // Store workspace
     public function store(Request $request)
     {
         try {
@@ -70,7 +67,7 @@ class WorkspaceController extends Controller
             ]);
 
             // ambil tanggal sekarang
-            $todayDate = now()->format('dmy'); // contoh: 24/09/2025
+            $todayDate = now()->format('dmy');
 
             // cari transaksi terakhir di hari ini
             $lastWorkspace = Workspace::whereDate('created_at', now()->toDateString())
@@ -80,16 +77,12 @@ class WorkspaceController extends Controller
             // tentuin nomor urut
             $nextNumber = 1;
             if ($lastWorkspace) {
-                // ambil 4 digit terakhir dari no_transaksi
                 $lastNo = (int) substr($lastWorkspace->no_transaksi, -4);
                 $nextNumber = $lastNo + 1;
             }
 
             // format nomor transaksi
             $noTransaksi = 'RKS-' . $todayDate . '' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-
-            // debug log (bisa dihapus setelah ok)
-            Log::info('Rincian diterima', ['rincian' => $request->input('rincian')]);
 
             $workspace = Workspace::create([
                 'employee_id'   => $request->employee_id,
@@ -103,13 +96,12 @@ class WorkspaceController extends Controller
             $rincian = $request->input('rincian', []);
 
             foreach ($rincian as $index => $row) {
-                // Pastikan row adalah array (jika datang sebagai object dari JS)
+
                 $row = (array) $row;
 
-                // Jika ingin validasi per-row, bisa cek di sini
                 if (empty($row['engine']) || empty($row['brand']) || empty($row['chassis']) || empty($row['vehicle']) || empty($row['keterangan'])) {
                     Log::warning("Skipping rincian index {$index} karena data kurang", $row);
-                    continue; // atau kembalikan error jika wajib
+                    continue;
                 }
 
                 $workspace->workspaceGambar()->create([
@@ -140,11 +132,11 @@ class WorkspaceController extends Controller
     {
         $workspace = Workspace::with(['workspaceGambar.engineModel', 'workspaceGambar.brandModel', 'workspaceGambar.chassisModel', 'workspaceGambar.vehicleModel'])->findOrFail($id);
 
-        $employees = Employee::active()->get();
-        $customers = Customer::all();
-        $submissions = Submission::all();
-        $engines = Engine::all();
-        $varians = Varian::all();
+        $employees = Employee::active()->orderBy('name', 'asc')->get();
+        $customers = Customer::active()->orderBy('name', 'asc')->get();
+        $submissions = Submission::orderBy('name', 'asc')->get();
+        $engines = Engine::orderBy('name', 'asc')->get();
+        $varians = Varian::orderBy('name', 'asc')->get();
 
         $rincianJs = $workspace->workspaceGambar->map(function ($g) use ($workspace) {
             $keteranganText = $g->keterangan;
@@ -167,14 +159,12 @@ class WorkspaceController extends Controller
                 'halaman_gambar' => $g->halaman_gambar,
                 'jumlah_gambar' => $g->jumlah_gambar,
 
-                // Workspace-level (supaya bisa dipakai saat checkbox dipilih)
                 'submission_id' => $workspace->submission_id ?? null,
                 'employee_id'   => $workspace->employee_id ?? null,
                 'customer_id'   => $workspace->customer_id ?? null,
                 'varian_id'     => $g->varian_id,
                 'varianText'    => optional($g->varian)->name ?? '-',
 
-                // Foto
                 'fotoBody'      => is_string($g->foto_body)
                     ? json_decode($g->foto_body, true) ?? []
                     : ($g->foto_body ?? []),
@@ -197,19 +187,15 @@ class WorkspaceController extends Controller
     {
         $workspace = Workspace::findOrFail($id);
 
-        // === Update data utama ===
         $workspace->employee_id   = $request->employee_id   ?? $workspace->employee_id;
         $workspace->customer_id   = $request->customer_id   ?? $workspace->customer_id;
         $workspace->submission_id = $request->submission_id ?? $workspace->submission_id;
         $workspace->varian_id     = $request->varian_id     ?? $workspace->varian_id;
 
-        // === Ambil data rincian dari request ===
         $rincians = $request->rincian ?? [];
 
-        // === Hapus semua rincian lama (replace full) ===
         $workspace->workspaceGambar()->delete();
 
-        // === Simpan rincian baru ===
         foreach ($rincians as $r) {
             $workspace->workspaceGambar()->create([
                 'halaman_gambar' => $r['halaman_gambar'] ?? null,
@@ -224,7 +210,6 @@ class WorkspaceController extends Controller
             ]);
         }
 
-        // === Hitung ulang total jumlah gambar workspace ===
         $workspace->jumlah_gambar = collect($rincians)
             ->sum(fn($r) => isset($r['jumlah_gambar']) ? (int) $r['jumlah_gambar'] : 0);
 
@@ -252,7 +237,6 @@ class WorkspaceController extends Controller
         ]);
     }
 
-    // Export overlay ke PDF (satu gambar = satu PDF, lalu zip)
     public function exportOverlayPDF($id)
     {
         $workspace = Workspace::with([
@@ -271,20 +255,18 @@ class WorkspaceController extends Controller
             return back()->with('error', 'Tidak ada gambar overlay untuk diexport.');
         }
 
-        // Nama ZIP berdasarkan workspaceGambar pertama
         $gambarFirst = $workspace->workspaceGambar->first();
         $zipName = trim(
             ($gambarFirst->mdata->brand->name ?? '-') . ' ' .
                 ($gambarFirst->mdata->chassis->name ?? '-') . ' ' .
                 ($gambarFirst->mdata->vehicle->name ?? '-')
         );
-        $zipName = preg_replace('/[^A-Za-z0-9_\- ]/', '', $zipName); // bersihkan
+        $zipName = preg_replace('/[^A-Za-z0-9_\- ]/', '', $zipName);
         if ($zipName === '' || $zipName === '-') {
             $zipName = "workspace_{$workspace->id}";
         }
         $zipPath = storage_path("app/public/{$zipName}.zip");
 
-        // Temp folder untuk PDF
         $tempDir = storage_path('app/public/tmp_pdf');
         if (!file_exists($tempDir)) {
             mkdir($tempDir, 0777, true);
@@ -311,7 +293,7 @@ class WorkspaceController extends Controller
         $zip = new \ZipArchive();
         if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
             foreach ($pdfFiles as $file) {
-                $zip->addFile($file, basename($file)); // pakai 01.pdf, 02.pdf, dst
+                $zip->addFile($file, basename($file));
             }
             $zip->close();
         }
@@ -383,16 +365,13 @@ class WorkspaceController extends Controller
                     $font->color('#000000');
                 };
 
-                // =======================
-                // Build halaman / jumlah
-                // =======================
+
                 $halaman = $gambar->halaman_gambar ? str_pad($gambar->halaman_gambar, 2, '0', STR_PAD_LEFT) : '-';
                 $jumlah  = $workspace->jumlah_gambar ? str_pad($workspace->jumlah_gambar, 2, '0', STR_PAD_LEFT) : '-';
                 $halamanJumlah = "{$halaman} / {$jumlah}";
 
-                // =======================
+
                 // Mapping posisi overlay
-                // =======================
                 $overlays = [
                     [
                         'text' => $workspace->customer->name ?? '-',
@@ -441,7 +420,6 @@ class WorkspaceController extends Controller
                         'size_percent' => 0.006,
                         'align' => 'center',
                     ],
-                    // halaman gambar asli (opsional ditampilkan)
                     [
                         'text' => $halaman,
                         'x' => 1015,
@@ -449,7 +427,6 @@ class WorkspaceController extends Controller
                         'size_percent' => 0.010,
                         'align' => 'center',
                     ],
-                    // gabungan "halaman / jumlah"
                     [
                         'text' => $halamanJumlah,
                         'x'    => 1025,
@@ -473,9 +450,7 @@ class WorkspaceController extends Controller
                     });
                 }
 
-                // =======================
                 // Paraf Drafter
-                // =======================
                 $fotoParaf = $workspace->employee->foto_paraf ?? null;
                 if ($fotoParaf) {
                     if (Str::startsWith($fotoParaf, '[')) {
@@ -496,9 +471,7 @@ class WorkspaceController extends Controller
                     }
                 }
 
-                // =======================
                 // Paraf Customer
-                // =======================
                 $fotoParaf = $workspace->customer->foto_paraf ?? null;
                 if ($fotoParaf) {
                     if (Str::startsWith($fotoParaf, '[')) {
@@ -533,17 +506,6 @@ class WorkspaceController extends Controller
         return $overlayedImages;
     }
 
-
-
-
-
-
-
-
-
-
-
-    // AJAX get brands by engine
     public function getBrands(Request $request)
     {
         $brands = Mdata::where('engine_id', $request->engine_id)
@@ -556,7 +518,6 @@ class WorkspaceController extends Controller
         return response()->json($brands);
     }
 
-    // AJAX get chassiss by brand
     public function getChassiss(Request $request)
     {
         $chassiss = Mdata::where('brand_id', $request->brand_id)
@@ -569,7 +530,6 @@ class WorkspaceController extends Controller
         return response()->json($chassiss);
     }
 
-    // AJAX get vehicles by chassis
     public function getVehicles(Request $request)
     {
         $vehicles = Mdata::where('chassis_id', $request->chassis_id)
@@ -582,14 +542,12 @@ class WorkspaceController extends Controller
         return response()->json($vehicles);
     }
 
-    // AJAX get keterangans by vehicle
     public function getKeterangans(Request $request)
     {
         $mgambars = Mgambar::whereHas('mdata', function ($q) use ($request) {
             $q->where('vehicle_id', $request->vehicle_id);
         })->get(['id', 'keterangan', 'foto_body']);
 
-        // Cast sudah otomatis, cukup pastikan foto_body array
         $mgambars->transform(function ($item) {
             if (!is_array($item->foto_body)) {
                 $item->foto_body = $item->foto_body ? [$item->foto_body] : [];

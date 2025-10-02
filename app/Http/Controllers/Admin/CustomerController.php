@@ -28,12 +28,18 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'direktur' => 'required|string|max:255',
-            'foto_paraf' => 'nullable|array',
-            'foto_paraf.*' => 'file|mimes:jpg,jpeg,png|max:2000',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_customers,name',
+                'direktur' => 'required|string|max:255',
+                'foto_paraf' => 'nullable|array',
+                'foto_paraf.*' => 'file|mimes:jpg,jpeg,png|max:2000',
+            ],
+            [
+                'name.unique' => 'Customer sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan!');
@@ -86,11 +92,16 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
 
         // Validasi input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'direktur' => 'required|string|max:255',
-            'foto_paraf.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|unique:tb_customers,name',
+                'direktur' => 'required|string|max:255',
+                'foto_paraf.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            ],
+            [
+                'name.unique' => 'Customer sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         // Update data
         $customer->name = $request->name;

@@ -27,6 +27,7 @@ class MgambarController extends Controller
         $mdatas = Mdata::orderBy('created_at', 'desc')->get();
         return view('admin.mgambar.add_mgambar', compact('mdatas'));
     }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -58,7 +59,6 @@ class MgambarController extends Controller
                 'mdata_id'   => $request->mdata_id,
                 'keterangan' => $request->keterangan,
                 'foto_body'  => $fotoFiles, // array langsung, Laravel cast ke JSON
-                'status'     => 1,
             ]);
 
             return redirect()->route('index.mgambar')
@@ -69,6 +69,14 @@ class MgambarController extends Controller
         }
     }
 
+    public function mgambar_copy($id)
+    {
+        $mgambar = Mgambar::findOrFail($id);
+        $mdatas = Mdata::orderBy('created_at', 'desc')->get();
+
+        return view('admin.mgambar.copy_mgambar', compact('mgambar', 'mdatas'));
+    }
+
     public function mgambar_edit($id)
     {
         $mgambar = Mgambar::findOrFail($id);
@@ -76,6 +84,8 @@ class MgambarController extends Controller
 
         return view('admin.mgambar.edit_mgambar', compact('mgambar', 'mdatas'));
     }
+
+
 
     public function update(Request $request, $id)
     {
@@ -122,12 +132,22 @@ class MgambarController extends Controller
             ->with('success', 'Data gambar berhasil diperbarui.');
     }
 
-    public function action(Request $request, $id)
+    public function delete($id)
     {
         $mgambar = Mgambar::findOrFail($id);
-        $mgambar->status = $request->status;
-        $mgambar->save();
 
-        return response()->json(['success' => true, 'status' => $mgambar->status]);
+        // Hapus file gambar dari storage
+        if ($mgambar->foto_body) {
+            foreach ($mgambar->foto_body as $file) {
+                if (Storage::disk('public')->exists('body/' . $file)) {
+                    Storage::disk('public')->delete('body/' . $file);
+                }
+            }
+        }
+
+        $mgambar->delete();
+
+        return redirect()->route('index.mgambar')
+            ->with('success', 'Data gambar berhasil dihapus.');
     }
 }

@@ -138,9 +138,9 @@
                             </ul>
                         </li>
                         <li
-                            class="nav-item has-treeview <?php echo e(request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata') ? 'menu-open' : ''); ?>">
+                            class="nav-item has-treeview <?php echo e(request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata', 'copy.mdata') ? 'menu-open' : ''); ?>">
                             <a href="javascript:void(0)"
-                                class="nav-link <?php echo e(request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata') ? 'active' : ''); ?>">
+                                class="nav-link <?php echo e(request()->routeIs('index.submission', 'add.submission', 'edit.submission', 'index.varian', 'add.varian', 'edit.varian', 'index.engine', 'add.engine', 'edit.engine', 'index.brand', 'add.brand', 'edit.brand', 'index.chassis', 'add.chassis', 'edit.chassis', 'index.vehicle', 'add.vehicle', 'edit.vehicle', 'index.mdata', 'add.mdata', 'edit.mdata', 'copy.mdata') ? 'active' : ''); ?>">
                                 <i class="nav-icon fa-solid fa-file-signature"></i>
                                 <p>
                                     Data Master
@@ -192,7 +192,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a href="<?php echo e(route('index.mdata')); ?>"
-                                        class="nav-link <?php echo e(request()->routeIs('index.mdata', 'add.mdata', 'edit.mdata') ? 'active' : ''); ?>">
+                                        class="nav-link <?php echo e(request()->routeIs('index.mdata', 'add.mdata', 'edit.mdata', 'copy.mdata') ? 'active' : ''); ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Data</p>
                                     </a>
@@ -201,9 +201,9 @@
                         </li>
                         <li class="nav-header">INPUT GAMBAR</li>
                         <li
-                            class="nav-item has-treeview <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'menu-open' : ''); ?>">
+                            class="nav-item has-treeview <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'menu-open' : ''); ?>">
                             <a href="javascript:void(0)"
-                                class="nav-link <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'active' : ''); ?>">
+                                class="nav-link <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'active' : ''); ?>">
                                 <i class="nav-icon fa-solid fa-images"></i>
                                 <p>
                                     Gambar Master
@@ -213,7 +213,7 @@
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="<?php echo e(route('index.mgambar')); ?>"
-                                        class="nav-link <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar') ? 'active' : ''); ?>">
+                                        class="nav-link <?php echo e(request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'active' : ''); ?>">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Master Gambar</p>
                                     </a>
@@ -271,7 +271,7 @@
     <!-- AdminLTE App -->
     <script src="<?php echo e(asset('adminlte/dist/js/adminlte.min.js')); ?>"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="<?php echo e(asset('adminlte/dist/js/demo.js')); ?>"></script>
+    
     <!-- DataTables  & Plugins -->
     <script src="<?php echo e(asset('adminlte/plugins/datatables/jquery.dataTables.min.js')); ?>"></script>
     <script src="<?php echo e(asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')); ?>"></script>

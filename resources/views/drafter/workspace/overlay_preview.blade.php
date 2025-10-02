@@ -7,7 +7,8 @@
             <div class="container-fluid">
                 <div class="col-12 col-sm-12">
                     <div>
-                        <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary">KEMBALI</a>
+                        <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary"><i
+                                class="fa-solid fa-circle-left"></i> Kembali</a>
                     </div>
                     <br>
                     <div class="card card-primary card-outline card-outline-tabs">
@@ -60,12 +61,12 @@
                                     </div>
                                 </div>
 
-                                <!-- Tab Detail Gambar (isi kolom dulu: max 4 per kolom; 4 kolom per blok) -->
+
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
 
                                     @php
-                                        // normalisasi input jadi array
+
                                         if (is_null($images)) {
                                             $imagesArr = [];
                                         } elseif (is_array($images)) {
@@ -80,46 +81,30 @@
                                         }
 
                                         $total = count($imagesArr);
-                                        $maxPerCol = 4; // maksimal 4 gambar per kolom (vertikal)
-                                        $colsPerBlock = 4; // 4 kolom per blok (seperti contoh)
-                                        $blockSize = $maxPerCol * $colsPerBlock; // 16
-                                        $blocks = $total ? array_chunk($imagesArr, $blockSize) : [];
                                     @endphp
 
                                     <div class="container-fluid">
                                         @if ($total === 0)
                                             <div class="text-muted">Tidak ada gambar.</div>
                                         @else
-                                            @foreach ($blocks as $block)
-                                                <div class="row mb-4">
-                                                    @for ($col = 0; $col < $colsPerBlock; $col++)
-                                                        <div
-                                                            class="col-6 col-md-4 col-lg-3 d-flex flex-column align-items-center">
-                                                            @for ($row = 0; $row < $maxPerCol; $row++)
-                                                                @php
-                                                                    $index = $col * $maxPerCol + $row;
-                                                                @endphp
+                                            <div class="row">
 
-                                                                @if (isset($block[$index]))
-                                                                    <div class="mb-3 w-100 d-flex justify-content-center">
-                                                                        <img src="{{ asset($block[$index]) }}"
-                                                                            class="img-fluid overlay-img"
-                                                                            data-preview="{{ asset($block[$index]) }}"
-                                                                            alt="Overlay Image">
-                                                                    </div>
-                                                                @endif
-                                                            @endfor
+                                                <div class="col-12 d-flex flex-column align-items-center">
+                                                    @foreach ($imagesArr as $imagePath)
+                                                        <div class="mb-3 w-75 w-md-50 d-flex justify-content-center">
+                                                            <img src="{{ asset($imagePath) }}" class="img-fluid overlay-img"
+                                                                data-preview="{{ asset($imagePath) }}" alt="Overlay Image">
                                                         </div>
-                                                    @endfor
+                                                    @endforeach
                                                 </div>
-                                            @endforeach
+                                            </div>
                                         @endif
                                     </div>
 
                                     <div class="mb-3 d-flex justify-content-between align-items-center">
                                         <a href="{{ route('export.overlay.workspace', $workspace->id) }}" target="_blank"
                                             class="btn btn-danger">
-                                            <i class="fa-solid fa-file-pdf"></i></i>
+                                            <i class="fa-solid fa-file-pdf"></i>Download
                                         </a>
                                     </div>
                                 </div>

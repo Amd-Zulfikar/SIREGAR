@@ -1,19 +1,17 @@
-@extends('drafter.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="content-wrapper">
 
         <section class="content-header">
             <div class="container-fluid">
-                <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary"><i
+                <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary"><i
                         class="fa-solid fa-circle-left"></i> Kembali</a>
             </div>
         </section>
 
         <section class="content">
             <div class="container-fluid">
-                <form id="form-workspace" method="POST" action="{{ route('store.workspace') }}">
-                    @csrf
+                <form id="form-workspace" method="POST" action="<?php echo e(route('store.workspace')); ?>">
+                    <?php echo csrf_field(); ?>
                     <div class="row">
                         <div class="col-12">
                             <div class="card card-outline card-info">
@@ -28,9 +26,9 @@
                                                 <label>Jenis Pengajuan</label>
                                                 <select id="submissions" class="form-control select2">
                                                     <option selected disabled>Pilih Jenis Pengajuan</option>
-                                                    @foreach ($submissions as $s)
-                                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $submissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($s->id); ?>"><?php echo e($s->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -40,9 +38,9 @@
                                                 <label>Nama Drafter</label>
                                                 <select id="employees" class="form-control select2">
                                                     <option selected disabled>Pilih Drafter</option>
-                                                    @foreach ($employees as $e)
-                                                        <option value="{{ $e->id }}">{{ $e->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $e): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($e->id); ?>"><?php echo e($e->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -52,9 +50,9 @@
                                                 <label>Nama Perusahaan</label>
                                                 <select id="customers" class="form-control select2">
                                                     <option selected disabled>Pilih Perusahaan</option>
-                                                    @foreach ($customers as $c)
-                                                        <option value="{{ $c->id }}">{{ $c->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -66,9 +64,9 @@
                                                 <label>Engine</label>
                                                 <select id="engines" class="form-control select2">
                                                     <option selected disabled>Pilih Engine</option>
-                                                    @foreach ($engines as $en)
-                                                        <option value="{{ $en->id }}">{{ $en->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $engines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $en): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($en->id); ?>"><?php echo e($en->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
 
@@ -106,9 +104,9 @@
                                                 <label>Varian</label>
                                                 <select name="varian_id" id="varians" class="form-control select2">
                                                     <option selected disabled>Pilih Varian</option>
-                                                    @foreach ($varians as $s)
-                                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $varians; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($s->id); ?>"><?php echo e($s->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -202,9 +200,9 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
             $('.select2').select2({
@@ -217,7 +215,7 @@
             // Multi-filter cascading
             $('#engines').change(function() {
                 let id = $(this).val();
-                $.get("{{ route('get.brands') }}", {
+                $.get("<?php echo e(route('get.brands')); ?>", {
                     engine_id: id
                 }, function(data) {
                     let html = '<option selected disabled>Pilih Brand</option>';
@@ -230,7 +228,7 @@
 
             $('#brands').change(function() {
                 let id = $(this).val();
-                $.get("{{ route('get.chassiss') }}", {
+                $.get("<?php echo e(route('get.chassiss')); ?>", {
                     brand_id: id
                 }, function(data) {
                     let html = '<option selected disabled>Pilih Chassis</option>';
@@ -242,7 +240,7 @@
 
             $('#chassiss').change(function() {
                 let id = $(this).val();
-                $.get("{{ route('get.vehicles') }}", {
+                $.get("<?php echo e(route('get.vehicles')); ?>", {
                     chassis_id: id
                 }, function(data) {
                     let html = '<option selected disabled>Pilih Vehicle</option>';
@@ -254,7 +252,7 @@
 
             $('#vehicles').change(function() {
                 let id = $(this).val();
-                $.get("{{ route('get.keterangans') }}", {
+                $.get("<?php echo e(route('get.keterangans')); ?>", {
                     vehicle_id: id
                 }, function(data) {
                     let html = '<option selected disabled>Pilih Keterangan</option>';
@@ -386,10 +384,10 @@
                 }
 
                 $.ajax({
-                    url: "{{ route('store.workspace') }}",
+                    url: "<?php echo e(route('store.workspace')); ?>",
                     method: "POST",
                     data: {
-                        _token: "{{ csrf_token() }}",
+                        _token: "<?php echo e(csrf_token()); ?>",
                         employee_id,
                         customer_id,
                         submission_id,
@@ -405,8 +403,8 @@
 
                             setTimeout(function() {
                                 window.location.href =
-                                    "{{ route('index.workspace') }}";
-                            }, 1000);
+                                    "<?php echo e(route('index.workspace')); ?>";
+                            }, 1000); // 1000ms = 1 detik delay supaya toastr kelihatan
                         } else {
                             toastr.error(res.message);
                         }
@@ -421,4 +419,6 @@
 
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('drafter.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/drafter/workspace/add_workspace.blade.php ENDPATH**/ ?>

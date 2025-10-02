@@ -5,7 +5,7 @@
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-left">
-                            <a type="button" class="btn btn-block bg-gradient-primary"
+                            <a type="button" class="btn btn-block btn-outline-primary"
                                 onclick="location.href='<?php echo e(route('add.mgambar')); ?>'">Tambah Data</a>
                         </ol>
                     </div>
@@ -37,7 +37,6 @@
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
                                             <th>Gambar Body</th>
-                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -63,16 +62,18 @@
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <input type="checkbox" class="status-switch"
-                                                        data-id="<?php echo e($mgambar->id); ?>" name="status"
-                                                        <?php echo e($mgambar->status ? 'checked' : ''); ?> data-bootstrap-switch
-                                                        data-off-color="danger" data-on-color="success">
-                                                </td>
-                                                <td>
+                                                    <a class="btn btn-light btn-sm"
+                                                        href="<?php echo e(route('copy.mgambar', $mgambar->id)); ?>">
+                                                        <i class="fa-solid fa-copy"></i> Copas
+                                                    </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="<?php echo e(route('edit.mgambar', $mgambar->id)); ?>">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-url="<?php echo e(route('delete.mgambar', $mgambar->id)); ?>">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
@@ -87,16 +88,12 @@
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
                                             <th>Gambar Body</th>
-                                            <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>
                                 </table>
 
-                                <div class="mt-2">
-                                    <?php echo e($mgambars->links('pagination::bootstrap-4')); ?>
-
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -129,33 +126,25 @@
                 $('#modalPreview').modal('show');
             });
 
-            // 🔥 Inisialisasi bootstrapSwitch
-            $("input[data-bootstrap-switch]").each(function() {
-                $(this).bootstrapSwitch('state', $(this).prop('checked'));
-            });
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
 
-            // 🔥 Event ON/OFF
-            $(document).on('switchChange.bootstrapSwitch', '.status-switch', function(event, state) {
-                let id = $(this).data('id');
-                let newStatus = state ? 1 : 0;
-
-                $.ajax({
-                    url: "<?php echo e(url('admin/mgambar/action')); ?>/" + id,
-                    method: "POST",
-                    data: {
-                        status: newStatus,
-                        _token: "<?php echo e(csrf_token()); ?>"
-                    },
-                    success: function(res) {
-                        if (res.success) {
-                            console.log("Status updated:", res.status);
-                        }
-                    },
-                    error: function(xhr) {
-                        alert("Gagal update status! (" + xhr.status + ")");
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
                     }
                 });
-            }); 
+            });
 
             // Toastr untuk flash session
             var successMessage = "<?php echo e(session('success') ?? ''); ?>";

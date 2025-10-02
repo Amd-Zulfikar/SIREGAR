@@ -19,9 +19,8 @@
 
         <section class="content">
             <div class="container-fluid">
-                <form method="POST" action="<?php echo e(route('update.mgambar', [$mgambar->id])); ?>" enctype="multipart/form-data">
+                <form method="POST" action="<?php echo e(route('store.mgambar')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
-                    <?php echo method_field('PUT'); ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-outline card-info">
@@ -34,7 +33,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Pilih Data</label>
-                                                <select name="mdatas" class="form-control select2" style="width: 100%;">
+                                                <select name="mdatas" class="form-control select2" required>
                                                     <option selected disabled>Pilih Data</option>
                                                     <?php $__currentLoopData = $mdatas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $mdata): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option value="<?php echo e($mdata->id); ?>"
@@ -179,8 +178,15 @@
                     reader.readAsDataURL(files[i]);
                 }
             });
+
+            // Toastr untuk flash session
+            var successMessage = "<?php echo e(session('success') ?? ''); ?>";
+            var errorMessage = "<?php echo e(session('error') ?? ''); ?>";
+
+            if (successMessage) toastr.success(successMessage);
+            if (errorMessage) toastr.error(errorMessage);
         });
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views/admin/mgambar/edit_mgambar.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('admin.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\colaborasi\SIREGAR\resources\views\admin\mgambar\copy_mgambar.blade.php ENDPATH**/ ?>

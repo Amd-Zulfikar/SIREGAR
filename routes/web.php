@@ -16,7 +16,15 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 // Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Middleware per role
+// Forgot Password
+Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+
+// Reset Password
+Route::get('reset-password/{token}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
+
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // route for view controller dashboard
@@ -146,10 +154,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/mgambar', [App\Http\Controllers\Admin\MgambarController::class, 'index'])->name('index.mgambar');
     Route::get('/admin/mgambar/add', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_add'])->name('add.mgambar');
     Route::get('/admin/mgambar/edit/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_edit'])->name('edit.mgambar');
+    Route::get('/admin/mgambar/copy/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'mgambar_copy'])->name('copy.mgambar');
+    Route::get('/admin/mgambar/delete/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'delete'])->name('delete.mgambar');
+
     // route for function controller mgambar
     Route::post('/admin/mgambar/store', [App\Http\Controllers\Admin\MgambarController::class, 'store'])->name('store.mgambar');
     Route::put('/admin/mgambar/update/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'update'])->name('update.mgambar');
-    Route::post('/admin/mgambar/action/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'action'])->name('mgambar.action');
 });
 
 Route::middleware(['auth', 'role:drafter'])->group(function () {

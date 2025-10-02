@@ -26,9 +26,15 @@ class RoleController extends Controller
     }
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_roles,name',
+            ],
+            [
+                'name.unique' => 'Role sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput()->with('error', 'Data gagal disimpan! Periksa input Anda.');
@@ -62,9 +68,15 @@ class RoleController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required|unique:tb_roles,name',
+            ],
+            [
+                'name.unique' => 'Role sudah ada, silahkan gunakan nama lain!',
+            ]
+        );
 
         if ($validator->fails()) {
             session()->flash('message', $validator->messages()->first());

@@ -74,8 +74,8 @@
                                     </div>
                                 </div>
                                 <div class="card-footer me-2">
-                                    <a href="{{ route('index.mgambar') }}" class="btn btn-danger">Kembali</a>
-                                    <input type="submit" value="Simpan" class="btn btn-success">
+                                    <a href="{{ route('index.mgambar') }}" class="btn btn-outline-danger">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -130,6 +130,6 @@
                     reader.readAsDataURL(file);
                 });
             }
-        }); 
+        });
     </script>
 @endpush

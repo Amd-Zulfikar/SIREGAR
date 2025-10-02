@@ -69,11 +69,11 @@
                                                 <td><?php echo e($workspace->submission->name ?? '-'); ?></td>
                                                 <td><?php echo e($workspace->created_at->format('d/m/Y')); ?></td>
                                                 <td>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="<?php echo e(route('edit.workspace', $workspace->id)); ?>">
                                                         <i class="fas fa-pencil-alt"></i> Edit
                                                     </a>
-                                                    <a class="btn btn-outline-info"
+                                                    <a class="btn btn-info btn-sm"
                                                         href="<?php echo e(route('overlay.workspace', $workspace->id)); ?>">
                                                         <i class="fas fa-eye"></i> Preview
                                                     </a>

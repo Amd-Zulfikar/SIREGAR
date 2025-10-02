@@ -34,7 +34,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Pilih Data</label>
-                                                <select name="mdatas" class="form-control select2" required>
+                                                <select name="mdatas" class="form-control select2" style="width: 100%;">
                                                     <option selected disabled>Pilih Data</option>
                                                     @foreach ($mdatas as $mdata)
                                                         <option value="{{ $mdata->id }}"
@@ -107,8 +107,8 @@
                                 </div>
 
                                 <div class="card-footer">
-                                    <a href="{{ route('index.mgambar') }}" class="btn btn-danger">Kembali</a>
-                                    <input type="submit" value="Simpan" class="btn btn-success">
+                                    <a href="{{ route('index.mgambar') }}" class="btn btn-outline-danger">Kembali</a>
+                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -154,7 +154,7 @@
             // Preview gambar baru
             $('#foto_body').on('change', function() {
                 let files = this.files;
-                $('#newPreviewContainer').empty(); // hapus preview lama
+                $('#newPreviewContainer').empty();
                 for (let i = 0; i < files.length; i++) {
                     let reader = new FileReader();
                     reader.onload = function(e) {
