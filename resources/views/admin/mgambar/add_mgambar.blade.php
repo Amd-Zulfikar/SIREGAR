@@ -25,18 +25,22 @@
                         <div class="col-md-12">
                             <div class="card card-outline card-info">
                                 <div class="card-header">
-                                    <h3 class="card-title">Tambah Gambar</h3>
+                                    <h3 class="card-title">Tambah Gambar Baru</h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
+
+                                        {{-- KOLOM KIRI: DATA UTAMA --}}
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label>Pilih Data</label>
-                                                <select name="mdata_id" class="form-control select2" style="width: 100%;"
-                                                    required>
+                                                <label>Pilih Data Kendaraan</label>
+                                                <select name="mdata_id"
+                                                    class="form-control select2 @error('mdata_id') is-invalid @enderror"
+                                                    style="width: 100%;" required>
                                                     <option selected disabled>Pilih Data</option>
                                                     @foreach ($mdatas as $mdata)
-                                                        <option value="{{ $mdata->id }}">
+                                                        <option value="{{ $mdata->id }}"
+                                                            {{ old('mdata_id') == $mdata->id ? 'selected' : '' }}>
                                                             {{ $mdata->engine->name ?? '-' }} -
                                                             {{ $mdata->brand->name ?? '-' }} -
                                                             {{ $mdata->chassis->name ?? '-' }} -
@@ -44,38 +48,128 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                                <small class="text-danger">{{ $errors->first('mdata_id') }}</small>
+                                                @error('mdata_id')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Nama Body</label>
-                                                <input name="keterangan" type="text" class="form-control"
-                                                    placeholder="Contoh: TAMPAK UTAMA (BOX SLIDING)" required>
-                                                <small class="text-danger">{{ $errors->first('keterangan') }}</small>
+                                                <label>Varian Body / Keterangan</label>
+                                                <input name="varian_body" type="text"
+                                                    class="form-control @error('varian_body') is-invalid @enderror"
+                                                    value="{{ old('varian_body') }}"
+                                                    placeholder="Contoh: BOX SLIDING / DROP SIDE 5 WAY" required>
+                                                @error('varian_body')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
                                             </div>
                                         </div>
 
+                                        {{-- KOLOM KANAN: UPLOAD GAMBAR 5 SEKAT --}}
                                         <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label>Upload Foto Body</label>
-                                                <div class="custom-file">
-                                                    <input type="file" name="foto_body[]" id="foto_body"
-                                                        class="custom-file-input" multiple>
-                                                    <label class="custom-file-label" for="foto_body">Choose files</label>
+
+                                            {{-- BLOK 1: GAMBAR UTAMA (Tetap) --}}
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label for="foto_utama" class="text-info"><i class="fas fa-image"></i>
+                                                    Gambar Utama</label>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control form-control-sm file-name-display"
+                                                        value="Belum ada file dipilih" readonly>
+                                                    <div class="input-group-append">
+                                                        <label class="btn btn-sm btn-info mb-0" for="foto_utama">
+                                                            Upload Gambar
+                                                            <input type="file" name="foto_utama" id="foto_utama"
+                                                                style="display: none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'utama')">
+                                                        </label>
+                                                    </div>
                                                 </div>
-                                                <small class="text-danger">{{ $errors->first('foto_body') }}</small>
+                                                @error('foto_utama')
+                                                    <small class="text-danger d-block">{{ $message }}</small>
+                                                @enderror
+                                                <div class="preview mt-2" id="preview_utama"></div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Preview Gambar</label>
-                                                <div class="preview row" id="previews"></div>
+                                            {{-- BLOK 2: GAMBAR TERURAI (Tetap) --}}
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label for="foto_terurai" class="text-warning"><i
+                                                        class="fas fa-layer-group"></i> Gambar Terurai</label>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control form-control-sm file-name-display"
+                                                        value="Belum ada file dipilih" readonly>
+                                                    <div class="input-group-append">
+                                                        <label class="btn btn-sm btn-warning mb-0" for="foto_terurai">
+                                                            Upload Gambar
+                                                            <input type="file" name="foto_terurai" id="foto_terurai"
+                                                                style="display: none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'terurai')">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                @error('foto_terurai')
+                                                    <small class="text-danger d-block">{{ $message }}</small>
+                                                @enderror
+                                                <div class="preview mt-2" id="preview_terurai"></div>
                                             </div>
+
+                                            {{-- BLOK 3: GAMBAR KONSTRUKSI (Tetap) --}}
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label for="foto_kontruksi" class="text-primary"><i
+                                                        class="fas fa-tools"></i> Gambar Konstruksi</label>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control form-control-sm file-name-display"
+                                                        value="Belum ada file dipilih" readonly>
+                                                    <div class="input-group-append">
+                                                        <label class="btn btn-sm btn-primary mb-0" for="foto_kontruksi">
+                                                            Upload Gambar
+                                                            <input type="file" name="foto_kontruksi" id="foto_kontruksi"
+                                                                style="display: none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'kontruksi')">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                @error('foto_kontruksi')
+                                                    <small class="text-danger d-block">{{ $message }}</small>
+                                                @enderror
+                                                <div class="preview mt-2" id="preview_kontruksi"></div>
+                                            </div>
+
+                                            {{-- BLOK 4: GAMBAR OPTIONAL (BARU) --}}
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label for="foto_optional" class="text-secondary"><i
+                                                        class="fas fa-th-large"></i> Gambar Optional</label>
+                                                <div class="input-group">
+                                                    <input type="text"
+                                                        class="form-control form-control-sm file-name-display"
+                                                        value="Belum ada file dipilih" readonly>
+                                                    <div class="input-group-append">
+                                                        <label class="btn btn-sm btn-secondary mb-0" for="foto_optional">
+                                                            Upload Gambar
+                                                            <input type="file" name="foto_optional" id="foto_optional"
+                                                                style="display: none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'optional')">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                @error('foto_optional')
+                                                    <small class="text-danger d-block">{{ $message }}</small>
+                                                @enderror
+                                                <div class="preview mt-2" id="preview_optional"></div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer me-2">
                                     <a href="{{ route('index.mgambar') }}" class="btn btn-outline-danger">Kembali</a>
-                                    <input type="submit" value="Simpan" class="btn btn-outline-success">
+                                    <input type="submit" value="Simpan Data Gambar" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -90,7 +184,8 @@
                                 <img src="" id="imgPreviewModal" class="img-fluid w-100">
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    data-dismiss="modal">Tutup</button>
                             </div>
                         </div>
                     </div>
@@ -107,29 +202,41 @@
             $('.select2').select2()
         });
 
-        if (typeof bsCustomFileInput !== 'undefined') {
-            bsCustomFileInput.init();
-        }
+        /**
+         * Fungsi untuk menampilkan nama file dan preview gambar, serta menampilkan modal preview saat gambar diklik.
+         * @param {HTMLInputElement} input - Elemen input file yang berubah.
+         * @param {string} type - Jenis gambar ('utama', 'terurai', 'kontruksi', 'optional').
+         */
+        function updateFileName(input, type) {
+            const fileNameInput = $(input).closest('.input-group').find('.file-name-display');
+            const previewContainer = $('#preview_' + type);
 
-        // Preview gambar sebelum submit & klik untuk modal
-        $('#foto_body').on('change', function() {
-            $('#previews').html('');
-            const files = this.files;
-            if (files) {
-                Array.from(files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = $('<div class="col-4 mb-2"><img src="' + e.target.result +
-                            '" class="img-thumbnail" style="width:100%; cursor:pointer;"></div>');
-                        img.find('img').on('click', function() {
-                            $('#imgPreviewModal').attr('src', e.target.result);
-                            $('#modalPreview').modal('show');
-                        });
-                        $('#previews').append(img);
-                    }
-                    reader.readAsDataURL(file);
-                });
+            previewContainer.html(''); // Bersihkan preview lama
+
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                fileNameInput.val(file.name);
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Membuat elemen gambar thumbnail
+                    const img = $('<img src="' + e.target.result +
+                        '" class="img-thumbnail" style="max-width: 150px; height: auto; cursor:pointer;" alt="Preview Gambar">'
+                    );
+
+                    // Menambahkan event click untuk menampilkan modal
+                    img.on('click', function() {
+                        $('#imgPreviewModal').attr('src', e.target.result);
+                        // Asumsi Anda menggunakan Bootstrap 4/5, pastikan modal dipanggil dengan benar
+                        $('#modalPreview').modal('show');
+                    });
+
+                    previewContainer.append(img);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                fileNameInput.val('Belum ada file dipilih');
             }
-        });
+        }
     </script>
 @endpush

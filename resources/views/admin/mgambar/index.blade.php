@@ -27,7 +27,7 @@
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <h3 class="card-title"><i class="fas fa-edit"></i>Gambar Master</h3>
+                                <h3 class="card-title"><i class="fas fa-edit"></i> Gambar Master</h3>
                             </div>
                             <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
@@ -38,7 +38,7 @@
                                             <th>Chassis</th>
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
-                                            <th>Gambar Body</th>
+                                            <th>Gambar Body</th> {{-- Kolom ini akan menampilkan 3 gambar --}}
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -51,23 +51,43 @@
                                                 <td>{{ $mgambar->mdata->chassis->name ?? '-' }}</td>
                                                 <td>{{ $mgambar->mdata->vehicle->name ?? '-' }}</td>
                                                 <td>{{ $mgambar->keterangan }}</td>
+
+                                                {{-- START: PERBAIKAN LOGIC TAMPIL GAMBAR --}}
                                                 <td>
-                                                    @if ($mgambar->foto_body)
-                                                        @foreach ($mgambar->foto_body as $file)
-                                                            <img src="{{ asset('storage/body/' . $file) }}" alt="Foto Body"
-                                                                class="img-thumbnail preview-img"
-                                                                style="width:100px; margin:5px; cursor:pointer;"
-                                                                data-src="{{ asset('storage/body/' . $file) }}">
+                                                    @php
+                                                        $foto_fields = [
+                                                            'foto_utama' => $mgambar->foto_utama,
+                                                            'foto_terurai' => $mgambar->foto_terurai,
+                                                            'foto_kontruksi' => $mgambar->foto_kontruksi,
+                                                            'foto_optional' => $mgambar->foto_optional,
+                                                        ];
+                                                        $hasImage = false;
+                                                    @endphp
+
+                                                    <div style="display:flex; flex-wrap: wrap; gap: 5px;">
+                                                        @foreach ($foto_fields as $type => $file_name)
+                                                            @if ($file_name)
+                                                                @php $hasImage = true; @endphp
+                                                                <img src="{{ asset('storage/body/' . $file_name) }}"
+                                                                    alt="{{ ucfirst($type) }}"
+                                                                    title="Gambar {{ ucfirst($type) }}"
+                                                                    class="img-thumbnail preview-img"
+                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer;"
+                                                                    data-src="{{ asset('storage/body/' . $file_name) }}">
+                                                            @endif
                                                         @endforeach
-                                                    @else
-                                                        <span class="text-muted">No Image</span>
-                                                    @endif
+
+                                                        @if (!$hasImage)
+                                                            <span class="text-muted">No Image</span>
+                                                        @endif
+                                                    </div>
                                                 </td>
+
                                                 <td>
-                                                    <a class="btn btn-light btn-sm"
+                                                    {{-- <a class="btn btn-light btn-sm"
                                                         href="{{ route('copy.mgambar', $mgambar->id) }}">
                                                         <i class="fa-solid fa-copy"></i> Copas
-                                                    </a>
+                                                    </a> --}}
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.mgambar', $mgambar->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit
@@ -79,9 +99,10 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            {{-- <tr>
-                                                <td colspan="4">Data Not Found!</td>
-                                            </tr> --}}
+                                            <tr>
+                                                <td colspan="7" class="text-center">Data Gambar Kosong. Silakan Tambah
+                                                    Data Baru.</td>
+                                            </tr>
                                         @endforelse
                                     </tbody>
                                     <tfoot>
@@ -96,10 +117,6 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-
-                                {{-- <div class="mt-2">
-                                    {{ $mgambars->links('pagination::bootstrap-4') }}
-                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -127,7 +144,7 @@
     <script>
         $(document).ready(function() {
             // Preview gambar
-            $('.preview-img').on('click', function() {
+            $(document).on('click', '.preview-img', function() {
                 $('#imgPreviewModal').attr('src', $(this).data('src'));
                 $('#modalPreview').modal('show');
             });

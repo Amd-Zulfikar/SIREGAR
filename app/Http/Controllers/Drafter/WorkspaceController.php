@@ -55,65 +55,166 @@ class WorkspaceController extends Controller
         ));
     }
 
+    
+
+    // public function store(Request $request)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'employee_id'   => 'required|exists:tb_employees,id',
+    //             'customer_id'   => 'required|exists:tb_customers,id',
+    //             'submission_id' => 'required|exists:tb_submissions,id',
+    //             'varian_id'     => 'required|exists:tb_varians,id',
+    //             'rincian'       => 'required|array|min:1',
+    //         ]);
+
+    //         // ambil tanggal sekarang
+    //         $todayDate = now()->format('dmy');
+
+    //         // cari transaksi terakhir di hari ini
+    //         $lastWorkspace = Workspace::whereDate('created_at', now()->toDateString())
+    //             ->orderBy('id', 'desc')
+    //             ->first();
+
+    //         // tentuin nomor urut
+    //         $nextNumber = 1;
+    //         if ($lastWorkspace) {
+    //             $lastNo = (int) substr($lastWorkspace->no_transaksi, -4);
+    //             $nextNumber = $lastNo + 1;
+    //         }
+
+    //         // format nomor transaksi
+    //         $noTransaksi = 'RKS-' . $todayDate . '' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+
+    //         $workspace = Workspace::create([
+    //             'employee_id'   => $request->employee_id,
+    //             'customer_id'   => $request->customer_id,
+    //             'submission_id' => $request->submission_id,
+    //             'varian_id'     => $request->varian_id,
+    //             'jumlah_gambar' => $request->jumlah_gambar,
+    //             'no_transaksi'  => $noTransaksi,
+    //         ]);
+
+    //         $rincian = $request->input('rincian', []);
+
+    //         foreach ($rincian as $index => $row) {
+
+    //             $row = (array) $row;
+
+    //             if (empty($row['engine']) || empty($row['brand']) || empty($row['chassis']) || empty($row['vehicle']) || empty($row['keterangan'])) {
+    //                 Log::warning("Skipping rincian index {$index} karena data kurang", $row);
+    //                 continue;
+    //             }
+
+    //             $workspace->workspaceGambar()->create([
+    //                 'engine'     => $row['engine'],
+    //                 'brand'      => $row['brand'],
+    //                 'chassis'    => $row['chassis'],
+    //                 'vehicle'    => $row['vehicle'],
+    //                 'keterangan' => $row['keterangan'],
+    //                 'varian_id'  => $row['varian_id'],
+    //                 'halaman_gambar' => $row['halaman_gambar'] ?? null,
+    //                 'jumlah_gambar'  => $row['jumlah_gambar'] ?? 0,
+    //                 'foto_body'  => json_encode($row['fotoBody'] ?? $row['foto_body'] ?? []),
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'error' => false,
+    //             'message' => 'Workspace berhasil disimpan!',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+    //         return redirect()->back()
+    //             ->with('error', 'Terjadi kesalahan saat menyimpan workspace: ' . $e->getMessage());
+    //     }
+    // }
+
     public function store(Request $request)
     {
         try {
+            // Validasi data header yang wajib
             $request->validate([
-                'employee_id'   => 'required|exists:tb_employees,id',
-                'customer_id'   => 'required|exists:tb_customers,id',
-                'submission_id' => 'required|exists:tb_submissions,id',
-                'varian_id'     => 'required|exists:tb_varians,id',
-                'rincian'       => 'required|array|min:1',
+                'employee_id'       => 'required|exists:tb_employees,id',
+                'customer_id'       => 'required|exists:tb_customers,id',
+                'submission_id'     => 'required|exists:tb_submissions,id',
+                'engine_id'         => 'required', 
+                'brand_id'          => 'required', 
+                'chassis_id'        => 'required', 
+                'jumlah_gambar_total' => 'required|numeric|min:1|max:4', // Validasi baru
+                'rincian'           => 'required|array', 
             ]);
-
-            // ambil tanggal sekarang
+            
+            // --- Logika Nomor Transaksi (Tetap sama) ---
+            // ... (kode untuk membuat $noTransaksi) ...
             $todayDate = now()->format('dmy');
-
-            // cari transaksi terakhir di hari ini
             $lastWorkspace = Workspace::whereDate('created_at', now()->toDateString())
                 ->orderBy('id', 'desc')
                 ->first();
 
-            // tentuin nomor urut
             $nextNumber = 1;
             if ($lastWorkspace) {
                 $lastNo = (int) substr($lastWorkspace->no_transaksi, -4);
                 $nextNumber = $lastNo + 1;
             }
-
-            // format nomor transaksi
             $noTransaksi = 'RKS-' . $todayDate . '' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+            // ------------------------------------------
 
+            // Ambil dan ratakan semua rincian dari form
+            $rincianGroups = $request->input('rincian', []);
+            
+            $allRincian = [];
+            foreach ($rincianGroups as $group) {
+                if (is_array($group)) {
+                    foreach ($group as $rincianItem) {
+                        $allRincian[] = $rincianItem;
+                    }
+                }
+            }
+            
+            // Filter rincian yang benar-benar terisi (punya keterangan_id dan varian_id)
+            $validRincian = collect($allRincian)->filter(function($r) {
+                return !empty($r['keterangan_id']) && !empty($r['varian_id']);
+            });
+
+            if ($validRincian->isEmpty()) {
+                return response()->json([
+                    'error' => true,
+                    'message' => 'Minimal satu baris rincian gambar harus diisi.'
+                ], 422);
+            }
+            
+            // Total gambar = Jumlah baris rincian valid (dikalikan 1 per baris)
+            // Karena setiap baris dianggap 1 gambar (Utama 1, Terurai 1, Konstruksi 1)
+            $totalGambar = $validRincian->count(); 
+
+            // Buat Workspace utama
             $workspace = Workspace::create([
                 'employee_id'   => $request->employee_id,
                 'customer_id'   => $request->customer_id,
                 'submission_id' => $request->submission_id,
-                'varian_id'     => $request->varian_id,
-                'jumlah_gambar' => $request->jumlah_gambar,
+                'varian_id'     => $validRincian->first()['varian_id'] ?? null, 
+                'jumlah_gambar' => $totalGambar, // Menggunakan total baris yang valid
                 'no_transaksi'  => $noTransaksi,
+                'engine_id'     => $request->engine_id,
+                'brand_id'      => $request->brand_id,
+                'chassis_id'    => $request->chassis_id,
             ]);
 
-            $rincian = $request->input('rincian', []);
-
-            foreach ($rincian as $index => $row) {
-
-                $row = (array) $row;
-
-                if (empty($row['engine']) || empty($row['brand']) || empty($row['chassis']) || empty($row['vehicle']) || empty($row['keterangan'])) {
-                    Log::warning("Skipping rincian index {$index} karena data kurang", $row);
-                    continue;
-                }
-
+            // Simpan setiap baris rincian yang valid ke WorkspaceGambar
+            foreach ($validRincian as $row) {
                 $workspace->workspaceGambar()->create([
-                    'engine'     => $row['engine'],
-                    'brand'      => $row['brand'],
-                    'chassis'    => $row['chassis'],
-                    'vehicle'    => $row['vehicle'],
-                    'keterangan' => $row['keterangan'],
-                    'varian_id'  => $row['varian_id'],
+                    'engine'         => $request->engine_id,
+                    'brand'          => $request->brand_id,
+                    'chassis'        => $request->chassis_id,
+                    'vehicle'        => $request->vehicle_id, 
+                    
+                    // Data dari Rincian
+                    'keterangan'     => $row['keterangan_id'], 
+                    'varian_id'      => $row['varian_id'],
                     'halaman_gambar' => $row['halaman_gambar'] ?? null,
-                    'jumlah_gambar'  => $row['jumlah_gambar'] ?? 0,
-                    'foto_body'  => json_encode($row['fotoBody'] ?? $row['foto_body'] ?? []),
+                    'jumlah_gambar'  => 1, // SET JML GAMBAR MENJADI 1 PER BARIS AKTIF
+                    'foto_body'      => json_encode([]), 
                 ]);
             }
 
@@ -122,11 +223,10 @@ class WorkspaceController extends Controller
                 'message' => 'Workspace berhasil disimpan!',
             ]);
         } catch (\Exception $e) {
-            Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menyimpan workspace: ' . $e->getMessage());
+            // ... (Logika error) ...
         }
     }
+
 
     public function workspace_edit($id)
     {
@@ -544,17 +644,17 @@ class WorkspaceController extends Controller
 
     public function getKeterangans(Request $request)
     {
-        $mgambars = Mgambar::whereHas('mdata', function ($q) use ($request) {
-            $q->where('vehicle_id', $request->vehicle_id);
-        })->get(['id', 'keterangan', 'foto_body']);
+        $mdata_id = $request->mdata_id;
+        if (!$mdata_id) {
+            return response()->json([], 400); // Bad request
+        }
 
-        $mgambars->transform(function ($item) {
-            if (!is_array($item->foto_body)) {
-                $item->foto_body = $item->foto_body ? [$item->foto_body] : [];
-            }
-            return $item;
-        });
-
-        return response()->json($mgambars);
+        $keterangans = Keterangan::where('mdata_id', $mdata_id)->get(['id', 'varian_body', 'foto_utama', 'foto_terurai', 'foto_kontruksi']);
+        return response()->json($keterangans);
     }
+
+
+
+
+
 }

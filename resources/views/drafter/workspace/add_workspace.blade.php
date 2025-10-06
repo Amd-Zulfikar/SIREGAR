@@ -14,6 +14,11 @@
             <div class="container-fluid">
                 <form id="form-workspace" method="POST" action="{{ route('store.workspace') }}">
                     @csrf
+                    <input type="hidden" name="brand_id" id="hidden_brand_id">
+                    <input type="hidden" name="chassis_id" id="hidden_chassis_id">
+                    <input type="hidden" name="vehicle_id" id="hidden_vehicle_id">
+                    <input type="hidden" name="jumlah_gambar" id="hidden_jumlah_gambar" value="0">
+
                     <div class="row">
                         <div class="col-12">
                             <div class="card card-outline card-info">
@@ -21,165 +26,199 @@
                                     <h3 class="card-title">Ambil Gambar</h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="row">
-                                        <!-- Kolom 1 -->
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label>Jenis Pengajuan</label>
-                                                <select id="submissions" class="form-control select2">
-                                                    <option selected disabled>Pilih Jenis Pengajuan</option>
-                                                    @foreach ($submissions as $s)
-                                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm text-left">Jumlah Gbr Tu :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="jumlah_halaman" id="jumlah_halaman"
+                                                        class="form-control form-control-sm select2-static" required
+                                                        data-placeholder="Jumlah Hal.">
+                                                        <option value="1" selected>1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Customer :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="customer_id" id="customers"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih Perusahaan">
+                                                        <option></option>
+                                                        @foreach ($customers as $c)
+                                                            <option value="{{ $c->id }}">{{ $c->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Jenis Pengajuan :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="submission_id" id="submissions"
+                                                        class="form-control form-control-sm select2" style="width: 100%;"
+                                                        required data-placeholder="Pilih Pengajuan">
+                                                        <option></option>
+                                                        @foreach ($submissions as $s)
+                                                            <option value="{{ $s->id }}">{{ $s->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Diperiksa :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="employee_id" id="employees"
+                                                        class="form-control form-control-sm select2" style="width: 100%;"
+                                                        required data-placeholder="Pilih Drafter">
+                                                        <option></option>
+                                                        @foreach ($employees as $e)
+                                                            <option value="{{ $e->id }}">{{ $e->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                        <!-- Kolom 2 -->
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label>Nama Drafter</label>
-                                                <select id="employees" class="form-control select2">
-                                                    <option selected disabled>Pilih Drafter</option>
-                                                    @foreach ($employees as $e)
-                                                        <option value="{{ $e->id }}">{{ $e->name }}</option>
-                                                    @endforeach
-                                                </select>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Type Engine :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="engine_id" id="engines"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih Engine">
+                                                        <option></option>
+                                                        @foreach ($engines as $en)
+                                                            <option value="{{ $en->id }}">{{ $en->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!-- Kolom 3 -->
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label>Nama Perusahaan</label>
-                                                <select id="customers" class="form-control select2">
-                                                    <option selected disabled>Pilih Perusahaan</option>
-                                                    @foreach ($customers as $c)
-                                                        <option value="{{ $c->id }}">{{ $c->name }}</option>
-                                                    @endforeach
-                                                </select>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Merk :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="brand_id_display" id="brands"
+                                                        class="form-control form-control-sm select2" required disabled
+                                                        data-placeholder="Pilih Merk">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Type Chassis :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="chassis_id_display" id="chassiss"
+                                                        class="form-control form-control-sm select2" required disabled
+                                                        data-placeholder="Pilih Chassis">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Jenis Kendaraan :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="vehicle_id_display" id="vehicles"
+                                                        class="form-control form-control-sm select2" required disabled
+                                                        data-placeholder="Pilih Jenis Kendaraan">
+                                                        <option></option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <!-- Kolom 1 -->
-                                        <div class="col-12 col-md-2">
-                                            <div class="form-group">
-                                                <label>Engine</label>
-                                                <select id="engines" class="form-control select2">
-                                                    <option selected disabled>Pilih Engine</option>
-                                                    @foreach ($engines as $en)
-                                                        <option value="{{ $en->id }}">{{ $en->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
 
-                                            <div class="form-group">
-                                                <label for="halaman_gambar">Halaman gambar</label>
-                                                <input name="rincian[0][halaman_gambar]" id="halaman_gambar" type="text"
-                                                    class="form-control" placeholder="Masukan No.Halaman" required>
-                                            </div>
-                                        </div>
-                                        <!-- Kolom 2 -->
-                                        <div class="col-12 col-md-2">
-                                            <div class="form-group">
-                                                <label>Brand</label>
-                                                <select id="brands" class="form-control select2">
-                                                    <option selected disabled>Pilih Brand</option>
-                                                </select>
-                                            </div>
+                                    <hr>
 
-                                            <div class="form-group">
-                                                <label for="jumlah_gambar">Jumlah gambar</label>
-                                                <input name="jumlah_gambar" id="jumlah_gambar" type="text"
-                                                    class="form-control" placeholder="Masukan Jumlah Gambar" required>
-                                            </div>
-                                        </div>
-                                        <!-- Kolom 3 -->
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label>Chassis</label>
-                                                <select id="chassiss" class="form-control select2">
-                                                    <option selected disabled>Pilih Chassis</option>
-                                                </select>
-                                            </div>
+                                    {{-- Kategori Gambar --}}
+                                    @php
+                                        // Key (internal name) => ['color' (card-color class), 'display' (for label)]
+                                        $kategori = [
+                                            'utama' => ['color' => 'info', 'display' => 'Utama'],
+                                            'terurai' => ['color' => 'info', 'display' => 'Terurai'],
+                                            'kontruksi' => ['color' => 'info', 'display' => 'Konstruksi'],
+                                            'detail' => ['color' => 'warning', 'display' => 'Detail'],
+                                            'kelistrikan' => ['color' => 'danger', 'display' => 'Kelistrikan'],
+                                        ];
+                                    @endphp
 
-                                            <div class="form-group ">
-                                                <label>Varian</label>
-                                                <select name="varian_id" id="varians" class="form-control select2">
-                                                    <option selected disabled>Pilih Varian</option>
-                                                    @foreach ($varians as $s)
-                                                        <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!-- Kolom 4 -->
-                                        <div class="col-12 col-md-2">
-                                            <div class="form-group">
-                                                <label>Vehicle</label>
-                                                <select id="vehicles" class="form-control select2">
-                                                    <option selected disabled>Pilih Vehicle</option>
-                                                </select>
-                                            </div>
+                                    @foreach ($kategori as $type => $data)
+                                        <div class="card card-outline card-{{ $data['color'] }} p-2 mb-3">
+                                            {{-- Judul Kartu dihilangkan sesuai permintaan user --}}
+                                            <h5 class="card-title"></h5>
+                                            <div class="card-body p-0" id="gambar-{{ $type }}-container">
+                                                @for ($i = 1; $i <= 4; $i++)
+                                                    <div id="{{ $type }}-row-{{ $i }}"
+                                                        class="gambar-rincian-row form-row align-items-center p-2"
+                                                        style="display: none;">
 
-                                        </div>
-                                        <!-- Kolom 5 -->
-                                        <div class="col-12 col-md-2">
-                                            <div class="form-group">
-                                                <label>Jenis Body</label>
-                                                <select id="keterangans" class="form-control select2">
-                                                    <option selected disabled>Pilih Body</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <!-- Kolom 5 -->
-                                        <div class="col-12 col-md-8">
-                                            <div class="form-group">
-                                                <label>Preview Foto</label>
-                                                <div class="preview_form_1 border p-2" style="min-height:243px;"></div>
-                                            </div>
+                                                        <div class="col-md-2">
+                                                            {{-- Label di dalam baris tetap ada untuk mengidentifikasi jenis gambar --}}
+                                                            <label class="col-form-label-sm font-weight-bold p-0">
+                                                                Gambar {{ $data['display'] }} {{ $i }}:
+                                                            </label>
+                                                        </div>
 
-                                            <button type="button" id="btn-tambah-rincian" class="btn btn-primary">
-                                                <i class="fa-solid fa-folder-plus"></i>
-                                                Tambah Data
-                                            </button>
+                                                        <div class="col-md-3">
+                                                            <select
+                                                                name="rincian[{{ $type }}][{{ $i }}][varian_id]"
+                                                                class="form-control form-control-sm varian-select select2"
+                                                                disabled required data-placeholder="Pilih Varian">
+                                                                <option></option>
+                                                                @foreach ($varians as $v)
+                                                                    <option value="{{ $v->id }}">
+                                                                        {{ $v->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-3">
+                                                            <select
+                                                                name="rincian[{{ $type }}][{{ $i }}][keterangan]"
+                                                                class="form-control form-control-sm gambar-keterangan select2"
+                                                                disabled required data-placeholder="Pilih Jenis Body">
+                                                                <option></option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-1">
+                                                            <input type="text"
+                                                                name="rincian[{{ $type }}][{{ $i }}][halaman_gambar]"
+                                                                class="form-control form-control-sm halaman-gambar-input"
+                                                                required readonly>
+                                                        </div>
+
+                                                        <div class="col-md-1">
+                                                            <input type="text"
+                                                                name="rincian[{{ $type }}][{{ $i }}][total_halaman]"
+                                                                class="form-control form-control-sm total-halaman-input"
+                                                                required readonly>
+                                                        </div>
+
+                                                        <div class="col-md-2 text-right">
+                                                            <input type="hidden"
+                                                                name="rincian[{{ $type }}][{{ $i }}][jumlah_gambar]"
+                                                                class="jumlah-gambar-hidden" value="">
+                                                            <button type="button"
+                                                                class="btn btn-info btn-sm preview-gambar-btn" disabled><i
+                                                                    class="fa fa-image"></i> Preview Gambar</button>
+                                                        </div>
+                                                    </div>
+                                                @endfor
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Rincian Data -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card card-outline card-info">
-                                <div class="card-header">
-                                    <h3 class="card-title">Rincian Data</h3>
-                                </div>
-                                <div class="card-body">
-                                    <table id="tbl-detail" class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>No Halaman</th>
-                                                <th>Jumlah Gambar</th>
-                                                <th>Engine</th>
-                                                <th>Brand</th>
-                                                <th>Chassis</th>
-                                                <th>Vehicle</th>
-                                                <th>Jenis Body</th>
-                                                <th>Varian</th>
-                                                <th>Gambar</th>
-                                                <th>Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                    <br>
-                                    <button type="button" id="btn-simpan-ws" class="btn btn-success float-right">Ambil
-                                        Gambar</button>
-
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-success float-right">Ambil Gambar</button>
                                 </div>
                             </div>
                         </div>
@@ -189,12 +228,12 @@
         </section>
     </div>
 
-    <!-- Modal Preview -->
+    {{-- Modal Preview --}}
     <div class="modal fade" id="modalPreview">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-body p-0 text-center">
-                    <img src="" id="imgPreviewModal" class="img-fluid" alt="Preview">
+                <div class="modal-body p-0 text-center" id="imgPreviewModal">
+                    {{-- Gambar akan diisi oleh JS --}}
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
@@ -204,219 +243,208 @@
     </div>
 @endsection
 
+
 @push('scripts')
     <script>
         $(function() {
-            $('.select2').select2({
-                width: '100%'
+            // --- Inisialisasi Select2 ---
+            $('.select2-static').select2({
+                width: '100%',
+                minimumResultsForSearch: Infinity,
+                allowClear: false
+            });
+            $('#customers, #submissions, #employees, #engines, #brands, #chassiss, #vehicles, .varian-select, .gambar-keterangan')
+                .select2({
+                    width: '100%',
+                    allowClear: true
+                });
+
+            function pad(num, size = 2) {
+                return String(num).padStart(size, '0');
+            }
+            const HANYA_TU_ID = '4';
+            let isHanyaTU = false;
+
+            function updatePageNumbers() {
+                let jumlahGbrUtama = parseInt($('#jumlah_halaman').val()) || 0;
+                let factor = isHanyaTU ? 1 : 3;
+                const totalPages = jumlahGbrUtama * factor;
+                $('#hidden_jumlah_gambar').val(totalPages);
+                let currentPage = 1;
+                const isVehicleSelected = $('#vehicles').val();
+
+                for (let i = 1; i <= 4; i++) {
+                    let rowUtama = $('#utama-row-' + i);
+                    let varianSelectUtama = rowUtama.find('.varian-select');
+                    let selectKeteranganUtama = rowUtama.find('.gambar-keterangan');
+
+                    if (i <= jumlahGbrUtama) {
+                        rowUtama.show();
+                        rowUtama.find('.halaman-gambar-input').val(pad(currentPage++)).prop('readonly', true);
+                        rowUtama.find('.total-halaman-input').val(pad(totalPages)).prop('readonly', true);
+                        rowUtama.find('.jumlah-gambar-hidden').val(totalPages);
+                        varianSelectUtama.prop('disabled', !isVehicleSelected);
+                        selectKeteranganUtama.prop('disabled', !isVehicleSelected);
+                        rowUtama.find('.preview-gambar-btn').prop('disabled', !selectKeteranganUtama.val());
+                    } else {
+                        rowUtama.hide();
+                        rowUtama.find('input').val('');
+                        varianSelectUtama.val(null).prop('disabled', true);
+                        selectKeteranganUtama.val(null).prop('disabled', true);
+                        rowUtama.find('.preview-gambar-btn').prop('disabled', true);
+                    }
+
+                    ['terurai', 'kontruksi'].forEach(type => {
+                        let row = $('#' + type + '-row-' + i);
+                        let varianSelect = row.find('.varian-select');
+                        let selectKeterangan = row.find('.gambar-keterangan');
+                        if (isHanyaTU || i > jumlahGbrUtama) {
+                            row.hide();
+                            row.find('input').val('');
+                            varianSelect.val(null).prop('disabled', true);
+                            selectKeterangan.val(null).prop('disabled', true);
+                            row.find('.preview-gambar-btn').prop('disabled', true);
+                            return;
+                        }
+                        row.show();
+                        row.find('.halaman-gambar-input').val(pad(currentPage++)).prop('readonly', true);
+                        row.find('.total-halaman-input').val(pad(totalPages)).prop('readonly', true);
+                        row.find('.jumlah-gambar-hidden').val(totalPages);
+                        varianSelect.val(varianSelectUtama.val()).prop('disabled', true);
+                        selectKeterangan.val(selectKeteranganUtama.val()).prop('disabled', true);
+                        row.find('.preview-gambar-btn').prop('disabled', !selectKeteranganUtama.val());
+                    });
+                }
+            }
+
+            $('#submissions').change(function() {
+                isHanyaTU = $(this).val() === HANYA_TU_ID;
+                updatePageNumbers();
             });
 
-            let rincianData = [];
-            let counter = 1;
+            updatePageNumbers();
+            $('#jumlah_halaman').on('change', updatePageNumbers);
 
-            // Multi-filter cascading
+            // Reset cascading dropdown
+            function resetDropdowns(start) {
+                if (start <= 1) {
+                    $('#brands').html('<option></option>').prop('disabled', true);
+                    $('#hidden_brand_id').val('');
+                }
+                if (start <= 2) {
+                    $('#chassiss').html('<option></option>').prop('disabled', true);
+                    $('#hidden_chassis_id').val('');
+                }
+                if (start <= 3) {
+                    $('#vehicles').html('<option></option>').prop('disabled', true);
+                    $('#hidden_vehicle_id').val('');
+                    updatePageNumbers();
+                }
+            }
+
             $('#engines').change(function() {
                 let id = $(this).val();
+                resetDropdowns(1);
+                if (!id) return;
                 $.get("{{ route('get.brands') }}", {
                     engine_id: id
                 }, function(data) {
-                    let html = '<option selected disabled>Pilih Brand</option>';
+                    let html = '<option></option>';
                     data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
-                    $('#brands').html(html);
-                    $('#chassiss,#vehicles,#keterangans').html(
-                        '<option selected disabled>Pilih</option>');
+                    $('#brands').html(html).prop('disabled', false);
                 });
             });
 
             $('#brands').change(function() {
                 let id = $(this).val();
+                $('#hidden_brand_id').val(id);
+                resetDropdowns(2);
+                if (!id) return;
                 $.get("{{ route('get.chassiss') }}", {
                     brand_id: id
                 }, function(data) {
-                    let html = '<option selected disabled>Pilih Chassis</option>';
+                    let html = '<option></option>';
                     data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
-                    $('#chassiss').html(html);
-                    $('#vehicles,#keterangans').html('<option selected disabled>Pilih</option>');
+                    $('#chassiss').html(html).prop('disabled', false);
                 });
             });
 
             $('#chassiss').change(function() {
                 let id = $(this).val();
+                $('#hidden_chassis_id').val(id);
+                resetDropdowns(3);
+                if (!id) return;
                 $.get("{{ route('get.vehicles') }}", {
                     chassis_id: id
                 }, function(data) {
-                    let html = '<option selected disabled>Pilih Vehicle</option>';
+                    let html = '<option></option>';
                     data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
-                    $('#vehicles').html(html);
-                    $('#keterangans').html('<option selected disabled>Pilih</option>');
+                    $('#vehicles').html(html).prop('disabled', false);
                 });
             });
 
+            // Update varian_body / keterangan saat vehicle dipilih
             $('#vehicles').change(function() {
                 let id = $(this).val();
+                $('#hidden_vehicle_id').val(id);
+                updatePageNumbers();
+                $('.gambar-rincian-row').find('.gambar-keterangan').html('<option></option>').val(null)
+                    .trigger('change');
+                if (!id) return;
                 $.get("{{ route('get.keterangans') }}", {
-                    vehicle_id: id
+                    mdata_id: id
                 }, function(data) {
-                    let html = '<option selected disabled>Pilih Keterangan</option>';
+                    let html = '<option></option>';
                     data.forEach(d => {
+                        let fotoData = {
+                            utama: d.foto_utama,
+                            terurai: d.foto_terurai,
+                            kontruksi: d.foto_kontruksi
+                        };
                         html +=
-                            `<option value="${d.id}" data-foto='${JSON.stringify(d.foto_body)}'>${d.keterangan}</option>`;
+                            `<option value="${d.id}" data-foto='${JSON.stringify(fotoData)}'>${d.varian_body}</option>`;
                     });
-                    $('#keterangans').html(html);
-                });
-            });
-
-            // Preview gambar di form utama
-            $('#keterangans').change(function() {
-                let selected = $(this).find(':selected').data('foto');
-                let preview = $('.preview_form_1');
-                preview.empty();
-                if (selected) {
-                    let fotos = (typeof selected === "string") ? JSON.parse(selected) : selected;
-                    fotos.forEach(f => {
-                        let img = $(
-                            `<img src="/storage/body/${f}" class="img-thumbnail m-1 img-fluid" style="cursor:pointer;">`
-                        );
-                        img.on('click', function() {
-                            $('#imgPreviewModal').attr('src', '/storage/body/' + f);
-                            let modal = new bootstrap.Modal(document.getElementById(
-                                'modalPreview'));
-                            modal.show();
-                        });
-                        preview.append(img);
+                    $('.gambar-rincian-row').find('.gambar-keterangan').each(function() {
+                        $(this).html(html);
                     });
-                }
-            });
-
-            $('#btn-tambah-rincian').click(function() {
-                let engine = $('#engines').val(),
-                    brand = $('#brands').val(),
-                    chassis = $('#chassiss').val(),
-                    vehicle = $('#vehicles').val(),
-                    keterangan = $('#keterangans').val(),
-                    halaman_gambar = $('#halaman_gambar').val(),
-                    jumlah_gambar = $('#jumlah_gambar').val(),
-                    varian_id = $('#varians').val(),
-                    varianText = $('#varians option:selected').text();
-
-                let engineText = $('#engines option:selected').text(),
-                    brandText = $('#brands option:selected').text(),
-                    chassisText = $('#chassiss option:selected').text(),
-                    vehicleText = $('#vehicles option:selected').text(),
-                    keteranganText = $('#keterangans option:selected').text(),
-                    fotoBody = $('#keterangans option:selected').data('foto');
-
-                if (!engine || !brand || !chassis || !vehicle || !keterangan || !halaman_gambar || !
-                    jumlah_gambar || !varian_id) {
-                    alert("Lengkapi semua data!");
-                    return;
-                }
-
-                rincianData.push({
-                    engine,
-                    engineText,
-                    brand,
-                    brandText,
-                    chassis,
-                    chassisText,
-                    vehicle,
-                    vehicleText,
-                    keterangan,
-                    keteranganText,
-                    halaman_gambar,
-                    jumlah_gambar,
-                    varian_id,
-                    varianText,
-                    fotoBody
                 });
-
-                let rowHtml = `<tr data-index="${rincianData.length - 1}">
-                    <td>${halaman_gambar}</td>
-                    <td>${jumlah_gambar}</td>
-                    <td>${engineText}</td>
-                    <td>${brandText}</td>
-                    <td>${chassisText}</td>
-                    <td>${vehicleText}</td>
-                    <td>${keteranganText}</td>
-                    
-                    <td>${varianText}</td>
-                    <td>${fotoBody.map(f => 
-                        `<img src="/storage/body/${f}" class="img-thumbnail mb-1" style="width:50px;height:50px;cursor:pointer;" data-preview="${f}">`
-                    ).join('')}</td>
-                    <td><button class="btn btn-danger btn-sm btn-hapus-rincian">Hapus</button></td>
-                </tr>`;
-
-                $('#tbl-detail tbody').append(rowHtml);
-                $('.preview_form_1').empty();
             });
 
-
-            $('#tbl-detail tbody').on('click', 'img[data-preview]', function() {
-                let src = $(this).data('preview');
-                $('#imgPreviewModal').attr('src', '/storage/body/' + src);
-                let modal = new bootstrap.Modal(document.getElementById('modalPreview'));
-                modal.show();
+            // Sinkronisasi varian-select ke terurai & kontruksi
+            $(document).on('change', '.gambar-rincian-row[id^="utama-row-"] .varian-select', function() {
+                if (isHanyaTU) return;
+                let rowNum = $(this).closest('.gambar-rincian-row').attr('id').split('-')[2];
+                $('#terurai-row-' + rowNum).find('.varian-select').val($(this).val());
+                $('#kontruksi-row-' + rowNum).find('.varian-select').val($(this).val());
             });
 
-            // Hapus rincian
-            $(document).on('click', '.btn-hapus-rincian', function() {
-                let tr = $(this).closest('tr'),
-                    index = tr.data('index');
-                rincianData.splice(index, 1);
-                tr.remove();
-                $('#tbl-detail tbody tr').each(function(i) {
-                    $(this).attr('data-index', i);
-                    $(this).find('td:first').text(i + 1);
-                });
-                counter = $('#tbl-detail tbody tr').length + 1;
+            // Update tombol preview
+            $(document).on('change', '.gambar-rincian-row[id^="utama-row-"] .gambar-keterangan', function() {
+                let row = $(this).closest('.gambar-rincian-row');
+                row.find('.preview-gambar-btn').prop('disabled', !$(this).val());
+                if (!isHanyaTU) updatePageNumbers();
             });
 
-            // Simpan workspace
-            $('#btn-simpan-ws').click(function() {
-                let employee_id = $('#employees').val(),
-                    customer_id = $('#customers').val(),
-                    submission_id = $('#submissions').val(),
-                    varian_id = $('#varians').val(),
-                    jumlah_gambar = $('#jumlah_gambar').val();
-
-                if (!employee_id || !customer_id || !submission_id || !varian_id || rincianData.length ==
-                    0) {
-                    alert("Lengkapi data & minimal 1 rincian!");
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('store.workspace') }}",
-                    method: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        employee_id,
-                        customer_id,
-                        submission_id,
-                        varian_id,
-                        jumlah_gambar,
-                        rincian: rincianData
-                    },
-                    success: function(res) {
-                        if (!res.error) {
-
-                            toastr.success(res.message);
-
-
-                            setTimeout(function() {
-                                window.location.href =
-                                    "{{ route('index.workspace') }}";
-                            }, 1000);
-                        } else {
-                            toastr.error(res.message);
+            // Preview gambar modal
+            $(document).on('click', '.preview-gambar-btn', function() {
+                let row = $(this).closest('.gambar-rincian-row');
+                let selectedOption = row.find('.gambar-keterangan option:selected');
+                let fotoData = selectedOption.data('foto');
+                let fotoHtml = '';
+                if (fotoData) {
+                    for (const key in fotoData) {
+                        if (fotoData[key]) {
+                            fotoHtml +=
+                                `<img src="/storage/${fotoData[key]}" class="img-fluid mb-2" style="max-height:300px;">`;
                         }
-                    },
-                    error: function(err) {
-                        console.error(err);
-                        toastr.error(
-                            "Terjadi error saat menyimpan workspace. Cek log Laravel!");
                     }
-                });
+                }
+                if (fotoHtml) {
+                    $('#imgPreviewModal').html(fotoHtml);
+                    $('#modalPreview').modal('show');
+                } else {
+                    toastr.warning("Tidak ada gambar yang tersedia untuk Jenis Body ini.");
+                }
             });
 
         });

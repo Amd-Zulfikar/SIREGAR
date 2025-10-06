@@ -179,10 +179,10 @@ Route::middleware(['auth', 'role:drafter'])->group(function () {
     Route::post('/drafter/workspace/select-upload', [App\Http\Controllers\Drafter\WorkspaceController::class, 'select_upload'])->name('select.upload');
 
     // AJAX - Multi Filter
-    Route::get('/get-brands', [WorkspaceController::class, 'getBrands'])->name('get.brands');
-    Route::get('/get-chassiss', [WorkspaceController::class, 'getChassiss'])->name('get.chassiss');
-    Route::get('/get-vehicles', [WorkspaceController::class, 'getVehicles'])->name('get.vehicles');
-    Route::get('/get-keterangans', [WorkspaceController::class, 'getKeterangans'])->name('get.keterangans');
+    Route::get('/drafter/workspace/get-brands', [WorkspaceController::class, 'getBrands'])->name('get.brands');
+    Route::get('/drafter/workspace/get-chassiss', [WorkspaceController::class, 'getChassiss'])->name('get.chassiss');
+    Route::get('/drafter/workspace/get-vehicles', [WorkspaceController::class, 'getVehicles'])->name('get.vehicles');
+    Route::get('/drafter/workspace/get-keterangans', [WorkspaceController::class, 'getKeterangans'])->name('get.keterangans');
     // AJAX - Preview foto_body
     Route::get('/preview-gambar', [WorkspaceController::class, 'previewGambar'])->name('preview.gambar');
 });

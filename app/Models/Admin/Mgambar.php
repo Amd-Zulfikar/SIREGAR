@@ -11,13 +11,16 @@ class Mgambar extends Model
     protected $table = 'tb_mgambar';
     protected $fillable = [
         'mdata_id',
-        'foto_body',
+        'foto_utama',
+        'foto_terurai',
+        'foto_kontruksi',
+        'foto_optional',
         'keterangan',
     ];
 
-    protected $casts = [
-        'foto_body' => 'array',
-    ];
+    // protected $casts = [
+    //     'foto_body' => 'array',
+    // ];
 
     public function mdata()
     {
