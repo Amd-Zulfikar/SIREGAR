@@ -42,10 +42,10 @@ class MgambarController extends Controller
         $validator = Validator::make($request->all(), [
             'mdata_id'       => 'required|exists:tb_mdata,id',
             'varian_body'    => 'required|string|max:255',
-            'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -69,7 +69,7 @@ class MgambarController extends Controller
                     $dataFiles[$field] = null;
                 }
             }
-            
+
             Mgambar::create([
                 'mdata_id'       => $request->mdata_id,
                 'keterangan'     => $request->varian_body,
@@ -117,10 +117,10 @@ class MgambarController extends Controller
         $validator = Validator::make($request->all(), [
             'mdata_id'       => 'required|exists:tb_mdata,id',
             'varian_body'    => 'required|string|max:255',
-            'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
         ]);
 
         if ($validator->fails()) {

@@ -34,12 +34,27 @@
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for="">Nama Varian</label>
+                                                <label for="">Nama Tampak Utama</label>
                                                 <input name="name" type="text" class="form-control"
-                                                    placeholder="Contoh: Gambar Tampak Utama Standar/Gambar Tampak Terurai Standar"
-                                                    required>
+                                                    placeholder="Contoh: Gambar Tampak Utama Standar" required>
+                                                <small><?php echo e($errors->first('name')); ?></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="">Nama Tampak Terurai</label>
+                                                <input name="name" type="text" class="form-control"
+                                                    placeholder="Contoh: Gambar Tampak Terurai Standar" required>
+                                                <small><?php echo e($errors->first('name')); ?></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="">Nama Tampak Kontruksi</label>
+                                                <input name="name" type="text" class="form-control"
+                                                    placeholder="Contoh: Gambar Detail Kontruksi Standar" required>
                                                 <small><?php echo e($errors->first('name')); ?></small>
                                             </div>
                                         </div>

@@ -84,10 +84,10 @@
                                                 </td>
 
                                                 <td>
-                                                    {{-- <a class="btn btn-light btn-sm"
+                                                    <a class="btn btn-light btn-sm"
                                                         href="{{ route('copy.mgambar', $mgambar->id) }}">
                                                         <i class="fa-solid fa-copy"></i> Copas
-                                                    </a> --}}
+                                                    </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="{{ route('edit.mgambar', $mgambar->id) }}">
                                                         <i class="fas fa-pencil-alt"></i> Edit

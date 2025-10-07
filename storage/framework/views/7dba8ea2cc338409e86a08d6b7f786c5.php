@@ -37,7 +37,9 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Jenis Varian</th>
+                                            <th>Tampak Utama</th>
+                                            <th>Tampak Terurai</th>
+                                            <th>Tampak Kontruksi</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -69,7 +71,9 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th>Jenis Pengajuan</th>
+                                            <th>Tampak Utama</th>
+                                            <th>Tampak Terurai</th>
+                                            <th>Tampak Kontruksi</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>

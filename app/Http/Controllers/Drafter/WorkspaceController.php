@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Drafter;
 
-
 use App\Models\Admin\Brand;
 use App\Models\Admin\Mdata;
 use Illuminate\Support\Str;
@@ -55,7 +54,7 @@ class WorkspaceController extends Controller
         ));
     }
 
-    
+
 
     // public function store(Request $request)
     // {
@@ -138,13 +137,13 @@ class WorkspaceController extends Controller
                 'employee_id'       => 'required|exists:tb_employees,id',
                 'customer_id'       => 'required|exists:tb_customers,id',
                 'submission_id'     => 'required|exists:tb_submissions,id',
-                'engine_id'         => 'required', 
-                'brand_id'          => 'required', 
-                'chassis_id'        => 'required', 
+                'engine_id'         => 'required',
+                'brand_id'          => 'required',
+                'chassis_id'        => 'required',
                 'jumlah_gambar_total' => 'required|numeric|min:1|max:4', // Validasi baru
-                'rincian'           => 'required|array', 
+                'rincian'           => 'required|array',
             ]);
-            
+
             // --- Logika Nomor Transaksi (Tetap sama) ---
             // ... (kode untuk membuat $noTransaksi) ...
             $todayDate = now()->format('dmy');
@@ -162,7 +161,7 @@ class WorkspaceController extends Controller
 
             // Ambil dan ratakan semua rincian dari form
             $rincianGroups = $request->input('rincian', []);
-            
+
             $allRincian = [];
             foreach ($rincianGroups as $group) {
                 if (is_array($group)) {
@@ -171,9 +170,9 @@ class WorkspaceController extends Controller
                     }
                 }
             }
-            
+
             // Filter rincian yang benar-benar terisi (punya keterangan_id dan varian_id)
-            $validRincian = collect($allRincian)->filter(function($r) {
+            $validRincian = collect($allRincian)->filter(function ($r) {
                 return !empty($r['keterangan_id']) && !empty($r['varian_id']);
             });
 
@@ -183,17 +182,17 @@ class WorkspaceController extends Controller
                     'message' => 'Minimal satu baris rincian gambar harus diisi.'
                 ], 422);
             }
-            
+
             // Total gambar = Jumlah baris rincian valid (dikalikan 1 per baris)
             // Karena setiap baris dianggap 1 gambar (Utama 1, Terurai 1, Konstruksi 1)
-            $totalGambar = $validRincian->count(); 
+            $totalGambar = $validRincian->count();
 
             // Buat Workspace utama
             $workspace = Workspace::create([
                 'employee_id'   => $request->employee_id,
                 'customer_id'   => $request->customer_id,
                 'submission_id' => $request->submission_id,
-                'varian_id'     => $validRincian->first()['varian_id'] ?? null, 
+                'varian_id'     => $validRincian->first()['varian_id'] ?? null,
                 'jumlah_gambar' => $totalGambar, // Menggunakan total baris yang valid
                 'no_transaksi'  => $noTransaksi,
                 'engine_id'     => $request->engine_id,
@@ -207,14 +206,14 @@ class WorkspaceController extends Controller
                     'engine'         => $request->engine_id,
                     'brand'          => $request->brand_id,
                     'chassis'        => $request->chassis_id,
-                    'vehicle'        => $request->vehicle_id, 
-                    
+                    'vehicle'        => $request->vehicle_id,
+
                     // Data dari Rincian
-                    'keterangan'     => $row['keterangan_id'], 
+                    'keterangan'     => $row['keterangan_id'],
                     'varian_id'      => $row['varian_id'],
                     'halaman_gambar' => $row['halaman_gambar'] ?? null,
                     'jumlah_gambar'  => 1, // SET JML GAMBAR MENJADI 1 PER BARIS AKTIF
-                    'foto_body'      => json_encode([]), 
+                    'foto_body'      => json_encode([]),
                 ]);
             }
 
@@ -242,7 +241,9 @@ class WorkspaceController extends Controller
             $keteranganText = $g->keterangan;
             if (is_numeric($g->keterangan)) {
                 $m = Mgambar::find($g->keterangan);
-                if ($m) $keteranganText = $m->keterangan;
+                if ($m) {
+                    $keteranganText = $m->keterangan;
+                }
             }
 
             return [
@@ -311,7 +312,7 @@ class WorkspaceController extends Controller
         }
 
         $workspace->jumlah_gambar = collect($rincians)
-            ->sum(fn($r) => isset($r['jumlah_gambar']) ? (int) $r['jumlah_gambar'] : 0);
+            ->sum(fn ($r) => isset($r['jumlah_gambar']) ? (int) $r['jumlah_gambar'] : 0);
 
         $workspace->save();
 
@@ -374,7 +375,9 @@ class WorkspaceController extends Controller
 
         $pdfFiles = [];
         foreach ($workspace->workspaceGambar as $index => $gambar) {
-            if (!isset($overlayedImages[$index])) continue;
+            if (!isset($overlayedImages[$index])) {
+                continue;
+            }
 
             // Nomor urut file PDF
             $pageNumber = str_pad($index + 1, 2, '0', STR_PAD_LEFT);
@@ -424,12 +427,16 @@ class WorkspaceController extends Controller
 
         foreach ($workspace->workspaceGambar as $gambar) {
             $fotos = json_decode($gambar->foto_body, true);
-            if (!$fotos) continue;
+            if (!$fotos) {
+                continue;
+            }
 
             foreach ($fotos as $foto) {
                 $relative = (strpos($foto, 'body/') === 0) ? $foto : 'body/' . ltrim($foto, '/');
                 $path = storage_path("app/public/{$relative}");
-                if (!file_exists($path)) continue;
+                if (!file_exists($path)) {
+                    continue;
+                }
 
                 $img = null;
                 try {
@@ -444,7 +451,9 @@ class WorkspaceController extends Controller
                     }
                 }
 
-                if ($img === null) continue;
+                if ($img === null) {
+                    continue;
+                }
 
                 $imgW = $img->width();
                 $imgH = $img->height();
@@ -555,7 +564,9 @@ class WorkspaceController extends Controller
                 if ($fotoParaf) {
                     if (Str::startsWith($fotoParaf, '[')) {
                         $decoded = json_decode($fotoParaf, true);
-                        if (is_array($decoded) && count($decoded) > 0) $fotoParaf = $decoded[0];
+                        if (is_array($decoded) && count($decoded) > 0) {
+                            $fotoParaf = $decoded[0];
+                        }
                     }
 
                     $parafPath = storage_path('app/public/paraf/' . ltrim($fotoParaf, '/'));
@@ -576,7 +587,9 @@ class WorkspaceController extends Controller
                 if ($fotoParaf) {
                     if (Str::startsWith($fotoParaf, '[')) {
                         $decoded = json_decode($fotoParaf, true);
-                        if (is_array($decoded) && count($decoded) > 0) $fotoParaf = $decoded[0];
+                        if (is_array($decoded) && count($decoded) > 0) {
+                            $fotoParaf = $decoded[0];
+                        }
                     }
 
                     $parafPath = storage_path('app/public/paraf/' . ltrim($fotoParaf, '/'));
@@ -644,14 +657,30 @@ class WorkspaceController extends Controller
 
     public function getKeterangans(Request $request)
     {
-        $mdata_id = $request->mdata_id;
-        if (!$mdata_id) {
-            return response()->json([], 400); // Bad request
+        $mdataId = $request->get('mdata_id');
+
+        // Ambil semua mgambar untuk mdata_id tersebut
+        $mgambars = \App\Models\Admin\Mgambar::where('mdata_id', $mdataId)->get();
+
+        if ($mgambars->isEmpty()) {
+            return response()->json([]);
         }
 
-        $keterangans = Keterangan::where('mdata_id', $mdata_id)->get(['id', 'varian_body', 'foto_utama', 'foto_terurai', 'foto_kontruksi']);
-        return response()->json($keterangans);
+        // Format data untuk dropdown
+        $options = $mgambars->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'keterangan' => $item->keterangan,
+                'foto_utama' => $item->foto_utama,
+                'foto_terurai' => $item->foto_terurai,
+                'foto_kontruksi' => $item->foto_kontruksi,
+                'foto_optional' => $item->foto_optional,
+            ];
+        });
+
+        return response()->json($options);
     }
+
 
 
 

@@ -82,7 +82,10 @@
                                                 </td>
 
                                                 <td>
-                                                    
+                                                    <a class="btn btn-light btn-sm"
+                                                        href="<?php echo e(route('copy.mgambar', $mgambar->id)); ?>">
+                                                        <i class="fa-solid fa-copy"></i> Copas
+                                                    </a>
                                                     <a class="btn btn-info btn-sm"
                                                         href="<?php echo e(route('edit.mgambar', $mgambar->id)); ?>">
                                                         <i class="fas fa-pencil-alt"></i> Edit
