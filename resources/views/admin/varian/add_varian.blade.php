@@ -39,25 +39,25 @@
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Utama</label>
-                                                <input name="name" type="text" class="form-control"
+                                                <input name="name_utama" type="text" class="form-control"
                                                     placeholder="Contoh: Gambar Tampak Utama Standar" required>
-                                                <small>{{ $errors->first('name') }}</small>
+                                                <small>{{ $errors->first('name_utama') }}</small>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Terurai</label>
-                                                <input name="name" type="text" class="form-control"
+                                                <input name="name_terurai" type="text" class="form-control"
                                                     placeholder="Contoh: Gambar Tampak Terurai Standar" required>
-                                                <small>{{ $errors->first('name') }}</small>
+                                                <small>{{ $errors->first('name_terurai') }}</small>
                                             </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Kontruksi</label>
-                                                <input name="name" type="text" class="form-control"
+                                                <input name="name_kontruksi" type="text" class="form-control"
                                                     placeholder="Contoh: Gambar Detail Kontruksi Standar" required>
-                                                <small>{{ $errors->first('name') }}</small>
+                                                <small>{{ $errors->first('name_kontruksi') }}</small>
                                             </div>
                                         </div>
                                     </div>

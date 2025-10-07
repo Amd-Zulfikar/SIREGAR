@@ -14,7 +14,6 @@ class Mgambar extends Model
         'foto_utama',
         'foto_terurai',
         'foto_kontruksi',
-        'foto_optional',
         'keterangan',
     ];
 

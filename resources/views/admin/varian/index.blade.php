@@ -49,7 +49,13 @@
                                         <tr>
                                             @forelse($varians as $varian)
                                                 <td>
-                                                    {{ $varian->name }}
+                                                    {{ $varian->name_utama }}
+                                                </td>
+                                                <td>
+                                                    {{ $varian->name_terurai }}
+                                                </td>
+                                                <td>
+                                                    {{ $varian->name_kontruksi }}
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-info btn-sm"

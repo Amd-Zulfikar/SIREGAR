@@ -27,16 +27,22 @@ class VarianController extends Controller
     {
         $request->validate(
             [
-                'name' => 'required|unique:tb_varians,name',
+                'name_utama' => 'required|unique:tb_varians,name_utama',
+                'name_terurai' => 'required|unique:tb_varians,name_terurai',
+                'name_kontruksi' => 'required|unique:tb_varians,name_kontruksi',
             ],
             [
-                'name.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_utama.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_terurai.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_kontruksi.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
             ]
         );
 
         $input = $request->all();
         Varian::create([
-            'name' => $input['name'],
+            'name_utama' => $input['name_utama'],
+            'name_terurai' => $input['name_terurai'],
+            'name_kontruksi' => $input['name_kontruksi'],
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil disimpan!');
@@ -63,10 +69,14 @@ class VarianController extends Controller
     {
         $request->validate(
             [
-                'name' => 'required|unique:tb_varians,name',
+                'name_utama' => 'required|unique:tb_varians,name_utama',
+                'name_terurai' => 'required|unique:tb_varians,name_terurai',
+                'name_kontruksi' => 'required|unique:tb_varians,name_kontruksi',
             ],
             [
-                'name.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_utama.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_terurai.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_kontruksi.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
             ]
         );
 
@@ -77,7 +87,9 @@ class VarianController extends Controller
 
         $input = $request->all();
         $tbvarian->update([
-            'name' => $input['name'],
+            'name_utama' => $input['name_utama'],
+            'name_terurai' => $input['name_terurai'],
+            'name_kontruksi' => $input['name_kontruksi'],
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil diupdate!');

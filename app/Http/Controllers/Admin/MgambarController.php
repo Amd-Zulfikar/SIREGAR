@@ -45,7 +45,7 @@ class MgambarController extends Controller
             'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
             'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
             'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
-            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
+            // 'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -76,7 +76,7 @@ class MgambarController extends Controller
                 'foto_utama'     => $dataFiles['foto_utama'],
                 'foto_terurai'   => $dataFiles['foto_terurai'],
                 'foto_kontruksi' => $dataFiles['foto_kontruksi'],
-                'foto_optional'  => $dataFiles['foto_optional'],
+                // 'foto_optional'  => $dataFiles['foto_optional'],
             ]);
 
             return redirect()->route('index.mgambar')->with('success', 'Master Gambar berhasil ditambahkan!');

@@ -38,12 +38,30 @@
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-4">
                                             <div class="form-group">
-                                                <label for="">Nama Varian</label>
-                                                <input name="name" type="text" value="{{ $varian->name }}"
+                                                <label for="">Nama Tampak Utama</label>
+                                                <input name="name_utama" type="text" value="{{ $varian->name_utama }}"
                                                     class="form-control" placeholder="Masukan Nama Varian" required>
-                                                <small>{{ $errors->first('name') }}</small>
+                                                <small>{{ $errors->first('name_utama') }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="">Nama Tampak Terurai</label>
+                                                <input name="name_terurai" type="text"
+                                                    value="{{ $varian->name_terurai }}" class="form-control"
+                                                    placeholder="Masukan Nama Varian" required>
+                                                <small>{{ $errors->first('name_terurai') }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="">Nama Tampak Kontruksi</label>
+                                                <input name="name_kontruksi" type="text"
+                                                    value="{{ $varian->name_kontruksi }}" class="form-control"
+                                                    placeholder="Masukan Nama Varian" required>
+                                                <small>{{ $errors->first('name_kontruksi') }}</small>
                                             </div>
                                         </div>
                                     </div>

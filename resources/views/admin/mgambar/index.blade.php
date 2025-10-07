@@ -52,36 +52,73 @@
                                                 <td>{{ $mgambar->mdata->vehicle->name ?? '-' }}</td>
                                                 <td>{{ $mgambar->keterangan }}</td>
 
-                                                {{-- START: PERBAIKAN LOGIC TAMPIL GAMBAR --}}
                                                 <td>
-                                                    @php
-                                                        $foto_fields = [
-                                                            'foto_utama' => $mgambar->foto_utama,
-                                                            'foto_terurai' => $mgambar->foto_terurai,
-                                                            'foto_kontruksi' => $mgambar->foto_kontruksi,
-                                                            'foto_optional' => $mgambar->foto_optional,
-                                                        ];
-                                                        $hasImage = false;
-                                                    @endphp
-
                                                     <div style="display:flex; flex-wrap: wrap; gap: 5px;">
-                                                        @foreach ($foto_fields as $type => $file_name)
-                                                            @if ($file_name)
+
+                                                        {{-- 1. Tampilkan Foto Utama, Terurai, Kontruksi --}}
+                                                        @php
+                                                            $imageFields = [
+                                                                'Utama' => $mgambar->foto_utama
+                                                                    ? asset('storage/body/' . $mgambar->foto_utama)
+                                                                    : null,
+                                                                'Terurai' => $mgambar->foto_terurai
+                                                                    ? asset('storage/body/' . $mgambar->foto_terurai)
+                                                                    : null,
+                                                                'Konstruksi' => $mgambar->foto_kontruksi
+                                                                    ? asset('storage/body/' . $mgambar->foto_kontruksi)
+                                                                    : null,
+                                                                'Optional' => $mgambar->foto_optional
+                                                                    ? asset('storage/body/' . $mgambar->foto_optional)
+                                                                    : null,
+                                                            ];
+                                                            $hasImage = false;
+                                                        @endphp
+
+                                                        @foreach ($imageFields as $title => $src)
+                                                            @if ($src)
                                                                 @php $hasImage = true; @endphp
-                                                                <img src="{{ asset('storage/body/' . $file_name) }}"
-                                                                    alt="{{ ucfirst($type) }}"
-                                                                    title="Gambar {{ ucfirst($type) }}"
+                                                                <img src="{{ $src }}"
+                                                                    alt="Gambar {{ $title }}"
+                                                                    title="Gambar {{ $title }}"
                                                                     class="img-thumbnail preview-img"
-                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer;"
-                                                                    data-src="{{ asset('storage/body/' . $file_name) }}">
+                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer; border: 2px solid #3c8dbc;"
+                                                                    data-src="{{ $src }}">
                                                             @endif
                                                         @endforeach
+
+                                                        {{-- 2. Tampilkan Foto Optional (JSON) --}}
+                                                        @php
+                                                            $optionalImages = json_decode(
+                                                                $mgambar->foto_optional,
+                                                                true,
+                                                            );
+                                                        @endphp
+
+                                                        @if (is_array($optionalImages))
+                                                            @foreach ($optionalImages as $optional)
+                                                                @php
+                                                                    $optionalSrc = asset(
+                                                                        'storage/body/optional/' .
+                                                                            $optional['filename'],
+                                                                    );
+                                                                    $optionalTitle =
+                                                                        $optional['name'] ?? 'Optional Image';
+                                                                    $hasImage = true;
+                                                                @endphp
+                                                                <img src="{{ $optionalSrc }}" alt="{{ $optionalTitle }}"
+                                                                    title="Optional: {{ $optionalTitle }}"
+                                                                    class="img-thumbnail preview-img"
+                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer; border: 2px solid #5cb85c;"
+                                                                    data-src="{{ $optionalSrc }}">
+                                                            @endforeach
+                                                        @endif
 
                                                         @if (!$hasImage)
                                                             <span class="text-muted">No Image</span>
                                                         @endif
                                                     </div>
                                                 </td>
+                                                {{-- END: PERBAIKAN LOGIC TAMPIL GAMBAR --}}
 
                                                 <td>
                                                     <a class="btn btn-light btn-sm"

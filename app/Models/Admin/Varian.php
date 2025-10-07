@@ -9,11 +9,17 @@ class Varian extends Model
 {
     protected $table = 'tb_varians';
     protected $fillable = [
-        'name',
+        'name_utama',
+        'name_terurai',
+        'name_kontruksi',
     ];
 
     public function workspace()
     {
         return $this->hasMany(Workspace::class, 'varian_id');
+    }
+    public function getDisplayNameAttribute()
+    {
+        return $this->name_utama;
     }
 }
