@@ -12,6 +12,7 @@ class Varian extends Model
         'name_utama',
         'name_terurai',
         'name_kontruksi',
+        'name_optional',
     ];
 
     public function workspace()

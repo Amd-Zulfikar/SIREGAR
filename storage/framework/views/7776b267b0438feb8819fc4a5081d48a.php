@@ -192,7 +192,8 @@ unset($__errorArgs, $__bag); ?>
                                             <div class="form-group border p-3 rounded mb-3"
                                                 style="background-color: #f7f9fc;">
                                                 <label for="foto_optional" class="text-secondary"><i
-                                                        class="fas fa-th-large"></i> Gambar Optional</label>
+                                                        class="fas fa-plus-circle"></i> Gambar
+                                                    Optional</label>
                                                 <div class="input-group">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
@@ -200,6 +201,7 @@ unset($__errorArgs, $__bag); ?>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-secondary mb-0" for="foto_optional">
                                                             Upload Gambar
+                                                            
                                                             <input type="file" name="foto_optional" id="foto_optional"
                                                                 style="display: none;" accept="image/*"
                                                                 onchange="updateFileName(this, 'optional')">
@@ -217,7 +219,10 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                                                 <div class="preview mt-2" id="preview_optional"></div>
+                                                
                                             </div>
+                                            
+
 
                                         </div>
                                     </div>
@@ -231,7 +236,6 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </form>
 
-                <!-- Modal Preview Gambar -->
                 <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
@@ -254,11 +258,13 @@ unset($__errorArgs, $__bag); ?>
 <?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
+            // Inisialisasi Select2
             $('.select2').select2()
         });
 
         /**
          * Fungsi untuk menampilkan nama file dan preview gambar, serta menampilkan modal preview saat gambar diklik.
+         * Digunakan untuk Blok 1, 2, 3, dan 4.
          * @param {HTMLInputElement} input - Elemen input file yang berubah.
          * @param {string} type - Jenis gambar ('utama', 'terurai', 'kontruksi', 'optional').
          */
@@ -282,7 +288,6 @@ unset($__errorArgs, $__bag); ?>
                     // Menambahkan event click untuk menampilkan modal
                     img.on('click', function() {
                         $('#imgPreviewModal').attr('src', e.target.result);
-                        // Asumsi Anda menggunakan Bootstrap 4/5, pastikan modal dipanggil dengan benar
                         $('#modalPreview').modal('show');
                     });
 

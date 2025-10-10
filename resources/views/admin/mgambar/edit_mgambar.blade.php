@@ -101,7 +101,9 @@
                                                         value="Pilih file baru (opsional)" readonly>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-info mb-0" for="foto_utama">
+
                                                             Upload Baru
+
                                                             <input type="file" name="foto_utama" id="foto_utama"
                                                                 style="display: none;"
                                                                 onchange="updateFileName(this, 'utama')">
@@ -113,6 +115,7 @@
                                                 @enderror
                                                 {{-- Area untuk preview gambar baru yang dipilih --}}
                                                 <div class="preview mt-2" id="preview_utama"></div>
+
                                             </div>
 
                                             {{-- BLOK 2: GAMBAR TERURAI --}}
@@ -145,7 +148,9 @@
                                                         value="Pilih file baru (opsional)" readonly>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-warning mb-0" for="foto_terurai">
+
                                                             Upload Baru
+
                                                             <input type="file" name="foto_terurai" id="foto_terurai"
                                                                 style="display: none;"
                                                                 onchange="updateFileName(this, 'terurai')">
@@ -156,6 +161,7 @@
                                                     <small class="text-danger d-block">{{ $message }}</small>
                                                 @enderror
                                                 <div class="preview mt-2" id="preview_terurai"></div>
+
                                             </div>
 
                                             {{-- BLOK 3: GAMBAR KONTRUKSI --}}
@@ -188,7 +194,9 @@
                                                         value="Pilih file baru (opsional)" readonly>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-primary mb-0" for="foto_kontruksi">
+
                                                             Upload Baru
+
                                                             <input type="file" name="foto_kontruksi"
                                                                 id="foto_kontruksi" style="display: none;"
                                                                 onchange="updateFileName(this, 'kontruksi')">
@@ -199,60 +207,56 @@
                                                     <small class="text-danger d-block">{{ $message }}</small>
                                                 @enderror
                                                 <div class="preview mt-2" id="preview_kontruksi"></div>
+
                                             </div>
 
-                                            {{-- BLOK 4: GAMBAR DETAIL --}}
-                                            <div class="form-group border p-3 rounded" style="background-color: #f7f9fc;">
-                                                <label for="foto_optional" class="text-success">
-                                                    <i class="fas fa-search-plus"></i> Gambar Detail
-                                                    @if ($mgambar->foto_optional)
-                                                        <span class="badge badge-success ml-1">TERSEDIA</span>
-                                                    @endif
-                                                </label>
+                                            {{-- BLOK 4: GAMBAR OPTIONAL --}}
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label for="foto_optional" class="text-secondary"><i
+                                                        class="fas fa-plus-circle"></i> Gambar Optional</label>
 
-                                                <div class="current-image-preview mb-2" id="current_preview_detail">
-                                                    @if ($mgambar->foto_optional)
+                                                {{-- Preview existing optional --}}
+                                                @if ($mgambar->foto_optional)
+                                                    <div class="current-image-preview mb-2" id="current_preview_optional">
                                                         <img src="{{ asset('storage/body/' . $mgambar->foto_optional) }}"
                                                             class="img-thumbnail border border-secondary"
                                                             style="max-width: 150px; height: auto; cursor:pointer;"
                                                             onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
                                                         <p class="text-muted small mt-1">Gambar saat ini (disimpan)</p>
-                                                    @else
-                                                        <p class="text-muted small mt-1">Belum ada gambar detail.</p>
-                                                    @endif
-                                                </div>
+                                                    </div>
+                                                @else
+                                                    <p class="text-muted small mt-1">Belum ada gambar optional.</p>
+                                                @endif
 
-                                                {{-- Hidden input untuk simpan nama file lama --}}
+                                                {{-- Input hidden untuk menyimpan nama file lama --}}
                                                 <input type="hidden" name="old_foto_optional"
                                                     value="{{ $mgambar->foto_optional }}">
 
+                                                {{-- Upload file baru --}}
                                                 <div class="input-group mt-3">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
                                                         value="Pilih file baru (opsional)" readonly>
                                                     <div class="input-group-append">
-                                                        <label class="btn btn-sm btn-success mb-0" for="foto_optional">
-                                                            Upload Baru
+                                                        <label class="btn btn-sm btn-secondary mb-0"
+                                                            for="foto_optional">Upload Baru
                                                             <input type="file" name="foto_optional" id="foto_optional"
-                                                                style="display: none;"
-                                                                onchange="updateFileName(this, 'detail')">
+                                                                style="display: none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'optional')">
                                                         </label>
                                                     </div>
                                                 </div>
-                                                @error('foto_optional')
-                                                    <small class="text-danger d-block">{{ $message }}</small>
-                                                @enderror
 
-                                                {{-- Preview gambar baru --}}
-                                                <div class="preview mt-2" id="preview_detail"></div>
+                                                {{-- Preview file baru --}}
+                                                <div class="preview mt-2" id="preview_optional"></div>
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-footer d-flex justify-content-end">
-                                    <a href="{{ route('index.mgambar') }}"
-                                        class="btn btn-outline-danger mr-2">Kembali</a>
+                                <div class="card-footer me-2">
+                                    <a href="{{ route('index.mgambar') }}" class="btn btn-outline-danger">Kembali</a>
                                     <input type="submit" value="Update Data Gambar" class="btn btn-outline-success">
                                 </div>
                             </div>
@@ -284,44 +288,44 @@
     <script>
         $(function() {
             // Inisialisasi Select2
-            $('.select2').select2()
+            $('.select2').select2();
         });
 
-        // Fungsi untuk menampilkan nama file dan preview
+        /**
+         * Fungsi untuk menampilkan nama file dan preview gambar baru,
+         * serta menampilkan modal preview saat gambar diklik.
+         * Digunakan untuk Blok 1, 2, 3, dan 4.
+         * @param {HTMLInputElement} input - Elemen input file yang berubah.
+         * @param {string} type - Jenis gambar ('utama', 'terurai', 'kontruksi', 'optional').
+         */
         function updateFileName(input, type) {
             const fileNameInput = $(input).closest('.input-group').find('.file-name-display');
-            const currentPreviewContainer = $('#current_preview_' + type); // Kontainer preview gambar lama
-            const newPreviewContainer = $('#preview_' + type); // Kontainer preview gambar baru
+            const previewContainer = $('#preview_' + type);
 
-            // 1. Bersihkan preview gambar baru sebelumnya
-            newPreviewContainer.html('');
+            previewContainer.html(''); // Bersihkan preview lama
 
             if (input.files.length > 0) {
                 const file = input.files[0];
                 fileNameInput.val(file.name);
 
-                // 2. Sembunyikan gambar yang saat ini tersimpan (agar tidak tumpang tindih dengan preview baru)
-                currentPreviewContainer.hide();
-
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // Tampilkan preview gambar baru dengan border hijau
+                    // Membuat elemen gambar thumbnail
                     const img = $('<img src="' + e.target.result +
-                        '" class="img-thumbnail border border-success" style="max-width: 150px; height: auto; cursor:pointer;">' +
-                        '<p class="text-success small mt-1">Preview Gambar BARU</p>');
+                        '" class="img-thumbnail" style="max-width: 150px; height: auto; cursor:pointer;" alt="Preview Gambar">'
+                    );
 
+                    // Menambahkan event click untuk menampilkan modal
                     img.on('click', function() {
                         $('#imgPreviewModal').attr('src', e.target.result);
                         $('#modalPreview').modal('show');
                     });
-                    newPreviewContainer.append(img);
+
+                    previewContainer.append(img);
                 }
                 reader.readAsDataURL(file);
             } else {
-                // Jika file dibatalkan/dihapus, reset tampilan file name
-                fileNameInput.val('Pilih file baru (opsional)');
-                // 3. Tampilkan kembali gambar yang saat ini tersimpan
-                currentPreviewContainer.show();
+                fileNameInput.val('Belum ada file dipilih');
             }
         }
     </script>

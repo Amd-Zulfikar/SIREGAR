@@ -34,28 +34,36 @@
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Utama</label>
                                                 <input name="name_utama" type="text" class="form-control"
-                                                    placeholder="Contoh: Gambar Tampak Utama Standar" required>
+                                                    placeholder="Contoh: Gambar Tampak Utama Standar">
                                                 <small><?php echo e($errors->first('name_utama')); ?></small>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Terurai</label>
                                                 <input name="name_terurai" type="text" class="form-control"
-                                                    placeholder="Contoh: Gambar Tampak Terurai Standar" required>
+                                                    placeholder="Contoh: Gambar Tampak Terurai Standar">
                                                 <small><?php echo e($errors->first('name_terurai')); ?></small>
                                             </div>
                                         </div>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <div class="form-group">
                                                 <label for="">Nama Tampak Kontruksi</label>
                                                 <input name="name_kontruksi" type="text" class="form-control"
-                                                    placeholder="Contoh: Gambar Detail Kontruksi Standar" required>
+                                                    placeholder="Contoh: Gambar Detail Kontruksi Standar">
                                                 <small><?php echo e($errors->first('name_kontruksi')); ?></small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="">Nama Tampak Optional/Detail</label>
+                                                <input name="name_optional" type="text" class="form-control"
+                                                    placeholder="Contoh: Gambar Detail Pengikat">
+                                                <small><?php echo e($errors->first('name_optional')); ?></small>
                                             </div>
                                         </div>
                                     </div>

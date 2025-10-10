@@ -13,6 +13,7 @@ use App\Models\Admin\Mgambar;
 use App\Models\Admin\Vehicle;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Employee;
+use App\Models\Admin\Pemeriksa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Admin\Submission;
 use App\Models\Drafter\Workspace;
@@ -40,51 +41,33 @@ class WorkspaceController extends Controller
     public function workspace_add()
     {
         $customers   = Customer::active()->orderBy('name','asc')->get();
-        $employees   = Employee::active()->orderBy('name','asc')->get();
+        $employees   = Employee::active()->orderBy('name','asc')->get();      // Drafter
+        $pemeriksas  = Pemeriksa::orderBy('name','asc')->get();     // Pemeriksa
         $submissions = Submission::orderBy('name','asc')->get();
-        
-        $varians = Varian::orderBy('name_utama','asc')
-                    ->orderBy('name_terurai','asc')
-                    ->orderBy('name_kontruksi','asc')
-                    ->get();
-        
-        $engines = Engine::orderBy('name','asc')->get();
-
-        // Gabungkan Employee & Customer untuk dropdown
-        $people = collect();
-
-        $employees->each(function($item) use ($people) {
-            $people->push([
-                'id'   => 'employee-'.$item->id,
-                'name' => $item->name,
-                'type' => 'Employee'
-            ]);
-        });
-
-        $customers->each(function($item) use ($people) {
-            $people->push([
-                'id'   => 'customer-'.$item->id,
-                'name' => $item->direktur,
-                'type' => 'Customer'
-            ]);
-        });
-
-        $people = $people->sortBy('name');
+        $keterangans = MGambar::all(); 
+        $varians     = Varian::orderBy('name_utama','asc')
+                            ->orderBy('name_terurai','asc')
+                            ->orderBy('name_kontruksi','asc')
+                            ->get();
+        $engines     = Engine::orderBy('name','asc')->get();
 
         return view('drafter.workspace.add_workspace', compact(
-            'people','customers','employees','submissions','varians','engines'
+            'customers','employees','pemeriksas','submissions','varians','engines','keterangans'
         ));
     }
+
 
     public function store(Request $request)
     {
         $request->validate([
-            'checked_by'    => 'required',
+            'pemeriksa_id'  => 'required|exists:tb_pemeriksa,id',
+            'pemeriksa_id'    => 'required|exists:tb_employee,id',
             'submission_id' => 'required|exists:tb_submissions,id',
             'engine_id'     => 'required',
             'brand_id'      => 'required',
             'chassis_id'    => 'required',
             'vehicle_id'    => 'required',
+            'sk_varian'    => 'required',
             'jumlah_gambar' => 'required|numeric|min:1',
             'rincian'       => 'required|array',
         ]);
@@ -117,13 +100,11 @@ class WorkspaceController extends Controller
 
         $totalGambar = $validRincian->count();
 
-        // Pisahkan tipe & id dari dropdown checked_by
-        list($type, $id) = explode('-', $request->checked_by);
-
         // Simpan Workspace
         $workspace = Workspace::create([
-            'employee_id'   => $type == 'employee' ? $id : null,
-            'customer_id'   => $type == 'customer' ? $id : null,
+            'employee_id'   => $request->employee_id,       // Drafter
+            'customer_id'   => null,
+            'pemeriksa_id'  => $request->pemeriksa_id,    // Pemeriksa
             'submission_id' => $request->submission_id,
             'varian_id'     => $validRincian->first()['varian_id'] ?? null,
             'jumlah_gambar' => $totalGambar,
@@ -131,6 +112,8 @@ class WorkspaceController extends Controller
             'engine_id'     => $request->engine_id,
             'brand_id'      => $request->brand_id,
             'chassis_id'    => $request->chassis_id,
+            'vehicle_id'    => $request->vehicle_id,
+            'sk_varian'    => $request->vehicle_id,
         ]);
 
         // Simpan rincian gambar
@@ -153,10 +136,6 @@ class WorkspaceController extends Controller
             'message'=>'Workspace berhasil disimpan!'
         ]);
     }
-
-
-
-
 
     public function workspace_edit($id)
     {
@@ -588,63 +567,31 @@ class WorkspaceController extends Controller
 
     public function getKeterangans(Request $request)
     {
-        $mdataId = $request->get('mdata_id');
+        $mdataId = $request->mdata_id;
+        
+         // Ambil mgambar beserta relasi varians
+        $mgambars = Mgambar::with('varian')->where('mdata_id', $mdataId)->get();
 
-        // Ambil semua mgambar untuk mdata_id tersebut
-        $mgambars = \App\Models\Admin\Mgambar::where('mdata_id', $mdataId)->get();
-
-        if ($mgambars->isEmpty()) {
-            return response()->json([]);
-        }
-
-        // Format data untuk dropdown
-        $options = $mgambars->map(function ($item) {
-            // 1. Decode foto_optional. Jika berupa string, asumsikan JSON.
-            $optional = $item->foto_optional;
-            if (is_string($optional)) {
-                // Decode JSON, jika gagal, set ke array kosong
-                $optional = json_decode($optional, true) ?? [];
-            } else if (!is_array($optional)) {
-                $optional = [];
-            }
-
-            // 2. Map array optional menjadi format detail yang diinginkan
-            $fotoDetails = collect($optional)->map(function ($detail) {
-                // Kasus 1: Array of simple strings (hanya path file)
-                if (is_string($detail)) {
-                    return [
-                        'filename' => $detail,
-                        'keterangan_optional' => 'Foto Detail' // Default description
-                    ];
-                }
-                
-                // Kasus 2: Array of objects/arrays (misal: {"filename": "...", "caption": "..."})
-                $filename = $detail['filename'] ?? $detail['file'] ?? null;
-                $caption = $detail['keterangan_optional'] ?? $detail['caption'] ?? 'Foto Detail';
-
-                return [
-                    'filename' => $filename,
-                    'keterangan_optional' => $caption
-                ];
-            })->filter(fn($detail) => !empty($detail['filename']))->values()->toArray();
-
-
-            // 3. Menyiapkan data output
+        $result = $mgambars->map(function($item){
             return [
                 'id' => $item->id,
-                'keterangan' => $item->keterangan, // Keterangan utama gambar
+                'keterangan' => $item->keterangan,
+                'varian_utama'    => $item->varian->name_utama ?? $item->keterangan,
+                'varian_terurai'  => $item->varian->name_terurai ?? $item->keterangan,
+                'varian_kontruksi' => $item->varian->name_kontruksi ?? $item->keterangan,
+                'varian_optional' => $item->varian->name_optional ?? $item->keterangan,
                 'foto_utama' => $item->foto_utama,
                 'foto_terurai' => $item->foto_terurai,
                 'foto_kontruksi' => $item->foto_kontruksi,
-                
-                // NEW: Mengembalikan array lengkap dari foto optional dan keterangannya
-                'foto_details' => $fotoDetails, 
-
-                // Menggunakan foto pertama sebagai fallback untuk key 'foto_detail' lama
-                'foto_detail' => $fotoDetails[0]['filename'] ?? null, 
+                'foto_optional' => $item->foto_optional 
+                                    ? [['file_name' => $item->foto_optional]] 
+                                    : []
             ];
         });
 
-        return response()->json($options);
+        return response()->json($result);
     }
+
+
+
 }

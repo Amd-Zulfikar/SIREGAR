@@ -42,6 +42,7 @@
                                             <th>Tampak Utama</th>
                                             <th>Tampak Terurai</th>
                                             <th>Tampak Kontruksi</th>
+                                            <th>Tampak Optional</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -56,6 +57,9 @@
                                                 </td>
                                                 <td>
                                                     {{ $varian->name_kontruksi }}
+                                                </td>
+                                                <td>
+                                                    {{ $varian->name_optional }}
                                                 </td>
                                                 <td>
                                                     <a class="btn btn-info btn-sm"
@@ -81,6 +85,7 @@
                                             <th>Tampak Utama</th>
                                             <th>Tampak Terurai</th>
                                             <th>Tampak Kontruksi</th>
+                                            <th>Tampak Optional</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>

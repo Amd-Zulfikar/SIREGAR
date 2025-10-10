@@ -40,6 +40,7 @@
                                             <th>Tampak Utama</th>
                                             <th>Tampak Terurai</th>
                                             <th>Tampak Kontruksi</th>
+                                            <th>Tampak Optional</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -56,6 +57,10 @@
                                                 </td>
                                                 <td>
                                                     <?php echo e($varian->name_kontruksi); ?>
+
+                                                </td>
+                                                <td>
+                                                    <?php echo e($varian->name_optional); ?>
 
                                                 </td>
                                                 <td>
@@ -82,6 +87,7 @@
                                             <th>Tampak Utama</th>
                                             <th>Tampak Terurai</th>
                                             <th>Tampak Kontruksi</th>
+                                            <th>Tampak Optional</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </tfoot>

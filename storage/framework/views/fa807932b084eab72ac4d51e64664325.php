@@ -8,7 +8,7 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
                             <li class="breadcrumb-item active">Master Gambar</li>
-                            <li class="breadcrumb-item active">Copy</li>
+                            <li class="breadcrumb-item active">Edit</li>
                         </ol>
                     </div>
                 </div>
@@ -20,18 +20,15 @@
                 
                 <form method="POST" action="<?php echo e(route('store.mgambar')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
-                    <input type="hidden" name="is_copy" value="1">
 
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-outline card-info">
                                 <div class="card-header">
-                                    <h3 class="card-title">Salin Data Gambar:
-                                        <?php echo e($mgambar->varian_body ?? $mgambar->keterangan); ?></h3>
+                                    <h3 class="card-title">Edit Data Gambar: <?php echo e($mgambar->varian_body); ?></h3>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-
                                         
                                         <div class="col-sm-6">
                                             <div class="form-group">
@@ -101,21 +98,23 @@ unset($__errorArgs, $__bag); ?>
 
                                             
                                             <div class="form-group border p-3 rounded" style="background-color: #f7f9fc;">
-                                                <label class="text-info"><i class="fas fa-image"></i> Gambar Utama
-                                                    <?php if($mgambar->foto_utama): ?>
-                                                        <span class="badge badge-info ml-1">TERSEDIA</span>
-                                                    <?php endif; ?>
-                                                </label>
+                                                <label class="text-info"><i class="fas fa-image"></i>
 
+                                                    Gambar Utama
+
+                                                </label>
                                                 <?php if($mgambar->foto_utama): ?>
-                                                    <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_utama)); ?>"
-                                                        class="img-thumbnail border border-secondary mb-2"
-                                                        style="max-width: 150px; cursor:pointer;"
-                                                        onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                    <div class="current-image-preview mb-2" id="current_preview_utama">
+                                                        <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_utama)); ?>"
+                                                            class="img-thumbnail border border-secondary"
+                                                            style="max-width:150px; height:auto; cursor:pointer;"
+                                                            onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                        <p class="text-muted small mt-1">Preview gambar lama (harus upload
+                                                            ulang)</p>
+                                                    </div>
                                                 <?php else: ?>
                                                     <p class="text-muted small mt-1">Belum ada gambar utama.</p>
                                                 <?php endif; ?>
-
                                                 <div class="input-group mt-2">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
@@ -123,13 +122,11 @@ unset($__errorArgs, $__bag); ?>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-info mb-0">
                                                             Upload Baru
-                                                            <input type="file" name="foto_utama" style="display: none;"
-                                                                onchange="updateFileName(this, 'utama')">
+                                                            <input type="file" name="foto_utama" style="display:none;"
+                                                                onchange="updateFileName(this,'utama')">
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <p class="text-danger small mt-1">* Gambar lama tidak akan tersimpan,
-                                                    silakan upload gambar baru.</p>
                                                 <div class="preview mt-2" id="preview_utama"></div>
                                             </div>
 
@@ -137,20 +134,19 @@ unset($__errorArgs, $__bag); ?>
                                             <div class="form-group border p-3 rounded" style="background-color: #f7f9fc;">
                                                 <label class="text-warning"><i class="fas fa-layer-group"></i> Gambar
                                                     Terurai
-                                                    <?php if($mgambar->foto_terurai): ?>
-                                                        <span class="badge badge-warning ml-1">TERSEDIA</span>
-                                                    <?php endif; ?>
                                                 </label>
-
                                                 <?php if($mgambar->foto_terurai): ?>
-                                                    <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_terurai)); ?>"
-                                                        class="img-thumbnail border border-secondary mb-2"
-                                                        style="max-width: 150px; cursor:pointer;"
-                                                        onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                    <div class="current-image-preview mb-2" id="current_preview_terurai">
+                                                        <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_terurai)); ?>"
+                                                            class="img-thumbnail border border-secondary"
+                                                            style="max-width:150px; height:auto; cursor:pointer;"
+                                                            onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                        <p class="text-muted small mt-1">Preview gambar lama (harus upload
+                                                            ulang)</p>
+                                                    </div>
                                                 <?php else: ?>
                                                     <p class="text-muted small mt-1">Belum ada gambar terurai.</p>
                                                 <?php endif; ?>
-
                                                 <div class="input-group mt-2">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
@@ -158,33 +154,33 @@ unset($__errorArgs, $__bag); ?>
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-warning mb-0">
                                                             Upload Baru
-                                                            <input type="file" name="foto_terurai" style="display: none;"
-                                                                onchange="updateFileName(this, 'terurai')">
+                                                            <input type="file" name="foto_terurai" style="display:none;"
+                                                                onchange="updateFileName(this,'terurai')">
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <p class="text-danger small mt-1">* Gambar lama tidak akan tersimpan,
-                                                    silakan upload gambar baru.</p>
                                                 <div class="preview mt-2" id="preview_terurai"></div>
                                             </div>
 
                                             
                                             <div class="form-group border p-3 rounded" style="background-color: #f7f9fc;">
-                                                <label class="text-primary"><i class="fas fa-tools"></i> Gambar Konstruksi
-                                                    <?php if($mgambar->foto_kontruksi): ?>
-                                                        <span class="badge badge-primary ml-1">TERSEDIA</span>
-                                                    <?php endif; ?>
-                                                </label>
+                                                <label class="text-primary"><i class="fas fa-tools"></i>
 
+                                                    Gambar Konstruksi
+
+                                                </label>
                                                 <?php if($mgambar->foto_kontruksi): ?>
-                                                    <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_kontruksi)); ?>"
-                                                        class="img-thumbnail border border-secondary mb-2"
-                                                        style="max-width: 150px; cursor:pointer;"
-                                                        onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                    <div class="current-image-preview mb-2" id="current_preview_kontruksi">
+                                                        <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_kontruksi)); ?>"
+                                                            class="img-thumbnail border border-secondary"
+                                                            style="max-width:150px; height:auto; cursor:pointer;"
+                                                            onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                        <p class="text-muted small mt-1">Preview gambar lama (harus upload
+                                                            ulang)</p>
+                                                    </div>
                                                 <?php else: ?>
                                                     <p class="text-muted small mt-1">Belum ada gambar konstruksi.</p>
                                                 <?php endif; ?>
-
                                                 <div class="input-group mt-2">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
@@ -193,61 +189,62 @@ unset($__errorArgs, $__bag); ?>
                                                         <label class="btn btn-sm btn-primary mb-0">
                                                             Upload Baru
                                                             <input type="file" name="foto_kontruksi"
-                                                                style="display: none;"
-                                                                onchange="updateFileName(this, 'kontruksi')">
+                                                                style="display:none;"
+                                                                onchange="updateFileName(this,'kontruksi')">
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <p class="text-danger small mt-1">* Gambar lama tidak akan tersimpan,
-                                                    silakan upload gambar baru.</p>
                                                 <div class="preview mt-2" id="preview_kontruksi"></div>
                                             </div>
 
                                             
-                                            <div class="form-group border p-3 rounded" style="background-color: #f7f9fc;">
-                                                <label class="text-success"><i class="fas fa-search-plus"></i> Gambar
-                                                    Detail
-                                                    <?php if($mgambar->foto_optional): ?>
-                                                        <span class="badge badge-success ml-1">TERSEDIA</span>
-                                                    <?php endif; ?>
-                                                </label>
+                                            <div class="form-group border p-3 rounded mb-3"
+                                                style="background-color: #f7f9fc;">
+                                                <label class="text-secondary"><i class="fas fa-plus-circle"></i> Gambar
+                                                    Optional</label>
 
+                                                
                                                 <?php if($mgambar->foto_optional): ?>
-                                                    <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_optional)); ?>"
-                                                        class="img-thumbnail border border-secondary mb-2"
-                                                        style="max-width: 150px; cursor:pointer;"
-                                                        onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                    <div class="current-image-preview mb-2" id="current_preview_optional">
+                                                        <img src="<?php echo e(asset('storage/body/' . $mgambar->foto_optional)); ?>"
+                                                            class="img-thumbnail border border-secondary"
+                                                            style="max-width:150px; height:auto; cursor:pointer;"
+                                                            onclick="$('#imgPreviewModal').attr('src', this.src); $('#modalPreview').modal('show');">
+                                                        <p class="text-muted small mt-1">Preview gambar lama (harus upload
+                                                            ulang)</p>
+                                                    </div>
                                                 <?php else: ?>
-                                                    <p class="text-muted small mt-1">Belum ada gambar detail.</p>
+                                                    <p class="text-muted small mt-1">Belum ada gambar optional.</p>
                                                 <?php endif; ?>
 
-                                                <div class="input-group mt-2">
+                                                
+                                                <div class="input-group mt-3">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
                                                         value="Pilih file baru (opsional)" readonly>
                                                     <div class="input-group-append">
-                                                        <label class="btn btn-sm btn-success mb-0">
+                                                        <label class="btn btn-sm btn-secondary mb-0">
                                                             Upload Baru
-                                                            <input type="file" name="foto_optional"
-                                                                style="display: none;"
-                                                                onchange="updateFileName(this, 'detail')">
+                                                            <input type="file" name="foto_optional" id="foto_optional"
+                                                                style="display:none;" accept="image/*"
+                                                                onchange="updateFileName(this, 'optional')">
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <p class="text-danger small mt-1">* Gambar lama tidak akan tersimpan,
-                                                    silakan upload gambar baru.</p>
-                                                <div class="preview mt-2" id="preview_detail"></div>
+
+                                                
+                                                <div class="preview mt-2" id="preview_optional"></div>
                                             </div>
+
+
 
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="card-footer d-flex justify-content-end">
-                                    <a href="<?php echo e(route('index.mgambar')); ?>"
-                                        class="btn btn-outline-danger mr-2">Kembali</a>
-                                    <input type="submit" value="Copy & Paste Data Gambar"
-                                        class="btn btn-outline-success">
+                                <div class="card-footer me-2">
+                                    <a href="<?php echo e(route('index.mgambar')); ?>" class="btn btn-outline-danger">Kembali</a>
+                                    <input type="submit" value="Update Data Gambar" class="btn btn-outline-success">
                                 </div>
                             </div>
                         </div>
@@ -277,14 +274,13 @@ unset($__errorArgs, $__bag); ?>
 <?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
-            $('.select2').select2()
+            $('.select2').select2();
         });
 
         function updateFileName(input, type) {
             const fileNameInput = $(input).closest('.input-group').find('.file-name-display');
-            const newPreviewContainer = $('#preview_' + type);
-            newPreviewContainer.html('');
-
+            const previewContainer = $('#preview_' + type);
+            previewContainer.html('');
             if (input.files.length > 0) {
                 const file = input.files[0];
                 fileNameInput.val(file.name);
@@ -292,22 +288,49 @@ unset($__errorArgs, $__bag); ?>
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = $('<img src="' + e.target.result +
-                        '" class="img-thumbnail border border-success" style="max-width: 150px; height: auto; cursor:pointer;">' +
+                        '" class="img-thumbnail border border-success" style="max-width:150px; height:auto; cursor:pointer;">' +
                         '<p class="text-success small mt-1">Preview Gambar BARU</p>');
-
                     img.on('click', function() {
                         $('#imgPreviewModal').attr('src', e.target.result);
                         $('#modalPreview').modal('show');
                     });
-
-                    newPreviewContainer.append(img);
+                    previewContainer.append(img);
                 }
                 reader.readAsDataURL(file);
             } else {
                 fileNameInput.val('Pilih file baru (opsional)');
-                newPreviewContainer.html('');
+                previewContainer.html('');
             }
         }
+
+        // Optional Images JS
+        $(function() {
+            $(document).on('change', '.foto-optional-input', function() {
+                const container = $(this).closest('.optional-block');
+                const previewContainer = container.find('.preview');
+                const fileNameInput = $(this).closest('.input-group').find('.file-name-display');
+
+                previewContainer.html('');
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    fileNameInput.val(file.name);
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = $('<img src="' + e.target.result +
+                            '" class="img-thumbnail" style="max-width:150px; cursor:pointer;">');
+                        img.on('click', function() {
+                            $('#imgPreviewModal').attr('src', e.target.result);
+                            $('#modalPreview').modal('show');
+                        });
+                        previewContainer.append(img);
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    fileNameInput.val('Belum ada file dipilih');
+                }
+            });
+        });
     </script>
 <?php $__env->stopPush(); ?>
 

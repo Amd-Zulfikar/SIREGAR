@@ -3,11 +3,22 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\MdataController;
+use App\Http\Controllers\Admin\EngineController;
+use App\Http\Controllers\Admin\VarianController;
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ChassisController;
+use App\Http\Controllers\Admin\MgambarController;
+use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\PemeriksaController;
 use App\Http\Controllers\Admin\SubmissionController;
+use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Drafter\WorkspaceController;
+use App\Http\Controllers\Admin\MgambarOptionalController;
+use App\Http\Controllers\Admin\MgambarElectricityController;
 
 // Route login
 Route::get('/', [AuthController::class, 'showLogin'])->name('login');
@@ -71,6 +82,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/admin/customer/update/{id}', [CustomerController::class, 'update'])->name('update.customer');
     Route::post('/admin/customer/action/{id}', [CustomerController::class, 'action'])
         ->name('customer.action');
+
+    // Route for view controller Pemeriksa
+     Route::get('/admin/pemeriksa', [PemeriksaController::class, 'index'])->name('index.pemeriksa');
+    Route::get('/admin/pemeriksa/add', [PemeriksaController::class, 'pemeriksa_add'])->name('add.pemeriksa');
+    Route::get('/admin/pemeriksa/edit/{id}', [PemeriksaController::class, 'pemeriksa_edit'])->name('edit.pemeriksa');
+    Route::get('/admin/pemeriksa/delete/{id}', [PemeriksaController::class, 'delete'])->name('delete.pemeriksa');
+    // route for function controller customer
+    Route::post('/admin/pemeriksa/store', [PemeriksaController::class, 'store'])->name('store.pemeriksa');
+    Route::post('/admin/pemeriksa/update/{id}', [PemeriksaController::class, 'update'])->name('update.pemeriksa');
 
     // route for view controller Account
     Route::get('/admin/account', [App\Http\Controllers\Admin\AccountController::class, 'index'])->name('index.account');
@@ -160,6 +180,27 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // route for function controller mgambar
     Route::post('/admin/mgambar/store', [App\Http\Controllers\Admin\MgambarController::class, 'store'])->name('store.mgambar');
     Route::put('/admin/mgambar/update/{id}', [App\Http\Controllers\Admin\MgambarController::class, 'update'])->name('update.mgambar');
+
+    // route for view controller mgambaroptional
+    Route::get('/admin/mgambaroptional',[MgambarOptionalController::class, 'index'])->name('index.mgambaroptional');
+    Route::get('/admin/mgambaroptional/add',[MgambarOptionalController::class, 'mgambaroptional_add'])->name('add.mgambaroptional');
+    Route::get('/admin/mgambaroptional/edit/{id}',[MgambarOptionalController::class, 'mgambaroptional_edit'])->name('edit.mgambaroptional');
+    Route::get('/admin/mgambaroptional/delete/{id}',[MgambarOptionalController::class, 'delete'])->name('delete.mgambaroptional');
+
+    // route for function controller mgambar
+    Route::post('/admin/mgambaroptional/store', [App\Http\Controllers\Admin\MgambarOptionalController::class, 'store'])->name('store.mgambaroptional');
+    Route::put('/admin/mgambaroptional/update/{id}', [App\Http\Controllers\Admin\MgambarOptionalController::class, 'update'])->name('update.mgambaroptional');
+
+    // route for view controller mgambarelectricity
+    Route::get('/admin/mgambarelectricity',[MgambarElectricityController::class, 'index'])->name('index.mgambarelectricity');
+    Route::get('/admin/mgambarelectricity/add',[MgambarElectricityController::class, 'mgambarelectricity_add'])->name('add.mgambarelectricity');
+    Route::get('/admin/mgambarelectricity/edit/{id}',[MgambarElectricityController::class, 'mgambarelectricity_edit'])->name('edit.mgambarelectricity');
+    Route::get('/admin/mgambarelectricity/delete/{id}',[MgambarElectricityController::class, 'delete'])->name('delete.mgambarelectricity');
+
+    // route for function controller mgambar
+    Route::post('/admin/mgambarelectricity/store', [App\Http\Controllers\Admin\MgambarElectricityController::class, 'store'])->name('store.mgambarelectricity');
+    Route::put('/admin/mgambarelectricity/update/{id}', [App\Http\Controllers\Admin\MgambarElectricityController::class, 'update'])->name('update.mgambarelectricity');
+
 });
 
 Route::middleware(['auth', 'role:drafter'])->group(function () {

@@ -27,22 +27,25 @@ class VarianController extends Controller
     {
         $request->validate(
             [
-                'name_utama' => 'required|unique:tb_varians,name_utama',
-                'name_terurai' => 'required|unique:tb_varians,name_terurai',
-                'name_kontruksi' => 'required|unique:tb_varians,name_kontruksi',
+                'name_utama' => 'unique:tb_varians,name_utama',
+                'name_terurai' => 'unique:tb_varians,name_terurai',
+                'name_kontruksi' => 'unique:tb_varians,name_kontruksi',
+                'name_optional' => 'unique:tb_varians,name_optional',
             ],
             [
                 'name_utama.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
                 'name_terurai.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
                 'name_kontruksi.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_optional.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
             ]
         );
 
         $input = $request->all();
         Varian::create([
-            'name_utama' => $input['name_utama'],
-            'name_terurai' => $input['name_terurai'],
-            'name_kontruksi' => $input['name_kontruksi'],
+            'name_utama' => $input['name_utama']?? null,
+            'name_terurai' => $input['name_terurai']?? null,
+            'name_kontruksi' => $input['name_kontruksi']?? null,
+            'name_optional' => $input['name_optional']?? null,
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil disimpan!');
@@ -72,11 +75,13 @@ class VarianController extends Controller
                 'name_utama' => 'required|unique:tb_varians,name_utama',
                 'name_terurai' => 'required|unique:tb_varians,name_terurai',
                 'name_kontruksi' => 'required|unique:tb_varians,name_kontruksi',
+                'name_optional' => 'required|unique:tb_varians,name_optional',
             ],
             [
                 'name_utama.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
                 'name_terurai.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
                 'name_kontruksi.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
+                'name_optional.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
             ]
         );
 
@@ -90,6 +95,7 @@ class VarianController extends Controller
             'name_utama' => $input['name_utama'],
             'name_terurai' => $input['name_terurai'],
             'name_kontruksi' => $input['name_kontruksi'],
+            'name_optional' => $input['name_optional'],
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil diupdate!');

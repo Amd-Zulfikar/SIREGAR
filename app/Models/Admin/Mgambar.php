@@ -3,6 +3,7 @@
 namespace App\Models\Admin;
 
 
+use App\Models\Admin\MgambarOptional;
 use App\Models\Drafter\WorkspaceGambar;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ class Mgambar extends Model
         'foto_utama',
         'foto_terurai',
         'foto_kontruksi',
+        'foto_optional',
         'keterangan',
     ];
 
@@ -30,4 +32,15 @@ class Mgambar extends Model
     {
         return $this->hasMany(WorkspaceGambar::class, 'mgambar_id');
     }
+
+    public function optionalImages()
+    {
+        return $this->hasMany(MgambarOptional::class, 'mgambar_id');
+    }
+
+    public function varian()
+    {
+        return $this->belongsTo(Varian::class, 'varian_id'); 
+    }
+
 }

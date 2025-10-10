@@ -65,7 +65,7 @@
                                             </div>
                                         </div>
 
-                                        {{-- KOLOM KANAN: UPLOAD GAMBAR 5 SEKAT --}}
+                                        {{-- KOLOM KANAN: UPLOAD GAMBAR 4 SEKAT --}}
                                         <div class="col-sm-6">
 
                                             {{-- BLOK 1: GAMBAR UTAMA (Tetap) --}}
@@ -140,11 +140,12 @@
                                                 <div class="preview mt-2" id="preview_kontruksi"></div>
                                             </div>
 
-                                            {{-- BLOK 4: GAMBAR OPTIONAL (BARU) --}}
+                                            {{-- BLOK 4: GAMBAR OPTIONAL (Disesuaikan seperti Blok 3) --}}
                                             <div class="form-group border p-3 rounded mb-3"
                                                 style="background-color: #f7f9fc;">
                                                 <label for="foto_optional" class="text-secondary"><i
-                                                        class="fas fa-th-large"></i> Gambar Optional</label>
+                                                        class="fas fa-plus-circle"></i> Gambar
+                                                    Optional</label>
                                                 <div class="input-group">
                                                     <input type="text"
                                                         class="form-control form-control-sm file-name-display"
@@ -152,6 +153,7 @@
                                                     <div class="input-group-append">
                                                         <label class="btn btn-sm btn-secondary mb-0" for="foto_optional">
                                                             Upload Gambar
+                                                            {{-- Nama input disesuaikan menjadi tunggal (bukan array) jika hanya 1 blok --}}
                                                             <input type="file" name="foto_optional" id="foto_optional"
                                                                 style="display: none;" accept="image/*"
                                                                 onchange="updateFileName(this, 'optional')">
@@ -162,7 +164,10 @@
                                                     <small class="text-danger d-block">{{ $message }}</small>
                                                 @enderror
                                                 <div class="preview mt-2" id="preview_optional"></div>
+                                                {{-- Tombol "Tambah Optional" dihapus --}}
                                             </div>
+                                            {{-- AKHIR BLOK 4 --}}
+
 
                                         </div>
                                     </div>
@@ -176,7 +181,6 @@
                     </div>
                 </form>
 
-                <!-- Modal Preview Gambar -->
                 <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
@@ -199,11 +203,13 @@
 @push('scripts')
     <script>
         $(function() {
+            // Inisialisasi Select2
             $('.select2').select2()
         });
 
         /**
          * Fungsi untuk menampilkan nama file dan preview gambar, serta menampilkan modal preview saat gambar diklik.
+         * Digunakan untuk Blok 1, 2, 3, dan 4.
          * @param {HTMLInputElement} input - Elemen input file yang berubah.
          * @param {string} type - Jenis gambar ('utama', 'terurai', 'kontruksi', 'optional').
          */
@@ -227,7 +233,6 @@
                     // Menambahkan event click untuk menampilkan modal
                     img.on('click', function() {
                         $('#imgPreviewModal').attr('src', e.target.result);
-                        // Asumsi Anda menggunakan Bootstrap 4/5, pastikan modal dipanggil dengan benar
                         $('#modalPreview').modal('show');
                     });
 

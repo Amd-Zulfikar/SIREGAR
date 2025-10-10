@@ -1,0 +1,148 @@
+@extends('admin.layouts.app')
+
+@section('content')
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-left">
+                            <a type="button" class="btn btn-block btn-outline-primary"
+                                onclick="location.href='{{ route('add.pemeriksa') }}'">Tambah Data</a>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Pemeriksa</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-edit"></i>Data Pemeriksa</h3>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Pemeriksa</th>
+                                            <th>Paraf</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($pemeriksas as $pemeriksa)
+                                            <tr>
+                                                <td>{{ $pemeriksa->name }}</td>
+                                                <td>
+                                                    @if ($pemeriksa->foto_paraf)
+                                                        @php $files = json_decode($pemeriksa->foto_paraf, true); @endphp
+                                                        @foreach ($files as $file)
+                                                            <img src="{{ asset('storage/paraf/' . $file) }}"
+                                                                style="width:50px; height:50px; object-fit:cover; cursor:pointer;"
+                                                                class="img-thumbnail preview-img"
+                                                                data-src="{{ asset('storage/paraf/' . $file) }}">
+                                                            <!-- MODIFIED -->
+                                                        @endforeach
+                                                    @else
+                                                        <span>Tidak ada file</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-info btn-sm"
+                                                        href="{{ route('edit.pemeriksa', $pemeriksa->id) }}">
+                                                        <i class="fas fa-pencil-alt"></i> Edit
+                                                    </a>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete"
+                                                        data-url="{{ route('delete.pemeriksa', $pemeriksa->id) }}">
+                                                        <i class="fas fa-trash"></i> Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4">Data Not Found!</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Pemeriksa</th>
+                                            <th>Paraf</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                {{-- <div class="mt-2">
+                                    {{ $pemeriksas->links('pagination::bootstrap-4') }}
+                                </div> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Preview -->
+        <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true"> <!-- MODIFIED -->
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <img src="" id="imgPreviewModal" class="img-fluid w-100">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            // Preview gambar
+            $('.preview-img').on('click', function() {
+                $('#imgPreviewModal').attr('src', $(this).data('src'));
+                $('#modalPreview').modal('show');
+            });
+
+            $('.btn-delete').click(function(e) {
+                e.preventDefault();
+                let url = $(this).data('url');
+
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus dan tidak bisa dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = url;
+                    }
+                });
+            });
+
+            // Toastr untuk flash session
+            var successMessage = "{{ session('success') ?? '' }}";
+            var errorMessage = "{{ session('error') ?? '' }}";
+
+            if (successMessage) toastr.success(successMessage);
+            if (errorMessage) toastr.error(errorMessage);
+        });
+    </script>
+@endpush

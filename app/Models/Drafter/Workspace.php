@@ -21,6 +21,7 @@ class Workspace extends Model
         'varian_id',
         'keterangan',
         'jumlah_gambar',
+        'sk_varian',
     ];
 
     public function customer()

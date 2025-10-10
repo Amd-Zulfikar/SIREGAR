@@ -26,9 +26,23 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row mb-4">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group row mb-1 align-items-center">
-                                                <label class="col-sm-3 col-form-label-sm">Jumlah Gbr Tu :</label>
+                                                <label class="col-sm-3 col-form-label-sm">Pengajuan :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="submission_id" id="submissions"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih Jenis Pengajuan">
+                                                        <option value="" selected disabled></option>
+                                                        <?php $__currentLoopData = $submissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($s->id); ?>"><?php echo e($s->name); ?></option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Jumlah Tu :</label>
                                                 <div class="col-sm-9">
                                                     <select name="jumlah_halaman" id="jumlah_halaman"
                                                         class="form-control form-control-sm select2-static" required
@@ -43,59 +57,18 @@
                                             </div>
 
                                             <div class="form-group row mb-1 align-items-center">
-                                                <label class="col-sm-3 col-form-label-sm">Customer :</label>
+                                                <label class="col-sm-3 col-form-label-sm">Varian SKRB :</label>
                                                 <div class="col-sm-9">
-                                                    <select name="customer_id" id="customers"
-                                                        class="form-control form-control-sm select2" required
-                                                        data-placeholder="Pilih Customer">
-                                                        <option value="" selected disabled></option>
-                                                        <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                            <option value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?></option>
-                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    </select>
+                                                    <input name="sk_varian" type="text"
+                                                        class="form-control form-control-sm"
+                                                        placeholder="Masukan No Varian SKRB">
+                                                    <small><?php echo e($errors->first('sk_varian')); ?></small>
                                                 </div>
                                             </div>
 
-                                            <div class="form-group row mb-1 align-items-center">
-                                                <label class="col-sm-3 col-form-label-sm">Jenis Pengajuan :</label>
-                                                <div class="col-sm-9">
-                                                    <select name="submission_id" id="submissions"
-                                                        class="form-control form-control-sm select2" required
-                                                        data-placeholder="Pilih Jenis Pengajuan">
-                                                        <option value="" selected disabled></option>
-                                                        <?php $__currentLoopData = $submissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                            <option value="<?php echo e($s->id); ?>"><?php echo e($s->name); ?></option>
-                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row mb-1 align-items-center">
-                                                <label class="col-sm-3 col-form-label-sm">Diperiksa :</label>
-                                                <div class="col-sm-9">
-                                                    <select name="checked_by" id="people"
-                                                        class="form-control form-control-sm select2" required
-                                                        data-placeholder="Pilih Karyawan atau Customer">
-
-                                                        <option value="" selected disabled></option>
-
-                                                        <?php $__currentLoopData = $people; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                            <option value="<?php echo e($p['id']); ?>">
-
-
-                                                                [<?php echo e($p['type']); ?>] <?php echo e($p['name']); ?>
-
-
-
-                                                            </option>
-                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
 
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group row mb-1 align-items-center">
                                                 <label class="col-sm-3 col-form-label-sm">Type Engine :</label>
                                                 <div class="col-sm-9">
@@ -135,7 +108,7 @@
                                             </div>
 
                                             <div class="form-group row mb-1 align-items-center">
-                                                <label class="col-sm-3 col-form-label-sm">Jenis Kendaraan :</label>
+                                                <label class="col-sm-3 col-form-label-sm">Kendaraan :</label>
                                                 <div class="col-sm-9">
                                                     <select name="vehicle_id_display" id="vehicles"
                                                         class="form-control form-control-sm select2" required disabled
@@ -144,6 +117,60 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Customer :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="customer_id" id="customers"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih Customer">
+                                                        <option value="" selected disabled></option>
+                                                        <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($c->id); ?>"><?php echo e($c->name); ?>
+
+                                                            </option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Pemeriksa :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="pemeriksa_id" id="pemeriksa"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih Pemeriksa">
+                                                        <option value="" selected disabled></option>
+                                                        <?php $__currentLoopData = $pemeriksas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($p->id); ?>"><?php echo e($p->name); ?>
+
+                                                            </option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <label class="col-sm-3 col-form-label-sm">Drafter :</label>
+                                                <div class="col-sm-9">
+                                                    <select name="employee_id" id="employee"
+                                                        class="form-control form-control-sm select2" required
+                                                        data-placeholder="Pilih employee">
+                                                        <option value="" selected disabled></option>
+                                                        <?php $__currentLoopData = $employees; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <option value="<?php echo e($d->id); ?>"><?php echo e($d->name); ?>
+
+                                                            </option>
+                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
 
@@ -155,15 +182,16 @@
                                             'utama' => ['color' => 'info', 'display' => 'Utama'],
                                             'terurai' => ['color' => 'info', 'display' => 'Terurai'],
                                             'kontruksi' => ['color' => 'info', 'display' => 'Konstruksi'],
-                                            'detail' => ['color' => 'warning', 'display' => 'Detail'],
-                                            'kelistrikan' => ['color' => 'danger', 'display' => 'Kelistrikan'],
+                                            'optional' => ['color' => 'info', 'display' => 'Optional'],
+                                            'detail' => ['color' => 'secondary', 'display' => 'Detail'],
+                                            'kelistrikan' => ['color' => 'warning', 'display' => 'Kelistrikan'],
                                         ];
                                     ?>
 
                                     <?php $__currentLoopData = $kategori; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $type => $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="card card-outline card-<?php echo e($data['color']); ?> p-2 mb-3">
                                             <div class="card-body p-0" id="gambar-<?php echo e($type); ?>-container">
-                                                <?php for($i = 1; $i <= 4; $i++): ?>
+                                                <?php for($i = 1; $i <= ($type === 'detail' ? 10 : 4); $i++): ?>
                                                     <div id="<?php echo e($type); ?>-row-<?php echo e($i); ?>"
                                                         class="gambar-rincian-row form-row align-items-center p-2"
                                                         style="display:none;">
@@ -171,15 +199,35 @@
                                                             <label class="col-form-label-sm font-weight-bold p-0">Gambar
                                                                 <?php echo e($data['display']); ?> <?php echo e($i); ?>:</label>
                                                         </div>
-                                                        <div class="col-md-3">
-                                                            <select
+
+                                                        <div class="col-md-3"> <select
                                                                 name="rincian[<?php echo e($type); ?>][<?php echo e($i); ?>][varian_id]"
                                                                 class="form-control form-control-sm varian-select select2"
-                                                                disabled required data-placeholder="Pilih Varian">
+                                                                
+                                                                <?php if($type === 'optional'): ?> required data-placeholder="Pilih Varian" <?php else: ?> disabled required data-placeholder="Pilih Varian" <?php endif; ?>>
                                                                 <option value="" selected disabled></option>
                                                                 <?php $__currentLoopData = $varians; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                    <option value="<?php echo e($v->id); ?>">
-                                                                        <?php echo e($v->name_utama); ?></option>
+                                                                    <option value="<?php echo e($v->id); ?>"
+                                                                        data-utama="<?php echo e($v->name_utama); ?>"
+                                                                        data-terurai="<?php echo e($v->name_terurai); ?>"
+                                                                        data-kontruksi="<?php echo e($v->name_kontruksi); ?>"
+                                                                        data-optional="<?php echo e($v->name_optional); ?>"
+                                                                        data-id-terurai="<?php echo e($v->id_terurai ?? $v->id); ?>"
+                                                                        data-id-kontruksi="<?php echo e($v->id_kontruksi ?? $v->id); ?>">
+                                                                         <?php if($type === 'terurai'): ?>
+                                                                            <?php echo e($v->name_terurai); ?>
+
+                                                                        <?php elseif($type === 'kontruksi'): ?>
+                                                                            <?php echo e($v->name_kontruksi); ?>
+
+                                                                        <?php elseif($type === 'optional'): ?>
+                                                                            <?php echo e($v->name_optional); ?>
+
+                                                                        <?php else: ?>
+                                                                            <?php echo e($v->name_utama); ?>
+
+                                                                        <?php endif; ?>
+                                                                    </option>
                                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                             </select>
                                                         </div>
@@ -189,7 +237,43 @@
                                                                 class="form-control form-control-sm gambar-keterangan select2"
                                                                 disabled required data-placeholder="Pilih Keterangan">
                                                                 <option value="" selected disabled></option>
+                                                                <?php $__currentLoopData = $varians; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                    <option value="<?php echo e($v->id); ?>"
+                                                                        data-utama="<?php echo e($v->name_utama); ?>"
+                                                                        data-terurai="<?php echo e($v->name_terurai); ?>"
+                                                                        data-kontruksi="<?php echo e($v->name_kontruksi); ?>"
+                                                                        data-optional="<?php echo e($v->name_optional); ?>"
+                                                                        data-detail="<?php echo e($v->name_detail ?? $v->name_utama); ?>"
+                                                                        data-kelistrikan="<?php echo e($v->name_kelistrikan ?? $v->name_utama); ?>"
+                                                                        data-id-terurai="<?php echo e($v->id_terurai ?? $v->id); ?>"
+                                                                        data-id-kontruksi="<?php echo e($v->id_kontruksi ?? $v->id); ?>"
+                                                                        data-id-detail="<?php echo e($v->id_detail ?? $v->id); ?>"
+                                                                        data-id-kelistrikan="<?php echo e($v->id_kelistrikan ?? $v->id); ?>">
+                                                                        <?php if($type === 'terurai'): ?>
+                                                                            <?php echo e($v->name_terurai); ?>
+
+                                                                        <?php elseif($type === 'kontruksi'): ?>
+                                                                            <?php echo e($v->name_kontruksi); ?>
+
+                                                                        <?php elseif($type === 'optional'): ?>
+                                                                            <?php echo e($v->name_optional); ?>
+
+                                                                        <?php elseif($type === 'detail'): ?>
+                                                                            <?php echo e($v->name_detail ?? $v->name_utama); ?>
+
+                                                                        <?php elseif($type === 'kelistrikan'): ?>
+                                                                            <?php echo e($v->name_kelistrikan ?? $v->name_utama); ?>
+
+                                                                        <?php else: ?>
+                                                                            <?php echo e($v->name_utama); ?>
+
+                                                                        <?php endif; ?>
+                                                                    </option>
+                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+
                                                             </select>
+
                                                         </div>
                                                         <div class="col-md-1">
                                                             <input type="text"
@@ -203,7 +287,30 @@
                                                                 class="form-control form-control-sm total-halaman-input"
                                                                 readonly>
                                                         </div>
+
                                                         <div class="col-md-2 text-right">
+                                                            <?php if($type === 'optional'): ?>
+                                                                <button type="button"
+                                                                    class="btn btn-danger btn-sm delete-row-btn ml-1"> <i
+                                                                        class="fa fa-trash"></i> Delete </button>
+                                                            <?php endif; ?>
+
+                                                            <?php if($type === 'detail'): ?>
+                                                                <input type="checkbox"
+                                                                    class="form-check-input hide-detail-checkbox"
+                                                                    name="rincian[detail][<?php echo e($i); ?>][hide]"
+                                                                    id="hide-detail-<?php echo e($i); ?>">
+                                                                <label class="form-check-label"
+                                                                    for="hide-detail-<?php echo e($i); ?>"></label>
+                                                            <?php endif; ?>
+
+                                                            <?php if($type === 'detail' && $i === 1): ?>
+                                                                <button type="button"
+                                                                    class="btn btn-success btn-sm add-detail-row-btn ml-1">
+                                                                    <i class="fa fa-plus"></i> Tambah
+                                                                </button>
+                                                            <?php endif; ?>
+
                                                             <input type="hidden"
                                                                 name="rincian[<?php echo e($type); ?>][<?php echo e($i); ?>][jumlah_gambar]"
                                                                 class="jumlah-gambar-hidden" value="">
@@ -243,156 +350,194 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
+
 <?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
-            // --- Fungsi pad number ---
+            // Inisialisasi Select2
+            $('.select2-static').select2({
+                width: '100%',
+                minimumResultsForSearch: Infinity,
+                allowClear: false
+            });
+
+            $('.gambar-rincian-row[id^="optional-row-"] .varian-select').prop('disabled', false);
+
+            $('.gambar-rincian-row[id^="optional-row-"] .gambar-keterangan').prop('disabled', true);
+
+            $('#customers, #submissions, #employee, #pemeriksa, #engines, #brands, #chassiss, #vehicles').select2({
+                width: '100%',
+                allowClear: true
+            });
+
+            $('.varian-select, .gambar-keterangan').select2({
+                width: '100%',
+                allowClear: true
+            });
+
+            const HANYA_TU_ID = '4';
+            let isHanyaTU = false;
+            const ALL_TYPES = ['utama', 'terurai', 'kontruksi', 'optional', 'detail', 'kelistrikan'];
+
             function pad(num, size = 2) {
                 return String(num).padStart(size, '0');
             }
 
-            const HANYA_TU_ID = '4';
-            let isHanyaTU = false;
-
-            // --- Inisialisasi Select2 ---
-            function initSelect2(selector) {
-                $(selector).select2({
-                    width: '100%',
-                    placeholder: function() {
-                        return $(this).data('placeholder');
-                    },
-                    allowClear: true
-                });
-            }
-
-            initSelect2(
-                '#customers, #submissions, #people, #engines, #brands, #chassiss, #vehicles, .varian-select, .gambar-keterangan'
-            );
-            initSelect2('.select2-static');
-
-            // --- Reset Cascading Dropdowns ---
-            function resetDropdowns(start) {
-                if (start <= 0) $('#people').val(null).trigger('change.select2');
-                if (start <= 1) {
-                    $('#brands').val(null).html('<option value="" selected disabled>Pilih Merk</option>').prop(
-                        'disabled', true).trigger('change.select2');
-                    $('#hidden_brand_id').val('');
-                }
-                if (start <= 2) {
-                    $('#chassiss').val(null).html('<option value="" selected disabled>Pilih Type Chassis</option>')
-                        .prop('disabled', true).trigger('change.select2');
-                    $('#hidden_chassis_id').val('');
-                }
-                if (start <= 3) {
-                    $('#vehicles').val(null).html(
-                        '<option value="" selected disabled>Pilih Jenis Kendaraan</option>').prop('disabled',
-                        true).trigger('change.select2');
-                    $('#hidden_vehicle_id').val('');
-                    $('.gambar-rincian-row .gambar-keterangan').val(null).trigger('change');
-                    updatePageNumbers();
-                }
-            }
-
-            resetDropdowns(0);
-
-            // --- Update Nomor Halaman ---
             function updatePageNumbers() {
-                let jumlahGbrUtama = parseInt($('#jumlah_halaman').val()) || 0;
-                let factor = isHanyaTU ? 1 : 3;
-                const totalPages = jumlahGbrUtama * factor;
+                const jumlahPerKategori = parseInt($('#jumlah_halaman').val()) || 0;
+                const activeTypes = isHanyaTU ? ['utama'] : ALL_TYPES;
+                const totalPages = jumlahPerKategori * activeTypes.length;
                 $('#hidden_jumlah_gambar').val(totalPages);
-                let currentPage = 1;
-                const isVehicleSelected = $('#vehicles').val();
 
-                const allCategories = ['utama', 'terurai', 'kontruksi', 'detail', 'kelistrikan'];
-
-                // Reset semua baris
-                allCategories.forEach(type => {
+                ALL_TYPES.forEach(type => {
                     for (let i = 1; i <= 4; i++) {
-                        let row = $('#' + type + '-row-' + i);
-                        row.hide();
-                        row.find('input').val('');
-                        row.find('.varian-select').val(null).trigger('change.select2').prop('disabled',
-                            type !== 'utama');
-                        row.find('.gambar-keterangan').val(null).trigger('change.select2').prop('disabled',
-                            type !== 'utama');
+                        const row = $(`#${type}-row-${i}`);
+                        row.hide().find('input').val('');
+
+                        // Reset status disabled
+                        row.find('.varian-select, .gambar-keterangan').val(null)
+                            .prop('disabled', true)
+                            .trigger('change.select2');
                         row.find('.preview-gambar-btn').prop('disabled', true);
                     }
                 });
 
-                // 1. Baris Utama
-                for (let i = 1; i <= jumlahGbrUtama; i++) {
-                    let rowUtama = $('#utama-row-' + i);
-                    let varianSelectUtama = rowUtama.find('.varian-select');
-                    let selectKeteranganUtama = rowUtama.find('.gambar-keterangan');
-                    let keteranganVal = selectKeteranganUtama.val();
+                const isVehicleSelected = !!$('#vehicles').val();
 
-                    rowUtama.show();
-                    rowUtama.find('.halaman-gambar-input').val(pad(currentPage++)).prop('readonly', true);
-                    rowUtama.find('.total-halaman-input').val(pad(totalPages)).prop('readonly', true);
-                    rowUtama.find('.jumlah-gambar-hidden').val(totalPages);
-                    varianSelectUtama.prop('disabled', !isVehicleSelected);
-                    selectKeteranganUtama.prop('disabled', !isVehicleSelected);
-                    rowUtama.find('.preview-gambar-btn').prop('disabled', !keteranganVal);
-                }
+                activeTypes.forEach((type, typeIndex) => {
+                    let limit = jumlahPerKategori;
+                    if (type === 'kelistrikan') {
+                        limit = 1; // kelistrikan tetap 1
+                    } else if (type === 'detail') {
+                        limit = 1; // detail juga hanya 1 saat awal
+                    }
 
-                // 2. Baris Terurai & Konstruksi (selalu disabled)
-                ['terurai', 'kontruksi'].forEach(type => {
-                    for (let i = 1; i <= jumlahGbrUtama; i++) {
-                        let row = $('#' + type + '-row-' + i);
-                        let rowUtama = $('#utama-row-' + i);
 
-                        let varianSelect = row.find('.varian-select');
-                        let selectKeterangan = row.find('.gambar-keterangan');
-                        let selectedVarian = rowUtama.find('.varian-select').val();
-                        let keteranganVal = rowUtama.find('.gambar-keterangan').val();
+                    for (let i = 1; i <= limit; i++) {
+                        const row = $(`#${type}-row-${i}`);
+                        if (!row.length) continue;
 
                         row.show();
-                        row.find('.halaman-gambar-input').val(pad(currentPage++)).prop('readonly', true);
-                        row.find('.total-halaman-input').val(pad(totalPages)).prop('readonly', true);
+                        const pageNum = (typeIndex * jumlahPerKategori) + i;
+                        row.find('.halaman-gambar-input').val(pad(pageNum));
+                        row.find('.total-halaman-input').val(pad(totalPages));
                         row.find('.jumlah-gambar-hidden').val(totalPages);
 
-                        varianSelect.val(selectedVarian).trigger('change.select2').prop('disabled', true);
-                        selectKeterangan.val(keteranganVal).trigger('change.select2').prop('disabled',
-                            true);
-                        row.find('.preview-gambar-btn').prop('disabled', !keteranganVal);
+                        const varianSelect = row.find('.varian-select');
+                        const selectKeterangan = row.find('.gambar-keterangan');
+
+                        const isVehicleSelected = !!$('#vehicles').val();
+                        if (isVehicleSelected) {
+                            varianSelect.prop('disabled', true);
+                            selectKeterangan.prop('disabled', true);
+                        } else {
+                            varianSelect.prop('disabled', true);
+                            selectKeterangan.prop('disabled', true);
+                        }
+
+                        row.find('.preview-gambar-btn').prop('disabled', true);
                     }
+                });
+
+            }
+
+            $('#submissions').on('change', function() {
+                const submissionId = $(this).val();
+                isHanyaTU = submissionId === HANYA_TU_ID;
+
+                if (isHanyaTU) {
+                    // SEMUA kategori disembunyikan dulu
+                    ALL_TYPES.forEach(type => {
+                        $(`#gambar-${type}-container .gambar-rincian-row`).hide();
+                    });
+
+                    // hanya tampilkan kategori 'utama'
+                    $('#gambar-utama-container .gambar-rincian-row:first').show();
+                    updateHalamanRows();
+                } else {
+                    // kalau bukan HANYA TU, kembalikan normal (misal sesuai jumlah_halaman)
+                    updateKategoriRows();
+                }
+            });
+
+            // --- Fungsi Update Kategori Rows ---
+            function updateKategoriRows() {
+                const jumlahHalaman = parseInt($('#jumlah_halaman').val()) || 0;
+
+                // Loop semua kategori
+                ALL_TYPES.forEach(type => {
+                    const container = $(`#gambar-${type}-container`);
+                    container.find('.gambar-rincian-row').hide(); // sembunyikan dulu semua baris
+
+                    if (type === 'kelistrikan' || type === 'detail') {
+                        // kategori ini cuma 1 baris
+                        container.find('.gambar-rincian-row:first').show();
+                    } else {
+                        // lainnya sesuai jumlah halaman
+                        for (let i = 1; i <= jumlahHalaman; i++) {
+                            container.find(`#${type}-row-${i}`).show();
+                        }
+                    }
+                });
+                updateHalamanRows();
+            }
+
+            function updateHalamanRows() {
+                let pageNum = 1;
+                const visibleRows = $('.gambar-rincian-row:visible');
+
+                const totalPages = visibleRows.length;
+
+                visibleRows.each(function() {
+                    $(this).find('.halaman-gambar-input').val(String(pageNum).padStart(2, '0'));
+                    $(this).find('.total-halaman-input').val(String(totalPages).padStart(2, '0'));
+                    $(this).find('.jumlah-gambar-hidden').val(totalPages);
+                    pageNum++;
                 });
             }
 
+            $('#jumlah_halaman').on('change', updatePageNumbers);
             updatePageNumbers();
 
-            // --- Listener Submissions & Jumlah Halaman ---
-            $('#submissions').change(function() {
-                isHanyaTU = $(this).val() === HANYA_TU_ID;
-                $('.gambar-rincian-row .gambar-keterangan').val(null).trigger('change');
-                updatePageNumbers();
-            });
+            function resetDropdowns(start) {
+                if (start <= 1) {
+                    $('#brands').html('<option></option>').val(null).prop('disabled', true).trigger(
+                        'change.select2');
+                    $('#hidden_brand_id').val('');
+                }
+                if (start <= 2) {
+                    $('#chassiss').html('<option></option>').val(null).prop('disabled', true).trigger(
+                        'change.select2');
+                    $('#hidden_chassis_id').val('');
+                }
+                if (start <= 3) {
+                    $('#vehicles').html('<option></option>').val(null).prop('disabled', true).trigger(
+                        'change.select2');
+                    $('#hidden_vehicle_id').val('');
+                    $('.gambar-rincian-row').find('.varian-select, .gambar-keterangan').prop('disabled', true).val(
+                        null).trigger('change.select2');
+                    $('.preview-gambar-btn').prop('disabled', true);
+                    updatePageNumbers();
+                }
+            }
 
-            $('#jumlah_halaman').on('change', function() {
-                $('.gambar-rincian-row .gambar-keterangan').val(null).trigger('change');
-                updatePageNumbers();
-            });
-
-            // --- Listener Engines ---
+            // Cascading dropdowns (tetap sama)
             $('#engines').change(function() {
-                let id = $(this).val();
-                $('#people').val(null).trigger('change.select2');
+                const id = $(this).val();
                 resetDropdowns(1);
-
                 if (!id) return;
                 $.get("<?php echo e(route('get.brands')); ?>", {
                         engine_id: id
                     })
                     .done(function(data) {
-                        let html = '<option value="" selected disabled>Pilih Merk</option>';
+                        let html = '<option></option>';
                         data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
                         $('#brands').html(html).prop('disabled', false).trigger('change.select2');
                     });
             });
 
             $('#brands').change(function() {
-                let id = $(this).val();
+                const id = $(this).val();
                 $('#hidden_brand_id').val(id);
                 resetDropdowns(2);
                 if (!id) return;
@@ -400,14 +545,14 @@
                         brand_id: id
                     })
                     .done(function(data) {
-                        let html = '<option value="" selected disabled>Pilih Type Chassis</option>';
+                        let html = '<option></option>';
                         data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
                         $('#chassiss').html(html).prop('disabled', false).trigger('change.select2');
                     });
             });
 
             $('#chassiss').change(function() {
-                let id = $(this).val();
+                const id = $(this).val();
                 $('#hidden_chassis_id').val(id);
                 resetDropdowns(3);
                 if (!id) return;
@@ -415,67 +560,344 @@
                         chassis_id: id
                     })
                     .done(function(data) {
-                        let html = '<option value="" selected disabled>Pilih Jenis Kendaraan</option>';
+                        let html = '<option></option>';
                         data.forEach(d => html += `<option value="${d.id}">${d.name}</option>`);
                         $('#vehicles').html(html).prop('disabled', false).trigger('change.select2');
                     });
             });
 
+            // Sembunyikan detail & kelistrikan saat awal
+            $('#gambar-detail-container, #gambar-kelistrikan-container').hide();
+
+            // Handler ketika Kendaraan dipilih (memuat data Keterangan)
             $('#vehicles').change(function() {
-                let id = $(this).val();
+                const id = $(this).val();
                 $('#hidden_vehicle_id').val(id);
+
                 updatePageNumbers();
-                $('.gambar-rincian-row .gambar-keterangan').val(null).trigger('change');
+
+                if (id) {
+                    // Tampilkan kategori detail & kelistrikan
+                    $('#gambar-detail-container, #gambar-kelistrikan-container').show();
+
+                    // Aktifkan row pertama dan dropdown
+                    ['detail', 'kelistrikan'].forEach(type => {
+                        const row = $(`#${type}-row-1`);
+                        if (!row.length) return;
+                        row.show();
+                        row.find('.varian-select, .gambar-keterangan').prop('disabled', false)
+                            .trigger('change.select2');
+
+                        // Aktifkan preview jika ada gambar
+                        const selectedOption = row.find('.gambar-keterangan option:selected');
+                        const fotoData = selectedOption.data('foto') || {};
+                        const hasFile = fotoData && fotoData[type];
+                        row.find('.preview-gambar-btn').prop('disabled', !hasFile);
+                    });
+                } else {
+                    // Kalau vehicle di-unselect, sembunyikan lagi
+                    $('#gambar-detail-container, #gambar-kelistrikan-container').hide();
+                }
+
+
+                $('.gambar-rincian-row').find('.gambar-keterangan').html('<option></option>').val(null)
+                    .prop('disabled', true).trigger('change.select2');
+                $('.preview-gambar-btn').prop('disabled', true);
 
                 if (!id) return;
+
                 $.get("<?php echo e(route('get.keterangans')); ?>", {
                         mdata_id: id
                     })
                     .done(function(data) {
-                        let html = '<option value="" selected disabled>Pilih Keterangan</option>';
+                        let optionHtml = '<option></option>';
                         if (Array.isArray(data) && data.length) {
-                            data.forEach(d => {
+                            data.forEach(function(d) {
                                 const fotoData = {
                                     utama: d.foto_utama || null,
                                     terurai: d.foto_terurai || null,
                                     kontruksi: d.foto_kontruksi || null,
-                                    detail: d.foto_optional || null
+                                    optional: d.foto_optional || null,
+                                    detail: d.foto_detail || null,
+                                    kelistrikan: d.foto_kelistrikan || null
                                 };
-                                html +=
+                                optionHtml +=
                                     `<option value="${d.id}" data-foto='${JSON.stringify(fotoData)}'>${d.keterangan}</option>`;
                             });
                         } else {
-                            html += `<option value="" disabled>Tidak ada data keterangan</option>`;
+                            optionHtml += `<option value="">Tidak ada data keterangan</option>`;
                         }
-                        $('.gambar-rincian-row .gambar-keterangan').html(html).prop('disabled', true)
-                            .trigger('change.select2');
+
+                        $('.gambar-rincian-row').each(function() {
+                            const row = $(this);
+                            const rowId = row.attr('id') || '';
+                            const type = rowId.split('-')[0];
+                            const varianSelect = row.find('.varian-select');
+                            const keteranganSelect = row.find('.gambar-keterangan');
+
+                            keteranganSelect.html(optionHtml).val(null).trigger(
+                                'change.select2');
+
+                            if (type === 'utama') {
+                                varianSelect.prop('disabled', false).trigger('change.select2');
+                                keteranganSelect.prop('disabled', false).trigger(
+                                    'change.select2');
+                            } else if (type === 'optional' || type === 'detail' || type ===
+                                'kelistrikan') {
+                                varianSelect.prop('disabled', false).trigger('change.select2');
+                                keteranganSelect.prop('disabled', false).trigger(
+                                    'change.select2');
+                            } else if (type === 'terurai' || type === 'kontruksi' || type ===
+                                'detail' || type === 'kelistrikan') {
+                                varianSelect.prop('disabled', true).trigger('change.select2');
+                                keteranganSelect.prop('disabled', true).trigger(
+                                    'change.select2');
+                            } else {
+                                varianSelect.prop('disabled', true).trigger('change.select2');
+                                keteranganSelect.prop('disabled', true).trigger(
+                                    'change.select2');
+                            }
+                        });
+                    })
+                    .fail(function() {
+                        toastr.error('Gagal memuat data keterangan');
                     });
             });
 
-            // --- Listener Preview ---
+            // Event ketika kategori Utama / sinkronisasi semua
+            $(document).on('change',
+                '.gambar-rincian-row[id^="utama-row-"] .varian-select, .gambar-rincian-row[id^="utama-row-"] .gambar-keterangan',
+                function() {
+                    const row = $(this).closest('.gambar-rincian-row');
+                    const rowNum = row.attr('id').split('-')[2];
+
+                    const varianSelect = row.find('.varian-select');
+                    const selectedVarianId = varianSelect.val();
+                    const selectedVarian = varianSelect.find(`option[value="${selectedVarianId}"]`);
+                    const utamaName = selectedVarian.data('utama');
+                    const teruraiName = selectedVarian.data('terurai');
+                    const kontruksiName = selectedVarian.data('kontruksi');
+                    const optionalName = selectedVarian.data('optional');
+                    const detailName = selectedVarian.data('detail');
+                    const kelistrikanName = selectedVarian.data('kelistrikan');
+
+                    const selectedOption = row.find('.gambar-keterangan option:selected');
+                    const fotoData = selectedOption.length ? selectedOption.data('foto') || {} : {};
+                    const isKeteranganSelected = selectedOption.length && selectedOption.val();
+
+                    const hasFileUtama = fotoData.utama && fotoData.utama.length > 0;
+                    row.find('.preview-gambar-btn').prop('disabled', !hasFileUtama);
+
+                    ['terurai', 'kontruksi', 'optional'].forEach(type => {
+                        const syncRow = $(`#${type}-row-${rowNum}`);
+                        if (!syncRow.length) return;
+
+                        syncRow.show();
+
+                        const syncSelect = syncRow.find('.varian-select');
+                        const keteranganSelect = syncRow.find('.gambar-keterangan');
+
+                        if (type === 'terurai' || type === 'kontruksi' || type === 'detail' || type ===
+                            'kelistrikan') {
+                            if (selectedVarianId) {
+                                syncSelect.val(selectedVarianId).trigger('change.select2');
+
+                                let newText = utamaName;
+                                if (type === 'terurai') newText = teruraiName;
+                                else if (type === 'kontruksi') newText = kontruksiName;
+                                else if (type === 'detail') newText = detailName;
+                                else if (type === 'kelistrikan') newText = kelistrikanName;
+
+                                if (newText) {
+                                    const syncOption = syncSelect.find(
+                                        `option[value="${selectedVarianId}"]`);
+                                    if (syncOption.length) syncOption.text(newText);
+                                    updateSelect2Text(syncSelect, newText);
+                                }
+                            }
+                            syncSelect.prop('disabled', true);
+                        } else if (type === 'optional') {
+                            syncSelect.prop('disabled', false);
+                        }
+
+                        if (isKeteranganSelected) {
+                            keteranganSelect.val(selectedOption.val()).trigger('change.select2');
+                            const syncOptionKet = keteranganSelect.find(
+                                `option[value="${selectedOption.val()}"]`);
+                            if (syncOptionKet.length) syncOptionKet.data('foto', fotoData);
+                        } else {
+                            keteranganSelect.val(null).trigger('change.select2');
+                        }
+
+                        let hasFile = false;
+                        if (type === 'optional') {
+                            hasFile = fotoData.optional && fotoData.optional.length > 0;
+                        } else {
+                            hasFile = fotoData[type] && fotoData[type].length > 0;
+                        }
+                        syncRow.find('.preview-gambar-btn').prop('disabled', !hasFile);
+
+                        if (type === 'terurai' || type === 'kontruksi' || type === 'detail' || type ===
+                            'kelistrikan') {
+                            keteranganSelect.prop('disabled', true);
+                        } else if (type === 'optional') {
+                            keteranganSelect.prop('disabled', true);
+                        } else if (type === 'utama') {
+                            keteranganSelect.prop('disabled', false);
+                        }
+                    });
+
+                    // Pastikan detail dan kelistrikan tetap aktif mandiri
+                    ['detail', 'kelistrikan'].forEach(type => {
+                        const row = $(`#${type}-row-1`);
+                        if (!row.length) return;
+                        row.show();
+
+                        row.find('.varian-select').prop('disabled', false).trigger('change.select2');
+                        row.find('.gambar-keterangan').prop('disabled', false).trigger(
+                            'change.select2');
+
+                        // Aktifkan preview jika ada foto
+                        const selectedOption = row.find('.gambar-keterangan option:selected');
+                        const fotoData = selectedOption.data('foto') || {};
+                        const jenisGambar = row.attr('id').split('-')[0];
+                        const hasFile = fotoData && fotoData[jenisGambar];
+                        row.find('.preview-gambar-btn').prop('disabled', !hasFile);
+                    });
+
+
+                });
+
+            // Helper untuk update tampilan teks Select2
+            function updateSelect2Text($select, text) {
+                const container = $select.next('.select2-container').find('.select2-selection__rendered');
+                if (container.length) container.text(text);
+            }
+
+            // optional varian label update (tetap sama)
+            $(document).on('change', '.gambar-rincian-row[id^="optional-row-"] .varian-select', function() {
+                const $sel = $(this);
+                const opt = $sel.find('option:selected');
+                const optionalName = opt.data('optional') || opt.text();
+                updateSelect2Text($sel, optionalName);
+            });
+
+            // Kategori DETAIL dan KELISTRIKAN tidak sinkron dan berdiri sendiri
+            ['detail', 'kelistrikan'].forEach(type => {
+                const row = $(`#${type}-row-1`);
+                if (!row.length) return;
+                row.show();
+
+                const varianSelect = row.find('.varian-select');
+                const keteranganSelect = row.find('.gambar-keterangan');
+
+                // Bebas dipilih
+                varianSelect.prop('disabled', false).trigger('change.select2');
+                keteranganSelect.prop('disabled', false).trigger('change.select2');
+
+                // Aktifkan tombol preview jika ada data gambar
+                const selectedOption = keteranganSelect.find('option:selected');
+                const fotoData = selectedOption.data('foto') || {};
+                const jenisGambar = row.attr('id').split('-')[0];
+                const hasFile = fotoData && fotoData[jenisGambar];
+                row.find('.preview-gambar-btn').prop('disabled', !hasFile);
+            });
+
+            // Tambah baris baru di kategori DETAIL
+            $(document).on('click', '.add-detail-row-btn', function() {
+                const container = $('#gambar-detail-container');
+                const visibleRows = container.find('.gambar-rincian-row:visible');
+                const hiddenRows = container.find('.gambar-rincian-row:hidden');
+
+                if (visibleRows.length >= 10) {
+                    toastr.warning('Maksimal 10 baris detail saja.');
+                    return;
+                }
+
+                if (hiddenRows.length === 0) {
+                    // Kalau belum ada row lebih dari 4 di HTML, bisa buat dinamis (jika kamu mau)
+                    toastr.warning('Tidak ada baris tambahan yang tersedia.');
+                    return;
+                }
+
+                const nextRow = hiddenRows.first();
+                nextRow.show();
+                nextRow.find('.varian-select, .gambar-keterangan').prop('disabled', false).trigger(
+                    'change.select2');
+                nextRow.find('.preview-gambar-btn').prop('disabled', true);
+
+                updateHalamanRows();
+
+                toastr.success('Baris detail baru ditambahkan.');
+            });
+
+            // Event toggle hide hanya untuk kategori detail
+            $(document).on('change', '.hide-detail-checkbox', function() {
+                const row = $(this).closest('.gambar-rincian-row');
+                if ($(this).is(':checked')) {
+                    row.hide();
+                } else {
+                    row.show();
+                }
+                updateHalamanRows(); // tetap update nomor & total halaman
+            });
+
+            // Event preview tombol
             $(document).on('click', '.preview-gambar-btn', function() {
-                if ($(this).is(':disabled')) return;
-
-                let row = $(this).closest('.gambar-rincian-row');
-                let selectedOption = row.find('.gambar-keterangan option:selected');
+                const row = $(this).closest('.gambar-rincian-row');
+                const selectedOption = row.find('.gambar-keterangan option:selected');
                 if (!selectedOption.length || !selectedOption.val()) {
-                    toastr.warning("Silakan pilih Keterangan Gambar terlebih dahulu.");
+                    toastr.warning("Silakan pilih Keterangan terlebih dahulu.");
                     return;
                 }
 
-                let fotoData = selectedOption.data('foto') || {};
-                let jenisGambar = row.attr('id').split('-')[0];
-                if (!fotoData[jenisGambar]) {
-                    toastr.warning("Tidak ada gambar untuk jenis body ini pada keterangan yang dipilih.");
+                const fotoData = selectedOption.data('foto') || {};
+                const jenisGambar = row.attr('id').split('-')[0];
+
+                let fileNama = null;
+                if (jenisGambar === 'optional' && fotoData.optional && fotoData.optional.length > 0) {
+                    fileNama = fotoData.optional[0].file_name;
+                } else {
+                    fileNama = fotoData[jenisGambar] || null;
+                }
+
+                if (!fileNama) {
+                    toastr.warning("Tidak ada gambar yang tersedia.");
                     return;
                 }
 
-                let fotoHtml = `<div class="mb-2 text-center">
-                            <img src="/storage/body/${fotoData[jenisGambar]}" class="img-fluid border rounded">
-                        </div>`;
-                $('#imgPreviewModal').html(fotoHtml);
+                $('#imgPreviewModal').html(
+                    `<div class="mb-2 text-center">
+                    <img src="/storage/body/${fileNama}" class="img-fluid border rounded" alt="Preview ${jenisGambar}">
+                </div>`
+                );
                 $('#modalPreview').modal('show');
             });
+
+            // Delete optional (sama seperti sebelumnya)
+            $(document).on('click', '.delete-row-btn', function() {
+                const row = $(this).closest('.gambar-rincian-row');
+                if (!row.attr('id').startsWith('optional-row')) return;
+
+                row.find('select').val(null).trigger('change.select2').prop('disabled', true);
+                row.find('input').val('').prop('readonly', true).prop('disabled', true);
+                row.find('.preview-gambar-btn').prop('disabled', true);
+                row.hide();
+
+                updateHalamanRows();
+
+                const totalAktif = $('.halaman-gambar-input:visible').length;
+                $('.total-halaman-input:visible').val(String(totalAktif).padStart(2, '0'));
+                $('#hidden_jumlah_gambar').val(totalAktif);
+
+                let pageNum = 1;
+                $('.halaman-gambar-input:visible').each(function() {
+                    $(this).val(String(pageNum).padStart(2, '0'));
+                    pageNum++;
+                });
+                toastr.info('Baris optional dihapus.');
+            });
+
         });
     </script>
 <?php $__env->stopPush(); ?>

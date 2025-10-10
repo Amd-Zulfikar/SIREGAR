@@ -36,7 +36,7 @@
                                             <th>Chassis</th>
                                             <th>Vehicle</th>
                                             <th>Jenis Body</th>
-                                            <th>Gambar Body</th> 
+                                            <th>Gambar Body</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -54,69 +54,29 @@
                                                     <div style="display:flex; flex-wrap: wrap; gap: 5px;">
 
                                                         
-                                                        <?php
-                                                            $imageFields = [
-                                                                'Utama' => $mgambar->foto_utama
-                                                                    ? asset('storage/body/' . $mgambar->foto_utama)
-                                                                    : null,
-                                                                'Terurai' => $mgambar->foto_terurai
-                                                                    ? asset('storage/body/' . $mgambar->foto_terurai)
-                                                                    : null,
-                                                                'Konstruksi' => $mgambar->foto_kontruksi
-                                                                    ? asset('storage/body/' . $mgambar->foto_kontruksi)
-                                                                    : null,
-                                                                'Optional' => $mgambar->foto_optional
-                                                                    ? asset('storage/body/' . $mgambar->foto_optional)
-                                                                    : null,
-                                                            ];
-                                                            $hasImage = false;
-                                                        ?>
-
-                                                        <?php $__currentLoopData = $imageFields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $title => $src): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                            <?php if($src): ?>
+                                                        <?php $hasImage = false; ?>
+                                                        <?php $__currentLoopData = ['Utama' => $mgambar->foto_utama, 'Terurai' => $mgambar->foto_terurai, 'Konstruksi' => $mgambar->foto_kontruksi, 'Optional' => $mgambar->foto_optional]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $title => $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                            <?php if($file): ?>
                                                                 <?php $hasImage = true; ?>
-                                                                <img src="<?php echo e($src); ?>"
+                                                                <img src="<?php echo e(asset('storage/body/' . $file)); ?>"
                                                                     alt="Gambar <?php echo e($title); ?>"
                                                                     title="Gambar <?php echo e($title); ?>"
                                                                     class="img-thumbnail preview-img"
-                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer; border: 2px solid #3c8dbc;"
-                                                                    data-src="<?php echo e($src); ?>">
+                                                                    style="width:80px; height:80px; object-fit:cover; cursor:pointer; border:2px solid #3c8dbc;"
+                                                                    data-src="<?php echo e(asset('storage/body/' . $file)); ?>">
                                                             <?php endif; ?>
                                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
                                                         
-                                                        <?php
-                                                            $optionalImages = json_decode(
-                                                                $mgambar->foto_optional,
-                                                                true,
-                                                            );
-                                                        ?>
-
-                                                        <?php if(is_array($optionalImages)): ?>
-                                                            <?php $__currentLoopData = $optionalImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optional): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                <?php
-                                                                    $optionalSrc = asset(
-                                                                        'storage/body/optional/' .
-                                                                            $optional['filename'],
-                                                                    );
-                                                                    $optionalTitle =
-                                                                        $optional['name'] ?? 'Optional Image';
-                                                                    $hasImage = true;
-                                                                ?>
-                                                                <img src="<?php echo e($optionalSrc); ?>" alt="<?php echo e($optionalTitle); ?>"
-                                                                    title="Optional: <?php echo e($optionalTitle); ?>"
-                                                                    class="img-thumbnail preview-img"
-                                                                    style="width:80px; height: 80px; object-fit: cover; cursor:pointer; border: 2px solid #5cb85c;"
-                                                                    data-src="<?php echo e($optionalSrc); ?>">
-                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                        <?php endif; ?>
+                                                        
 
                                                         <?php if(!$hasImage): ?>
                                                             <span class="text-muted">No Image</span>
                                                         <?php endif; ?>
+
                                                     </div>
                                                 </td>
-                                                
+
 
                                                 <td>
                                                     <a class="btn btn-light btn-sm"

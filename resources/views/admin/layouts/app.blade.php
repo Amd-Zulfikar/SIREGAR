@@ -97,9 +97,9 @@
                             </a>
                         </li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account', 'index.pemeriksa', 'add.pemeriksa', 'edit.pemeriksa') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.role', 'add.role', 'edit.role', 'index.employee', 'add.employee', 'edit.employee', 'index.customer', 'add.customer', 'edit.customer', 'index.account', 'add.account', 'edit.account', 'index.pemeriksa', 'add.pemeriksa', 'edit.pemeriksa') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-users"></i>
                                 <p>
                                     Data User
@@ -126,6 +126,13 @@
                                         class="nav-link {{ request()->routeIs('index.customer', 'add.customer', 'edit.customer') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Customer</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('index.pemeriksa') }}"
+                                        class="nav-link {{ request()->routeIs('index.pemeriksa', 'add.pemeriksa', 'edit.pemeriksa') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Pemeriksa</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -201,9 +208,9 @@
                         </li>
                         <li class="nav-header">INPUT GAMBAR</li>
                         <li
-                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'menu-open' : '' }}">
+                            class="nav-item has-treeview {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar', 'index.mgambaroptional', 'add.mgambaroptional', 'edit.mgambaroptional', 'index.mgambarelectricity', 'add.mgambarelectricity', 'edit.mgambarelectricity') ? 'menu-open' : '' }}">
                             <a href="javascript:void(0)"
-                                class="nav-link {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'active' : '' }}">
+                                class="nav-link {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar', 'index.mgambaroptional', 'add.mgambaroptional', 'edit.mgambaroptional', 'index.mgambarelectricity', 'add.mgambarelectricity', 'edit.mgambarelectricity') ? 'active' : '' }}">
                                 <i class="nav-icon fa-solid fa-images"></i>
                                 <p>
                                     Gambar Master
@@ -215,7 +222,21 @@
                                     <a href="{{ route('index.mgambar') }}"
                                         class="nav-link {{ request()->routeIs('index.mgambar', 'add.mgambar', 'edit.mgambar', 'copy.mgambar') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Master Gambar</p>
+                                        <p>Master</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('index.mgambaroptional') }}"
+                                        class="nav-link {{ request()->routeIs('index.mgambaroptional', 'add.mgambaroptional', 'edit.mgambaroptional') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Master Optional</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('index.mgambarelectricity') }}"
+                                        class="nav-link {{ request()->routeIs('index.mgambarelectricity', 'add.mgambarelectricity', 'edit.mgambarelectricity') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Master Kelistrikan</p>
                                     </a>
                                 </li>
                             </ul>

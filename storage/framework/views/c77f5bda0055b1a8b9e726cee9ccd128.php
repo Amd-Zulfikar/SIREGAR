@@ -166,7 +166,7 @@
     <!-- AdminLTE App -->
     <script src="<?php echo e(asset('adminlte/dist/js/adminlte.min.js')); ?>"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="<?php echo e(asset('adminlte/dist/js/demo.js')); ?>"></script>
+    
     <!-- DataTables  & Plugins -->
     <script src="<?php echo e(asset('adminlte/plugins/datatables/jquery.dataTables.min.js')); ?>"></script>
     <script src="<?php echo e(asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')); ?>"></script>
