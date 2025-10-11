@@ -35,7 +35,6 @@
                                         <tr>
                                             <th>Engine</th>
                                             <th>Merk</th>
-                                            <th>Chassis</th>
                                             <th>Keterangan</th>
                                             <th>Gambar</th>
                                             <th>Aksi</th>
@@ -47,7 +46,6 @@
                                             <tr>
                                                 <td>{{ $item->mdata->engine->name ?? '-' }}</td>
                                                 <td>{{ $item->mdata->brand->name ?? '-' }}</td>
-                                                <td>{{ $item->mdata->chassis->name ?? '-' }}</td>
                                                 <td>{{ $item->description ?? '-' }}</td>
 
                                                 <td>
@@ -85,7 +83,6 @@
                                         <tr>
                                             <th>Engine</th>
                                             <th>Merk</th>
-                                            <th>Chassis</th>
                                             <th>Keterangan</th>
                                             <th>Gambar</th>
                                             <th>Aksi</th>

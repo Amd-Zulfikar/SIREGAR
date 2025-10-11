@@ -6,6 +6,7 @@ use App\Models\Admin\Mdata;
 use App\Models\Admin\Varian;
 use App\Models\Admin\Customer;
 use App\Models\Admin\Employee;
+use App\Models\Admin\Pemeriksa;
 use App\Models\Admin\Submission;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,7 @@ class Workspace extends Model
         'no_transaksi',
         'customer_id',
         'employee_id',
+        'pemeriksa_id',
         'submission_id',
         'varian_id',
         'keterangan',
@@ -32,6 +34,11 @@ class Workspace extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_id');
+    }
+
+    public function pemeriksa()
+    {
+        return $this->belongsTo(Pemeriksa::class, 'pemeriksa_id');
     }
 
     public function submission()

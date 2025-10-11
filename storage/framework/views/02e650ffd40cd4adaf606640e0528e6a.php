@@ -50,8 +50,7 @@ unset($__errorArgs, $__bag); ?>"
                                                         <option value="<?php echo e($mdata->id); ?>"
                                                             <?php echo e(old('mdata_id') == $mdata->id ? 'selected' : ''); ?>>
                                                             <?php echo e($mdata->engine->name ?? '-'); ?> -
-                                                            <?php echo e($mdata->brand->name ?? '-'); ?> -
-                                                            <?php echo e($mdata->chassis->name ?? '-'); ?>
+                                                            <?php echo e($mdata->brand->name ?? '-'); ?>
 
                                                         </option>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -43,8 +43,7 @@
                                                         <option value="{{ $mdata->id }}"
                                                             {{ old('mdata_id') == $mdata->id ? 'selected' : '' }}>
                                                             {{ $mdata->engine->name ?? '-' }} -
-                                                            {{ $mdata->brand->name ?? '-' }} -
-                                                            {{ $mdata->chassis->name ?? '-' }}
+                                                            {{ $mdata->brand->name ?? '-' }}
                                                         </option>
                                                     @endforeach
                                                 </select>

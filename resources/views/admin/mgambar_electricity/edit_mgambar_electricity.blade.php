@@ -43,8 +43,7 @@
                                                         <option value="{{ $mdata->id }}"
                                                             {{ $mdata->id == $mgambarelectricity->mdata_id ? 'selected' : '' }}>
                                                             {{ $mdata->engine->name ?? '-' }} -
-                                                            {{ $mdata->brand->name ?? '-' }} -
-                                                            {{ $mdata->chassis->name ?? '-' }}
+                                                            {{ $mdata->brand->name ?? '-' }}
                                                         </option>
                                                     @endforeach
                                                 </select>

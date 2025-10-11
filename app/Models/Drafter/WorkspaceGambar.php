@@ -11,7 +11,7 @@ class WorkspaceGambar extends Model
 {
     protected $table = 'tb_workspace_gambar';
 
-    protected $fillable = [
+    protected $fillable = [ 
         'workspace_id',
         'engine',
         'brand',

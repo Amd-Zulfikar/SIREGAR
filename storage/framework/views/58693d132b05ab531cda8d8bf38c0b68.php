@@ -35,7 +35,6 @@
                                         <tr>
                                             <th>Engine</th>
                                             <th>Merk</th>
-                                            <th>Chassis</th>
                                             <th>Keterangan</th>
                                             <th>Gambar</th>
                                             <th>Aksi</th>
@@ -47,15 +46,14 @@
                                             <tr>
                                                 <td><?php echo e($item->mdata->engine->name ?? '-'); ?></td>
                                                 <td><?php echo e($item->mdata->brand->name ?? '-'); ?></td>
-                                                <td><?php echo e($item->mdata->chassis->name ?? '-'); ?></td>
                                                 <td><?php echo e($item->description ?? '-'); ?></td>
 
                                                 <td>
-                                                    <?php if($item->file_name): ?>
-                                                        <img src="<?php echo e(Storage::url('body/kelistrikan/' . $item->file_name)); ?>"
-                                                            alt="Gambar electricity" class="img-thumbnail preview-img"
+                                                    <?php if($item->file_path): ?>
+                                                        <img src="<?php echo e(Storage::url($item->file_path)); ?>"
+                                                            alt="Gambar Kelistrikan" class="img-thumbnail preview-img"
                                                             style="width:80px; height:80px; object-fit:cover; cursor:pointer; border:2px solid #5cb85c;"
-                                                            data-src="<?php echo e(Storage::url('body/kelistrikan/' . $item->file_name)); ?>">
+                                                            data-src="<?php echo e(Storage::url($item->file_path)); ?>">
                                                     <?php else: ?>
                                                         <span class="text-muted">No Image</span>
                                                     <?php endif; ?>
@@ -85,7 +83,6 @@
                                         <tr>
                                             <th>Engine</th>
                                             <th>Merk</th>
-                                            <th>Chassis</th>
                                             <th>Keterangan</th>
                                             <th>Gambar</th>
                                             <th>Aksi</th>

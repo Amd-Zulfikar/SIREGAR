@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Admin\Varian;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class VarianController extends Controller
 {
@@ -27,10 +28,22 @@ class VarianController extends Controller
     {
         $request->validate(
             [
-                'name_utama' => 'unique:tb_varians,name_utama',
-                'name_terurai' => 'unique:tb_varians,name_terurai',
-                'name_kontruksi' => 'unique:tb_varians,name_kontruksi',
-                'name_optional' => 'unique:tb_varians,name_optional',
+                'name_utama' => [
+                    'nullable',
+                    Rule::unique('tb_varians', 'name_utama')->whereNotNull('name_utama'),
+                ],
+                'name_terurai' => [
+                    'nullable',
+                    Rule::unique('tb_varians', 'name_terurai')->whereNotNull('name_terurai'),
+                ],
+                'name_kontruksi' => [
+                    'nullable',
+                    Rule::unique('tb_varians', 'name_kontruksi')->whereNotNull('name_kontruksi'),
+                ],
+                'name_optional' => [
+                    'nullable',
+                    Rule::unique('tb_varians', 'name_optional')->whereNotNull('name_optional'),
+                ],
             ],
             [
                 'name_utama.unique' => 'Varian sudah ada, silahkan gunakan nama lain!',
@@ -40,12 +53,11 @@ class VarianController extends Controller
             ]
         );
 
-        $input = $request->all();
         Varian::create([
-            'name_utama' => $input['name_utama']?? null,
-            'name_terurai' => $input['name_terurai']?? null,
-            'name_kontruksi' => $input['name_kontruksi']?? null,
-            'name_optional' => $input['name_optional']?? null,
+            'name_utama' => $request->name_utama ?: null,
+            'name_terurai' => $request->name_terurai ?: null,
+            'name_kontruksi' => $request->name_kontruksi ?: null,
+            'name_optional' => $request->name_optional ?: null,
         ]);
 
         return redirect()->route('index.varian')->with('success', 'Data berhasil disimpan!');

@@ -53,14 +53,15 @@
                                                 <td><?php echo e($item->description ?? '-'); ?></td>
 
                                                 <td>
-                                                    <?php if($item->file_name): ?>
-                                                        <img src="<?php echo e(Storage::url('body/detail/' . $item->file_name)); ?>"
+                                                    <?php if($item->file_path): ?>
+                                                        <img src="<?php echo e(Storage::url($item->file_path)); ?>"
                                                             alt="Gambar Optional" class="img-thumbnail preview-img"
                                                             style="width:80px; height:80px; object-fit:cover; cursor:pointer; border:2px solid #5cb85c;"
-                                                            data-src="<?php echo e(Storage::url('body/detail/' . $item->file_name)); ?>">
+                                                            data-src="<?php echo e(Storage::url($item->file_path)); ?>">
                                                     <?php else: ?>
                                                         <span class="text-muted">No Image</span>
                                                     <?php endif; ?>
+
                                                 </td>
 
                                                 <td>

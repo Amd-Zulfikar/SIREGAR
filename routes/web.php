@@ -196,6 +196,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/mgambarelectricity/add',[MgambarElectricityController::class, 'mgambarelectricity_add'])->name('add.mgambarelectricity');
     Route::get('/admin/mgambarelectricity/edit/{id}',[MgambarElectricityController::class, 'mgambarelectricity_edit'])->name('edit.mgambarelectricity');
     Route::get('/admin/mgambarelectricity/delete/{id}',[MgambarElectricityController::class, 'delete'])->name('delete.mgambarelectricity');
+    
+
 
     // route for function controller mgambar
     Route::post('/admin/mgambarelectricity/store', [App\Http\Controllers\Admin\MgambarElectricityController::class, 'store'])->name('store.mgambarelectricity');
@@ -224,6 +226,10 @@ Route::middleware(['auth', 'role:drafter'])->group(function () {
     Route::get('/drafter/workspace/get-chassiss', [WorkspaceController::class, 'getChassiss'])->name('get.chassiss');
     Route::get('/drafter/workspace/get-vehicles', [WorkspaceController::class, 'getVehicles'])->name('get.vehicles');
     Route::get('/drafter/workspace/get-keterangans', [WorkspaceController::class, 'getKeterangans'])->name('get.keterangans');
+    Route::get('/drafter/workspace/get-keterangans-electricity', [WorkspaceController::class, 'getKeterangansElectricity'])
+    ->name('get.keterangans.electricity');
+    Route::get('/drafter/workspace/get-keterangans-detail', [WorkspaceController::class, 'getKeterangansdetail'])
+    ->name('get.keterangans.detail');
     // AJAX - Preview foto_body
     Route::get('/preview-gambar', [WorkspaceController::class, 'previewGambar'])->name('preview.gambar');
 });
