@@ -135,7 +135,7 @@ class WorkspaceController extends Controller
                     'keterangan'     => $item['keterangan'] ?? null,
                     'halaman_gambar' => $item['halaman_gambar'] ?? null,
                     'jumlah_gambar'  => $item['jumlah_gambar'] ?? 1,
-                    'hide'           => 0, // sudah di-filter, semua visible
+                    'hide'           => 0,
                 ];
             }
         }
@@ -175,8 +175,6 @@ class WorkspaceController extends Controller
         return redirect()->route('index.workspace')
             ->with('success', 'Workspace berhasil disimpan!');
     }
-
-
 
     public function workspace_edit($id)
     {
@@ -280,9 +278,10 @@ class WorkspaceController extends Controller
     {
         $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])
             ->findOrFail($id);
-
+        
         $overlayedImages = $this->generateOverlayImages($workspace);
 
+       
         return view('drafter.workspace.overlay_preview', [
             'workspace' => $workspace,
             'images' => $overlayedImages,
@@ -377,6 +376,7 @@ class WorkspaceController extends Controller
         $useFontFile = file_exists($fontPath);
 
         foreach ($workspace->workspaceGambar as $gambar) {
+            
             $fotos = json_decode($gambar->foto_body, true);
             if (!$fotos) {
                 continue;
@@ -638,7 +638,7 @@ class WorkspaceController extends Controller
     {
         $mdata_id = $request->mdata_id;
 
-        $data = MgambarElectricity::where('mdata_id', $mdata_id)
+        $data = \App\Models\Admin\MgambarElectricity::where('mdata_id', $mdata_id)
                     ->select('id', 'file_name', 'file_path', 'description')
                     ->get();
 

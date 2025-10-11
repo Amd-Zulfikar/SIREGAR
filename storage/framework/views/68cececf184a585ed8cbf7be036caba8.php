@@ -406,11 +406,15 @@
 
             $('.select2').removeAttr('required');
 
-
             $('.select2-static').select2({
                 width: '100%',
                 minimumResultsForSearch: Infinity,
                 allowClear: false
+            });
+
+            $('.varian-select, .gambar-keterangan').select2({
+                width: '100%',
+                allowClear: true
             });
 
             $('.gambar-rincian-row[id^="optional-row-"] .varian-select').prop('disabled', false);
@@ -418,11 +422,6 @@
             $('.gambar-rincian-row[id^="optional-row-"] .gambar-keterangan').prop('disabled', true);
 
             $('#customers, #submissions, #employee, #pemeriksa, #engines, #brands, #chassiss, #vehicles').select2({
-                width: '100%',
-                allowClear: true
-            });
-
-            $('.varian-select, .gambar-keterangan').select2({
                 width: '100%',
                 allowClear: true
             });
@@ -544,7 +543,6 @@
                 updateHalamanRows();
             }
 
-
             $('#submissions').on('change', function() {
                 const submissionId = $(this).val();
                 isHanyaTU = submissionId === HANYA_TU_ID;
@@ -587,13 +585,12 @@
 
             function updateHalamanRows() {
                 let pageNum = 1;
-                const visibleRows = $('.gambar-rincian-row:visible');
+                const allRows = $('.gambar-rincian-row'); // semua row, termasuk hide
+                const totalPages = allRows.length;
 
-                const totalPages = visibleRows.length;
-
-                visibleRows.each(function() {
-                    $(this).find('.halaman-gambar-input').val(String(pageNum).padStart(2, '0'));
-                    $(this).find('.total-halaman-input').val(String(totalPages).padStart(2, '0'));
+                allRows.each(function() {
+                    $(this).find('.halaman-gambar-input').val(pad(pageNum));
+                    $(this).find('.total-halaman-input').val(pad(totalPages));
                     $(this).find('.jumlah-gambar-hidden').val(totalPages);
                     pageNum++;
                 });
@@ -871,8 +868,6 @@
                     });
             });
 
-
-
             // Event ketika kategori Utama / sinkronisasi semua
             $(document).on('change',
                 '.gambar-rincian-row[id^="utama-row-"] .varian-select, .gambar-rincian-row[id^="utama-row-"] .gambar-keterangan',
@@ -1021,7 +1016,6 @@
                 row.find('.preview-gambar-btn').prop('disabled', !hasFile);
             });
 
-
             // Tambah baris baru di kategori DETAIL
             $(document).on('click', '.add-detail-row-btn', function() {
                 const container = $('#gambar-detail-container');
@@ -1148,24 +1142,9 @@
                 toastr.info('Baris optional dihapus.');
             });
 
-            $(document).on('submit', '#form-workspace', function(e) {
-                e.preventDefault(); // hentikan submit default dulu
-
-                const $form = $(this);
-                const fd = new FormData(this);
-
-                // tampilkan semua field yang akan dikirim
-                let output = '';
-                for (const [k, v] of fd.entries()) {
-                    output += `${k} = ${v}\n`;
-                }
-                toastr.info(output, 'DEBUG: Data Form'); // tampilkan toastr semua field
-
-                // opsional: lanjut submit setelah 1 detik agar bisa lihat toastr
-                setTimeout(() => {
-                    $form.off('submit'); // matikan event ini supaya submit normal jalan
-                    $form.submit();
-                }, 1000);
+            $(document).on('submit', '#form-workspace', function() {
+                $('.gambar-rincian-row').find('select, input').prop('disabled', false);
+                return true;
             });
 
 

@@ -11,6 +11,10 @@ class WorkspaceGambar extends Model
 {
     protected $table = 'tb_workspace_gambar';
 
+    protected $casts = [
+    'foto_body' => 'array',
+    ];
+
     protected $fillable = [ 
         'workspace_id',
         'engine',

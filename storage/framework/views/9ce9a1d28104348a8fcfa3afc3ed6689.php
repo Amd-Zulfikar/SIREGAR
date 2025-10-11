@@ -1,13 +1,11 @@
-@extends('drafter.layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="content-wrapper">
         <br>
         <div class="content">
             <div class="container-fluid">
                 <div class="col-12 col-sm-12">
                     <div>
-                        <a href="{{ route('index.workspace') }}" class="btn btn-outline-primary"><i
+                        <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary"><i
                                 class="fa-solid fa-circle-left"></i> Kembali</a>
                     </div>
                     <br>
@@ -43,19 +41,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($workspace->workspaceGambar as $g)
+                                                <?php $__currentLoopData = $workspace->workspaceGambar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $g): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <tr>
-                                                        <td>{{ $workspace->no_transaksi ?? '-' }}</td>
+                                                        <td><?php echo e($workspace->no_transaksi ?? '-'); ?></td>
                                                         <td>
-                                                            {{ $g->brandModel ? $g->brandModel->name : '-' }}
-                                                            {{ $g->chassisModel ? ' ' . $g->chassisModel->name : '' }}
-                                                            {{ $g->vehicleModel ? ' ' . $g->vehicleModel->name : '' }}
-                                                            {{ $g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : '' }}
+                                                            <?php echo e($g->brandModel ? $g->brandModel->name : '-'); ?>
+
+                                                            <?php echo e($g->chassisModel ? ' ' . $g->chassisModel->name : ''); ?>
+
+                                                            <?php echo e($g->vehicleModel ? ' ' . $g->vehicleModel->name : ''); ?>
+
+                                                            <?php echo e($g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : ''); ?>
+
                                                         </td>
-                                                        <td>{{ $workspace->submission->name ?? '-' }}</td>
-                                                        <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
+                                                        <td><?php echo e($workspace->submission->name ?? '-'); ?></td>
+                                                        <td><?php echo e($workspace->created_at->format('d/m/Y')); ?></td>
                                                     </tr>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -65,34 +67,34 @@
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
 
-                                    @php
+                                    <?php
                                         $imagesArr = collect($images)
                                             ->flatten()
                                             ->filter(fn($img) => $img)
                                             ->values()
                                             ->all();
                                         $total = count($imagesArr);
-                                    @endphp
+                                    ?>
 
 
                                     <div class="container-fluid">
-                                        @if ($total === 0)
+                                        <?php if($total === 0): ?>
                                             <div class="text-muted">Tidak ada gambar.</div>
-                                        @else
+                                        <?php else: ?>
                                             <div class="row justify-content-center">
-                                                @foreach ($imagesArr as $imagePath)
+                                                <?php $__currentLoopData = $imagesArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imagePath): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <div class="mb-3 col-6 col-md-4 col-lg-3 d-flex justify-content-center">
-                                                        <img src="{{ asset($imagePath) }}" class="img-fluid overlay-img"
-                                                            data-preview="{{ asset($imagePath) }}" alt="Overlay Image">
+                                                        <img src="<?php echo e(asset($imagePath)); ?>" class="img-fluid overlay-img"
+                                                            data-preview="<?php echo e(asset($imagePath)); ?>" alt="Overlay Image">
                                                     </div>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
-                                        @endif
+                                        <?php endif; ?>
 
                                     </div>
 
                                     <div class="mb-3 d-flex justify-content-between align-items-center">
-                                        <a href="{{ route('export.overlay.workspace', $workspace->id) }}" target="_blank"
+                                        <a href="<?php echo e(route('export.overlay.workspace', $workspace->id)); ?>" target="_blank"
                                             class="btn btn-danger">
                                             <i class="fa-solid fa-file-pdf"></i>Download
                                         </a>
@@ -120,9 +122,9 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <style>
         .overlay-img {
             width: 150px;
@@ -157,9 +159,9 @@
             }
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         $(function() {
             $(document).on('click', '.overlay-img', function() {
@@ -174,4 +176,6 @@
             });
         });
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('drafter.layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\02. ZULFIKAR\CODING\REKAYASA\SIREGAR\resources\views/drafter/workspace/overlay_preview.blade.php ENDPATH**/ ?>
