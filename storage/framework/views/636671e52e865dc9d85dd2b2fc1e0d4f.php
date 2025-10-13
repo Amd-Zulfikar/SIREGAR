@@ -68,39 +68,29 @@
                                     aria-labelledby="custom-tabs-four-profile-tab">
 
                                     <?php
-
-                                        if (is_null($images)) {
-                                            $imagesArr = [];
-                                        } elseif (is_array($images)) {
-                                            $imagesArr = array_values($images);
-                                        } elseif ($images instanceof \Illuminate\Support\Collection) {
-                                            $imagesArr = $images->values()->all();
-                                        } else {
-                                            $imagesArr = is_iterable($images)
-                                                ? iterator_to_array($images)
-                                                : (array) $images;
-                                            $imagesArr = array_values($imagesArr);
-                                        }
-
+                                        $imagesArr = collect($images)
+                                            ->flatten()
+                                            ->filter(fn($img) => $img)
+                                            ->values()
+                                            ->all();
                                         $total = count($imagesArr);
                                     ?>
+
 
                                     <div class="container-fluid">
                                         <?php if($total === 0): ?>
                                             <div class="text-muted">Tidak ada gambar.</div>
                                         <?php else: ?>
-                                            <div class="row">
-
-                                                <div class="col-12 d-flex flex-column align-items-center">
-                                                    <?php $__currentLoopData = $imagesArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imagePath): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                        <div class="mb-3 w-75 w-md-50 d-flex justify-content-center">
-                                                            <img src="<?php echo e(asset($imagePath)); ?>" class="img-fluid overlay-img"
-                                                                data-preview="<?php echo e(asset($imagePath)); ?>" alt="Overlay Image">
-                                                        </div>
-                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                </div>
+                                            <div class="row justify-content-center">
+                                                <?php $__currentLoopData = $imagesArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imagePath): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <div class="mb-3 col-6 col-md-4 col-lg-3 d-flex justify-content-center">
+                                                        <img src="<?php echo e(asset($imagePath)); ?>" class="img-fluid overlay-img"
+                                                            data-preview="<?php echo e(asset($imagePath)); ?>" alt="Overlay Image">
+                                                    </div>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         <?php endif; ?>
+
                                     </div>
 
                                     <div class="mb-3 d-flex justify-content-between align-items-center">
@@ -145,12 +135,14 @@
             border: 1px solid #ddd;
             padding: 3px;
             background: #fff;
-            transition: transform .15s ease;
+            transition: transform .15s ease, box-shadow .15s ease;
         }
 
         .overlay-img:hover {
             transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
+
 
         /* Responsif ukuran gambar */
         @media (max-width: 768px) {

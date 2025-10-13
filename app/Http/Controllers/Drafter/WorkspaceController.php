@@ -84,7 +84,6 @@ class WorkspaceController extends Controller
         // Merge kembali ke request
         $request->merge(['rincian' => $rincian]);
 
-
         // 2️⃣ Validasi input
         $rules = [
             'customer_id'   => 'required|exists:tb_customers,id',
@@ -129,12 +128,27 @@ class WorkspaceController extends Controller
             foreach ($items as $i => $item) {
                 if (empty($item['varian_id']) && empty($item['keterangan'])) continue;
 
+                // ✅ ambil foto dari hidden input (kalau ada)
+                $foto = [];
+                if (!empty($item['foto'])) {
+                    if (is_string($item['foto'])) {
+                        // Jika bentuknya string JSON
+                        $decoded = json_decode($item['foto'], true);
+                        $foto = is_array($decoded) ? $decoded : [];
+                    } elseif (is_array($item['foto'])) {
+                        // Jika sudah array langsung pakai
+                        $foto = $item['foto'];
+                    }
+                }
+
+
                 $allRincian[] = [
                     'kategori'       => $kategori,
                     'varian_id'      => $item['varian_id'] ?? null,
                     'keterangan'     => $item['keterangan'] ?? null,
                     'halaman_gambar' => $item['halaman_gambar'] ?? null,
                     'jumlah_gambar'  => $item['jumlah_gambar'] ?? 1,
+                    'foto'           => $foto, // ✅ simpan sementara untuk dimasukkan ke DB
                     'hide'           => 0,
                 ];
             }
@@ -167,7 +181,8 @@ class WorkspaceController extends Controller
                 'keterangan'     => $row['keterangan'],
                 'halaman_gambar' => $row['halaman_gambar'],
                 'jumlah_gambar'  => $row['jumlah_gambar'],
-                'foto_body'      => json_encode([]),
+                // ✅ simpan path foto hasil preview
+                'foto_body'      => json_encode($row['foto'] ?? []),
             ]);
         }
 
@@ -175,6 +190,7 @@ class WorkspaceController extends Controller
         return redirect()->route('index.workspace')
             ->with('success', 'Workspace berhasil disimpan!');
     }
+
 
     public function workspace_edit($id)
     {
@@ -232,7 +248,6 @@ class WorkspaceController extends Controller
         ));
     }
 
-
     public function update(Request $request, $id)
     {
         $workspace = Workspace::findOrFail($id);
@@ -272,19 +287,33 @@ class WorkspaceController extends Controller
         ]);
     }
 
-
     // Preview overlay
     public function previewOverlay($id)
     {
-        $workspace = Workspace::with(['customer', 'employee', 'varian', 'workspaceGambar'])
+        $workspace = Workspace::with(['customer', 'employee','pemeriksa', 'varian', 'workspaceGambar'])
             ->findOrFail($id);
         
-        $overlayedImages = $this->generateOverlayImages($workspace);
+        // Ambil gambar asli langsung dari DB
+        $images = [];
+        foreach ($workspace->workspaceGambar as $gambar) {
+            $fotos = $gambar->foto_body;
 
-       
+            if (is_string($fotos)) {
+                $fotos = json_decode($fotos, true);
+            }
+
+            if (is_array($fotos)) {
+                foreach ($fotos as $foto) {
+                    if (isset($foto['file_path']) && file_exists(storage_path('app/public/' . $foto['file_path']))) {
+                        $images[] = 'storage/' . $foto['file_path'];
+                    }
+                }
+            }
+        }
+
         return view('drafter.workspace.overlay_preview', [
             'workspace' => $workspace,
-            'images' => $overlayedImages,
+            'images' => $images, // ini langsung gambar asli
         ]);
     }
 
@@ -377,12 +406,21 @@ class WorkspaceController extends Controller
 
         foreach ($workspace->workspaceGambar as $gambar) {
             
-            $fotos = json_decode($gambar->foto_body, true);
-            if (!$fotos) {
+            $fotos = $gambar->foto_body;
+
+            if (is_string($fotos)) {
+                $fotos = json_decode($fotos, true);
+            }
+
+            if (!is_array($fotos) || empty($fotos)) {
                 continue;
             }
 
             foreach ($fotos as $foto) {
+                if (!is_string($foto) || trim($foto) === '') {
+            continue;
+            }
+            
                 $relative = (strpos($foto, 'body/') === 0) ? $foto : 'body/' . ltrim($foto, '/');
                 $path = storage_path("app/public/{$relative}");
                 if (!file_exists($path)) {
@@ -638,7 +676,7 @@ class WorkspaceController extends Controller
     {
         $mdata_id = $request->mdata_id;
 
-        $data = \App\Models\Admin\MgambarElectricity::where('mdata_id', $mdata_id)
+        $data = MgambarElectricity::where('mdata_id', $mdata_id)
                     ->select('id', 'file_name', 'file_path', 'description')
                     ->get();
 

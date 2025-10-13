@@ -365,6 +365,9 @@
                                                             <button type="button"
                                                                 class="btn btn-info btn-sm preview-gambar-btn" disabled><i
                                                                     class="fa fa-image"></i> Preview</button>
+                                                            <input type="hidden"
+                                                                name="rincian[<?php echo e($type); ?>][<?php echo e($i); ?>][foto]"
+                                                                class="foto-hidden">
                                                         </div>
 
                                                     </div>
@@ -406,11 +409,15 @@
 
             $('.select2').removeAttr('required');
 
-
             $('.select2-static').select2({
                 width: '100%',
                 minimumResultsForSearch: Infinity,
                 allowClear: false
+            });
+
+            $('.varian-select, .gambar-keterangan').select2({
+                width: '100%',
+                allowClear: true
             });
 
             $('.gambar-rincian-row[id^="optional-row-"] .varian-select').prop('disabled', false);
@@ -418,11 +425,6 @@
             $('.gambar-rincian-row[id^="optional-row-"] .gambar-keterangan').prop('disabled', true);
 
             $('#customers, #submissions, #employee, #pemeriksa, #engines, #brands, #chassiss, #vehicles').select2({
-                width: '100%',
-                allowClear: true
-            });
-
-            $('.varian-select, .gambar-keterangan').select2({
                 width: '100%',
                 allowClear: true
             });
@@ -544,7 +546,6 @@
                 updateHalamanRows();
             }
 
-
             $('#submissions').on('change', function() {
                 const submissionId = $(this).val();
                 isHanyaTU = submissionId === HANYA_TU_ID;
@@ -587,13 +588,12 @@
 
             function updateHalamanRows() {
                 let pageNum = 1;
-                const visibleRows = $('.gambar-rincian-row:visible');
+                const allRows = $('.gambar-rincian-row'); // semua row, termasuk hide
+                const totalPages = allRows.length;
 
-                const totalPages = visibleRows.length;
-
-                visibleRows.each(function() {
-                    $(this).find('.halaman-gambar-input').val(String(pageNum).padStart(2, '0'));
-                    $(this).find('.total-halaman-input').val(String(totalPages).padStart(2, '0'));
+                allRows.each(function() {
+                    $(this).find('.halaman-gambar-input').val(pad(pageNum));
+                    $(this).find('.total-halaman-input').val(pad(totalPages));
                     $(this).find('.jumlah-gambar-hidden').val(totalPages);
                     pageNum++;
                 });
@@ -871,9 +871,9 @@
                     });
             });
 
-
-
-            // Event ketika kategori Utama / sinkronisasi semua
+            // ==========================
+            // Sinkronisasi Kategori Utama
+            // ==========================
             $(document).on('change',
                 '.gambar-rincian-row[id^="utama-row-"] .varian-select, .gambar-rincian-row[id^="utama-row-"] .gambar-keterangan',
                 function() {
@@ -883,21 +883,26 @@
                     const varianSelect = row.find('.varian-select');
                     const selectedVarianId = varianSelect.val();
                     const selectedVarian = varianSelect.find(`option[value="${selectedVarianId}"]`);
+
                     const utamaName = selectedVarian.data('utama');
                     const teruraiName = selectedVarian.data('terurai');
                     const kontruksiName = selectedVarian.data('kontruksi');
-                    const optionalName = selectedVarian.data('optional');
                     const detailName = selectedVarian.data('detail');
                     const kelistrikanName = selectedVarian.data('kelistrikan');
+                    const optionalName = selectedVarian.data('optional');
 
                     const selectedOption = row.find('.gambar-keterangan option:selected');
                     const fotoData = selectedOption.length ? selectedOption.data('foto') || {} : {};
                     const isKeteranganSelected = selectedOption.length && selectedOption.val();
 
+                    // Preview utama
                     const hasFileUtama = fotoData.utama && fotoData.utama.length > 0;
                     row.find('.preview-gambar-btn').prop('disabled', !hasFileUtama);
 
-                    ['terurai', 'kontruksi', 'optional'].forEach(type => {
+                    // ==========================
+                    // Sinkronisasi terurai, kontruksi, detail
+                    // ==========================
+                    ['terurai', 'kontruksi', 'detail'].forEach(type => {
                         const syncRow = $(`#${type}-row-${rowNum}`);
                         if (!syncRow.length) return;
 
@@ -905,92 +910,139 @@
 
                         const syncSelect = syncRow.find('.varian-select');
                         const keteranganSelect = syncRow.find('.gambar-keterangan');
+                        let hiddenInput = syncRow.find('.hidden-keterangan-input');
 
-                        if (type === 'terurai' || type === 'kontruksi' || type === 'detail' || type ===
-                            'kelistrikan') {
-                            if (selectedVarianId) {
-                                syncSelect.val(selectedVarianId).trigger('change.select2');
+                        // Sinkron value dan text select
+                        if (selectedVarianId) {
+                            syncSelect.val(selectedVarianId).trigger('change.select2');
 
-                                let newText = utamaName;
-                                if (type === 'terurai') newText = teruraiName;
-                                else if (type === 'kontruksi') newText = kontruksiName;
-                                else if (type === 'detail') newText = detailName;
-                                else if (type === 'kelistrikan') newText = kelistrikanName;
+                            let newText = '';
+                            if (type === 'terurai') newText = teruraiName;
+                            else if (type === 'kontruksi') newText = kontruksiName;
+                            else if (type === 'detail') newText = detailName;
 
-                                if (newText) {
-                                    const syncOption = syncSelect.find(
-                                        `option[value="${selectedVarianId}"]`);
-                                    if (syncOption.length) syncOption.text(newText);
-                                    updateSelect2Text(syncSelect, newText);
-                                }
+                            if (newText) {
+                                const syncOption = syncSelect.find(
+                                    `option[value="${selectedVarianId}"]`);
+                                if (syncOption.length) syncOption.text(newText);
+                                updateSelect2Text(syncSelect, newText);
                             }
-                            syncSelect.prop('disabled', true);
-                        } else if (type === 'optional') {
-                            syncSelect.prop('disabled', false);
                         }
 
+                        // Sinkron keterangan & hidden input
                         if (isKeteranganSelected) {
                             keteranganSelect.val(selectedOption.val()).trigger('change.select2');
-                            const syncOptionKet = keteranganSelect.find(
-                                `option[value="${selectedOption.val()}"]`);
-                            if (syncOptionKet.length) syncOptionKet.data('foto', fotoData);
+                            hiddenInput.val(selectedOption.val());
                         } else {
                             keteranganSelect.val(null).trigger('change.select2');
+                            hiddenInput.val('');
                         }
 
-                        let hasFile = false;
+                        // Disable dropdown & keterangan, tapi backend tetap dapat via hidden input
+                        syncSelect.prop('disabled', true);
+                        keteranganSelect.prop('disabled', true);
+
+                        // Preview foto
+                        const fotoUntukHidden = [];
+                        if (fotoData[type] && fotoData[type].length > 0) {
+                            fotoData[type].forEach(foto => {
+                                const rawPath = foto.file_path;
+                                const imagePath = rawPath.startsWith('/storage/') ? rawPath :
+                                    '/storage/' + rawPath;
+                                fotoUntukHidden.push({
+                                    file_path: imagePath,
+                                    file_name: foto.file_name
+                                });
+                            });
+                        }
+                        syncRow.find('.foto-hidden').val(JSON.stringify(fotoUntukHidden));
+                        syncRow.find('.preview-gambar-btn').prop('disabled', fotoUntukHidden.length ===
+                            0);
+                    });
+
+                    // ==========================
+                    // Optional dan kelistrikan
+                    // ==========================
+                    ['optional', 'kelistrikan'].forEach(type => {
+                        const row = $(`#${type}-row-${rowNum}`);
+                        if (!row.length) return;
+
+                        const syncSelect = row.find('.varian-select');
+                        const keteranganSelect = row.find('.gambar-keterangan');
+                        const hiddenInput = row.find('.hidden-keterangan-input');
+
                         if (type === 'optional') {
-                            hasFile = fotoData.optional && fotoData.optional.length > 0;
-                        } else {
-                            hasFile = fotoData[type] && fotoData[type].length > 0;
-                        }
-                        syncRow.find('.preview-gambar-btn').prop('disabled', !hasFile);
-
-                        if (type === 'terurai' || type === 'kontruksi' || type === 'detail' || type ===
-                            'kelistrikan') {
+                            syncSelect.prop('disabled', false);
                             keteranganSelect.prop('disabled', true);
-                        } else if (type === 'optional') {
-                            keteranganSelect.prop('disabled', true);
-                        } else if (type === 'utama') {
+                        } else if (type === 'kelistrikan') {
+                            syncSelect.prop('disabled', false);
                             keteranganSelect.prop('disabled', false);
                         }
-                    });
 
-                    // Pastikan detail dan kelistrikan tetap aktif mandiri
-                    ['detail', 'kelistrikan'].forEach(type => {
-                        const row = $(`#${type}-row-1`);
-                        if (!row.length) return;
-                        row.show();
-
-                        row.find('.varian-select').prop('disabled', false).trigger('change.select2');
-                        row.find('.gambar-keterangan').prop('disabled', false).trigger(
-                            'change.select2');
-
-                        // Aktifkan preview jika ada foto
-                        const selectedOption = row.find('.gambar-keterangan option:selected');
-                        const fotoData = selectedOption.data('foto') || {};
-                        const jenisGambar = row.attr('id').split('-')[0];
-                        const hasFile = fotoData && fotoData[jenisGambar];
-                        row.find('.preview-gambar-btn').prop('disabled', !hasFile);
-                    });
-
-                    $(document).on('change', '.gambar-keterangan', function() {
-                        const path = $(this).find(':selected').data('path');
-                        if (path) {
-                            // tampilkan preview gambar
-                            $('#preview-image').attr('src', '/storage/' + path);
+                        // Sinkron keterangan & hidden
+                        if (isKeteranganSelected) {
+                            keteranganSelect.val(selectedOption.val()).trigger('change.select2');
+                            hiddenInput.val(selectedOption.val());
+                        } else {
+                            keteranganSelect.val(null).trigger('change.select2');
+                            hiddenInput.val('');
                         }
+
+                        // Preview foto
+                        const fotoUntukHidden = [];
+                        const selectedOpt = keteranganSelect.find('option:selected');
+                        const fotoDataRow = selectedOpt.data('foto') || {};
+                        if (fotoDataRow[type] && fotoDataRow[type].length > 0) {
+                            fotoDataRow[type].forEach(foto => {
+                                const rawPath = foto.file_path;
+                                const imagePath = rawPath.startsWith('/storage/') ? rawPath :
+                                    '/storage/' + rawPath;
+                                fotoUntukHidden.push({
+                                    file_path: imagePath,
+                                    file_name: foto.file_name
+                                });
+                            });
+                        }
+                        row.find('.foto-hidden').val(JSON.stringify(fotoUntukHidden));
+                        row.find('.preview-gambar-btn').prop('disabled', fotoUntukHidden.length === 0);
                     });
-
-
                 });
 
+            // ==========================
+            // Saat user pilih keterangan
+            // ==========================
+            $(document).on('change', '.gambar-keterangan', function() {
+                const row = $(this).closest('.gambar-rincian-row');
+                const selectedOption = $(this).find('option:selected');
+                const jenisGambar = row.attr('id').split('-')[0];
+                const fotoData = selectedOption.data('foto') || {};
+                const fotoUntukHidden = [];
 
-            // Helper untuk update tampilan teks Select2
+                if (fotoData[jenisGambar] && fotoData[jenisGambar].length > 0) {
+                    fotoData[jenisGambar].forEach(foto => {
+                        const rawPath = foto.file_path;
+                        const imagePath = rawPath.startsWith('/storage/') ? rawPath : '/storage/' +
+                            rawPath;
+                        fotoUntukHidden.push({
+                            file_path: imagePath,
+                            file_name: foto.file_name
+                        });
+                    });
+                }
+
+                row.find('.foto-hidden').val(JSON.stringify(fotoUntukHidden));
+                row.find('.preview-gambar-btn').prop('disabled', fotoUntukHidden.length === 0);
+            });
+
+            // ==========================
+            // Helper update teks select2
+            // ==========================
             function updateSelect2Text($select, text) {
                 const container = $select.next('.select2-container').find('.select2-selection__rendered');
                 if (container.length) container.text(text);
             }
+
+
 
             // optional varian label update (tetap sama)
             $(document).on('change', '.gambar-rincian-row[id^="optional-row-"] .varian-select', function() {
@@ -1020,7 +1072,6 @@
                 const hasFile = fotoData && fotoData[jenisGambar];
                 row.find('.preview-gambar-btn').prop('disabled', !hasFile);
             });
-
 
             // Tambah baris baru di kategori DETAIL
             $(document).on('click', '.add-detail-row-btn', function() {
@@ -1075,49 +1126,54 @@
                 const jenisGambar = row.attr('id').split('-')[0];
                 let htmlContent = '';
                 let isHandled = false;
+                let fotoUntukHidden = []; // <- simpan ke sini
 
-                // --- LOGIKA KELISTRIKAN
+                // --- LOGIKA KELISTRIKAN & DETAIL
                 if ((jenisGambar === 'kelistrikan' || jenisGambar === 'detail') && fotoData[jenisGambar] &&
                     fotoData[jenisGambar].length > 0) {
 
                     fotoData[jenisGambar].forEach(foto => {
-
                         const rawPath = foto.file_path;
-
-
                         const imagePath = rawPath.startsWith('/storage/') ? rawPath : '/storage/' +
                             rawPath;
+                        fotoUntukHidden.push({
+                            file_path: imagePath,
+                            file_name: foto.file_name
+                        });
 
-
-                        htmlContent +=
-                            `<div class="mb-2 text-center">
-                            <img src="${imagePath}" class="img-fluid border rounded" alt="${foto.file_name}">
-                            </div>`;
+                        htmlContent += `
+                <div class="mb-2 text-center">
+                    <img src="${imagePath}" class="img-fluid border rounded" alt="${foto.file_name}">
+                </div>`;
                     });
                     isHandled = true;
                 }
 
-                // --- LOGIKA JENIS GAMBAR LAIN (Single File Name, Asumsi path: /storage/body/) ---
+                // --- LOGIKA JENIS GAMBAR LAIN (Utama, Terurai, Konstruksi, Optional)
                 else if (fotoData[jenisGambar]) {
-                    // Ini berlaku untuk utama, terurai, kontruksi, optional
-                    // ... (kode Anda yang lain untuk kategori non-kelistrikan/detail tetap di sini) ...
                     const fileNama = jenisGambar === 'optional' ? fotoData.optional[0].file_name : fotoData[
                         jenisGambar];
-
                     if (fileNama) {
-                        htmlContent =
-                            `<div class="mb-2 text-center">
-                                <img src="/storage/body/${fileNama}" class="img-fluid border rounded" alt="Preview ${jenisGambar}">
-                            </div>`;
+                        const imagePath = '/storage/body/' + fileNama;
+                        fotoUntukHidden.push({
+                            file_path: imagePath,
+                            file_name: fileNama
+                        });
+
+                        htmlContent = `
+                <div class="mb-2 text-center">
+                    <img src="${imagePath}" class="img-fluid border rounded" alt="Preview ${jenisGambar}">
+                </div>`;
                         isHandled = true;
                     }
                 }
 
                 if (isHandled && htmlContent) {
-                    // Masukkan gambar ke dalam modal
-                    $('#imgPreviewModal').html(htmlContent);
+                    // 🟢 Simpan ke input hidden
+                    row.find('.foto-hidden').val(JSON.stringify(fotoUntukHidden));
 
-                    // Tampilkan modal yang sudah kamu punya
+                    // 🟢 Tampilkan modal preview
+                    $('#imgPreviewModal').html(htmlContent);
                     $('#modalPreview').modal('show');
                 } else {
                     toastr.warning("Tidak ada gambar yang tersedia untuk kategori ini.");
@@ -1148,11 +1204,11 @@
                 toastr.info('Baris optional dihapus.');
             });
 
-            $(document).on('submit', '#form-workspace', function(e) {
-                $('.gambar-rincian-row:visible').find('select').prop('disabled', false);
-                // Pastikan form tetap lanjut
-                this.submit();
+            $(document).on('submit', '#form-workspace', function() {
+                $('.gambar-rincian-row').find('select, input').prop('disabled', false);
+                return true;
             });
+
 
 
         });
