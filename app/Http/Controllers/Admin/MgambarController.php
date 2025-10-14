@@ -39,14 +39,13 @@ class MgambarController extends Controller
      */
     public function store(Request $request)
     {
-        // Hapus Validasi Array dan Deskripsi Optional
         $validator = Validator::make($request->all(), [
             'mdata_id'       => 'required|exists:tb_mdata,id',
             'varian_body'    => 'required|string|max:255',
             'foto_utama'     => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
             'foto_terurai'   => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
             'foto_kontruksi' => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
-            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000', 
+            'foto_optional'  => 'nullable|image|mimes:jpg,jpeg,png|max:1000',
         ]);
 
         if ($validator->fails()) {
@@ -58,43 +57,58 @@ class MgambarController extends Controller
 
         try {
             $dataFiles = [];
-            $fileFields = ['foto_utama', 'foto_terurai', 'foto_kontruksi', 'foto_optional']; // Tambah foto_optional
+            $fileFields = ['foto_utama', 'foto_terurai', 'foto_kontruksi', 'foto_optional'];
 
-            // Simpan file utama, terurai, konstruksi, dan optional (sebagai file tunggal)
             foreach ($fileFields as $field) {
                 if ($request->hasFile($field)) {
                     $file = $request->file($field);
-                    // Sesuaikan direktori untuk optional jika perlu, di sini saya samakan ke 'body'
-                    $directory = 'body'; 
-                    
-                    // Gunakan direktori berbeda untuk optional jika Anda mau
-                    // $directory = ($field == 'foto_optional') ? 'body/optional' : 'body';
-                    
-                    $filename = time() . '_' . $field . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $file->getClientOriginalName());
+
+                    // === Folder sama untuk semua file ===
+                    $directory = 'body';
+
+                    // === Ambil nama file dan ekstensi asli ===
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                    $extension    = $file->getClientOriginalExtension();
+
+                    // Jika ekstensi kosong, fallback ke jpg
+                    if (empty($extension)) {
+                        $extension = 'jpg';
+                    }
+                    $extension = strtolower($extension);
+
+                    // Bersihkan nama file dari karakter aneh
+                    $cleanName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $originalName);
+
+                    // Bentuk nama file final
+                    $filename = time() . '_' . $field . '_' . $cleanName . '.' . $extension;
+
+                    // Simpan file ke storage
                     $file->storeAs($directory, $filename, 'public');
+
+                    // Simpan nama file ke array untuk database
                     $dataFiles[$field] = $filename;
                 } else {
                     $dataFiles[$field] = null;
                 }
             }
 
-            // Simpan data utama ke tabel tb_mgambar
+            // Simpan ke database
             Mgambar::create([
                 'mdata_id'       => $request->mdata_id,
                 'keterangan'     => $request->varian_body,
                 'foto_utama'     => $dataFiles['foto_utama'],
                 'foto_terurai'   => $dataFiles['foto_terurai'],
                 'foto_kontruksi' => $dataFiles['foto_kontruksi'],
-                'foto_optional'  => $dataFiles['foto_optional'], 
+                'foto_optional'  => $dataFiles['foto_optional'],
             ]);
-
-            // Catatan: Seluruh logika penyimpanan ke tb_mgambar_optional telah dihapus.
 
             return redirect()->route('index.mgambar')->with('success', 'Master Gambar berhasil ditambahkan!');
         } catch (Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Data tidak tersimpan: ' . $e->getMessage());
         }
     }
+
+
 
 
     /**

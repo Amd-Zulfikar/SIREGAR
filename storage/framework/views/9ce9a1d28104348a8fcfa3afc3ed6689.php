@@ -5,10 +5,12 @@
             <div class="container-fluid">
                 <div class="col-12 col-sm-12">
                     <div>
-                        <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary"><i
-                                class="fa-solid fa-circle-left"></i> Kembali</a>
+                        <a href="<?php echo e(route('index.workspace')); ?>" class="btn btn-outline-primary">
+                            <i class="fa-solid fa-circle-left"></i> Kembali
+                        </a>
                     </div>
                     <br>
+
                     <div class="card card-primary card-outline card-outline-tabs">
                         <div class="card-header p-0 border-bottom-0">
                             <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
@@ -27,7 +29,8 @@
 
                         <div class="card-body">
                             <div class="tab-content" id="custom-tabs-four-tabContent">
-                                <!-- Tab Detail Transaksi -->
+
+                                
                                 <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-home-tab">
                                     <div class="card-body table-responsive p-0">
@@ -45,7 +48,7 @@
                                                     <tr>
                                                         <td><?php echo e($workspace->no_transaksi ?? '-'); ?></td>
                                                         <td>
-                                                            <?php echo e($g->brandModel ? $g->brandModel->name : '-'); ?>
+                                                            <?php echo e($g->brandModel->name ?? '-'); ?>
 
                                                             <?php echo e($g->chassisModel ? ' ' . $g->chassisModel->name : ''); ?>
 
@@ -63,43 +66,51 @@
                                     </div>
                                 </div>
 
-
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
 
                                     <?php
-                                        $imagesArr = collect($images)
-                                            ->flatten()
-                                            ->filter(fn($img) => $img)
-                                            ->values()
-                                            ->all();
+                                        if (is_null($images)) {
+                                            $imagesArr = [];
+                                        } elseif (is_array($images)) {
+                                            $imagesArr = array_values($images);
+                                        } elseif ($images instanceof \Illuminate\Support\Collection) {
+                                            $imagesArr = $images->values()->all();
+                                        } else {
+                                            $imagesArr = is_iterable($images)
+                                                ? iterator_to_array($images)
+                                                : (array) $images;
+                                            $imagesArr = array_values($imagesArr);
+                                        }
+
                                         $total = count($imagesArr);
                                     ?>
-
 
                                     <div class="container-fluid">
                                         <?php if($total === 0): ?>
                                             <div class="text-muted">Tidak ada gambar.</div>
                                         <?php else: ?>
-                                            <div class="row justify-content-center">
+                                            <div class="d-flex overflow-auto py-3 px-2" style="gap: 15px;">
                                                 <?php $__currentLoopData = $imagesArr; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $imagePath): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <div class="mb-3 col-6 col-md-4 col-lg-3 d-flex justify-content-center">
-                                                        <img src="<?php echo e(asset($imagePath)); ?>" class="img-fluid overlay-img"
+                                                    <div class="border rounded p-2 bg-light flex-shrink-0 text-center"
+                                                        style="max-width: 1000px;">
+                                                        <img src="<?php echo e(asset($imagePath)); ?>" class="overlay-img img-fluid"
                                                             data-preview="<?php echo e(asset($imagePath)); ?>" alt="Overlay Image">
                                                     </div>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </div>
                                         <?php endif; ?>
-
                                     </div>
 
-                                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                                    <div class="mb-3 d-flex justify-content-between align-items-center mt-3">
                                         <a href="<?php echo e(route('export.overlay.workspace', $workspace->id)); ?>" target="_blank"
                                             class="btn btn-danger">
-                                            <i class="fa-solid fa-file-pdf"></i>Download
+                                            <i class="fa-solid fa-file-pdf"></i> Download
                                         </a>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -109,7 +120,7 @@
         </div>
     </div>
 
-    <!-- Modal Preview -->
+    
     <div class="modal fade" id="modalPreview" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -127,39 +138,45 @@
 <?php $__env->startPush('styles'); ?>
     <style>
         .overlay-img {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            max-width: 650px;
+            /* dari 450 jadi 650 */
+            height: auto;
             object-fit: contain;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid #ddd;
-            padding: 3px;
             background: #fff;
-            transition: transform .15s ease, box-shadow .15s ease;
+            transition: transform .2s ease;
         }
 
         .overlay-img:hover {
             transform: scale(1.03);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-
-        /* Responsif ukuran gambar */
+        /* Responsif */
         @media (max-width: 768px) {
             .overlay-img {
-                width: 120px;
-                height: 120px;
+                max-width: 500px;
+                /* naik dari 350 */
             }
         }
 
         @media (max-width: 576px) {
             .overlay-img {
-                width: 100px;
-                height: 100px;
+                max-width: 350px;
+                /* naik dari 250 */
             }
+        }
+
+        .overflow-auto {
+            scroll-behavior: smooth;
         }
     </style>
 <?php $__env->stopPush(); ?>
+
+
+
 
 <?php $__env->startPush('scripts'); ?>
     <script>
