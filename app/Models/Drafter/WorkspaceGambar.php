@@ -26,6 +26,7 @@ class WorkspaceGambar extends Model
         'halaman_gambar',
         'jumlah_gambar',
         'varian_id',
+        'varian_name',
 
     ];
 
@@ -57,7 +58,7 @@ class WorkspaceGambar extends Model
     
     public function varianModel()
     {
-        return $this->belongsTo(Varian::class, 'varian_id');
+        return $this->belongsTo(Varian::class, 'varian_id', 'id');
     }
 
     public function engineModel()
