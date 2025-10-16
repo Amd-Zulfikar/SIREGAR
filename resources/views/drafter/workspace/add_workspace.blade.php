@@ -1200,147 +1200,93 @@
                     const container = $(`#gambar-${type}-container`);
                     container.find('.gambar-rincian-row:visible').each(function(index) {
                         const row = $(this);
+                        let rowNum = (row.attr('id') || '').split('-').pop() || (index + 1);
+
+                        // === FOTO BODY ===
                         let fotoArray = [];
-
-                        // === FOTO ===
-                        if (type === 'optional') {
-                            const hiddenVal = row.find('.foto-hidden').val();
-                            if (hiddenVal) {
-                                try {
-                                    const fotos = JSON.parse(hiddenVal);
-                                    fotos.forEach(f => fotoArray.push({
-                                        file_path: f.file_path,
-                                        file_name: f.file_name
-                                    }));
-                                } catch (e) {
-                                    console.error('Error parsing foto-hidden', e);
-                                }
+                        const hiddenVal = row.find('.foto-hidden').val();
+                        if (hiddenVal) {
+                            try {
+                                fotoArray = JSON.parse(hiddenVal);
+                            } catch (e) {
+                                console.error(`Error parsing foto-hidden for ${type}:`, e);
                             }
+                        }
 
-                            if (fotoArray.length === 0) {
-                                const selectedOpt = row.find(
-                                    'select.varian-select option:selected');
-                                if (selectedOpt.length) {
-                                    const optionalFile = selectedOpt.data('optional');
-                                    if (optionalFile) {
-                                        fotoArray.push({
-                                            file_path: '/storage/body/' +
-                                                optionalFile,
-                                            file_name: optionalFile
-                                        });
-                                    }
-                                }
-                            }
-                        } else {
+                        // Ambil ulang kalau kosong
+                        if (fotoArray.length === 0) {
                             const selectedKeterangan = row.find(
                                 'select.gambar-keterangan option:selected');
                             const fotoData = selectedKeterangan.data('foto') || {};
+                            let fotoSource = fotoData[type];
 
-                            if (Array.isArray(fotoData[type])) {
-                                fotoData[type].forEach(f => {
-                                    const path = f.file_path.startsWith(
-                                        '/storage/') ? f.file_path : '/storage/' + f
-                                        .file_path;
+                            // 🔧 Tambahan khusus untuk kategori OPTIONAL
+                            if (type === 'optional' && !fotoSource) {
+                                const selectedVarian = row.find(
+                                    'select.varian-select option:selected');
+                                fotoSource = selectedVarian.data('optional');
+                            }
+
+                            if (Array.isArray(fotoSource)) {
+                                fotoSource.forEach(f => {
+                                    const path = f.file_path?.startsWith(
+                                            '/storage/') ?
+                                        f.file_path :
+                                        '/storage/' + (f.file_path || '');
                                     fotoArray.push({
                                         file_path: path,
                                         file_name: f.file_name
                                     });
                                 });
-                            } else if (fotoData[type]) {
+                            } else if (fotoSource) {
+                                const filePath = fotoSource.startsWith('/storage/') ?
+                                    fotoSource :
+                                    '/storage/body/' + fotoSource;
                                 fotoArray.push({
-                                    file_path: '/storage/body/' + fotoData[type],
-                                    file_name: fotoData[type]
+                                    file_path: filePath,
+                                    file_name: fotoSource.split('/').pop()
                                 });
-                            } else {
-                                // 🔥 fallback kalau fotoData kosong — ambil dari varian
-                                const selectedVarian = row.find(
-                                    'select.varian-select option:selected');
-                                const fotoBody = selectedVarian.data('foto-body') ||
-                                    selectedVarian.data('body') || null;
-                                if (fotoBody) {
-                                    fotoArray.push({
-                                        file_path: '/storage/body/' + fotoBody,
-                                        file_name: fotoBody
-                                    });
-                                }
                             }
                         }
 
-                        // simpan ke hidden input
+                        // Simpan hasil final
                         row.find('.foto-hidden').val(JSON.stringify(fotoArray));
 
-                        // === VARIAN ID & NAME ===
+                        // === VARIAN ===
                         const $varianSelect = row.find('select.varian-select');
                         const selectedOption = $varianSelect.find('option:selected');
                         let finalVarianId = selectedOption.val();
-                        let finalVarianName = selectedOption.data('utama') || '';
+                        let finalVarianName =
+                            selectedOption.data(type) ||
+                            selectedOption.data('utama') ||
+                            selectedOption.text().trim() || '';
 
-                        if (type === 'terurai') {
-                            finalVarianId = selectedOption.data('id-terurai') ||
-                                finalVarianId;
-                            finalVarianName = selectedOption.data('terurai') ||
-                                finalVarianName;
-                        } else if (type === 'kontruksi') {
-                            finalVarianId = selectedOption.data('id-kontruksi') ||
-                                finalVarianId;
-                            finalVarianName = selectedOption.data('kontruksi') ||
-                                finalVarianName;
-                        } else if (type === 'detail') {
-                            finalVarianId = selectedOption.data('id-detail') ||
-                                finalVarianId;
-                            finalVarianName = selectedOption.data('detail') ||
-                                finalVarianName;
-                        } else if (type === 'optional') {
-                            finalVarianId = selectedOption.data('id-optional') ||
-                                finalVarianId;
-                            finalVarianName = selectedOption.data('optional') ||
-                                finalVarianName;
-                        } else if (type === 'kelistrikan') {
-                            finalVarianName = selectedOption.data('optional') ||
-                                finalVarianName;
-                        }
-
-                        // pastikan varian id terkirim
-                        $varianSelect.removeAttr('disabled').val(finalVarianId);
-
-                        // === INPUT HIDDEN UNTUK VARIAN NAME ===
+                        // Hidden varian_name
                         let $hiddenName = row.find('.varian-name-hidden');
                         if (!$hiddenName.length) {
                             $hiddenName = $('<input>', {
                                 type: 'hidden',
-                                name: `rincian[${type}][${index}][varian_name]`,
+                                name: `rincian[${type}][${rowNum}][varian_name]`,
                                 class: 'varian-name-hidden'
                             }).appendTo(row);
                         }
                         $hiddenName.val(finalVarianName);
 
-                        // === PENOMORAN HALAMAN ===
+                        // Nomor halaman
                         const globalIndex = $('.gambar-rincian-row:visible').index(row);
                         row.find('.halaman-gambar-input').val(String(globalIndex + 1)
                             .padStart(2, '0'));
                         row.find('.total-halaman-input, .jumlah-gambar-hidden').val(
                             totalGambarGlobal);
 
-                        // === DEBUG LOG ===
                         console.log(
-                            `[${type}] id=${finalVarianId}, name=${finalVarianName}, foto=${fotoArray.length} file`
-                        );
+                            `[${type}] row=${rowNum} id=${finalVarianId} name="${finalVarianName}" fotos=${fotoArray.length}`
+                            );
                     });
                 });
 
-                return true;
+                return true; // lanjut submit
             });
-
-
-
-
-
-
-
-
-
-
-
 
         });
     </script>

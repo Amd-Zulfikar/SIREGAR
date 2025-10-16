@@ -107,6 +107,7 @@ class WorkspaceController extends Controller
                     continue;
                 }
 
+                // ... [Logika Foto tidak berubah] ...
                 $foto = [];
                 if (!empty($item['foto'])) {
                     if (is_string($item['foto'])) {
@@ -117,10 +118,16 @@ class WorkspaceController extends Controller
                     }
                 }
 
+                // **PERUBAHAN DISINI:** Ubah string kosong menjadi NULL untuk varian_name
+                $varianName = $item['varian_name'] ?? null;
+                if ($varianName === '') {
+                    $varianName = null;
+                }
+
                 $allRincian[] = [
                     'kategori' => $kategori,
                     'varian_id' => $item['varian_id'] ?? null,
-                    'varian_name' => $item['varian_name'] ?? null,
+                    'varian_name' => $varianName, // Menggunakan variabel yang sudah di-check
                     'keterangan' => $item['keterangan'] ?? null,
                     'halaman_gambar' => $item['halaman_gambar'] ?? null,
                     'jumlah_gambar' => $item['jumlah_gambar'] ?? 1,
@@ -277,17 +284,28 @@ class WorkspaceController extends Controller
         ])->findOrFail($id);
 
         try {
-            // 🔥 Coba generate overlay
+            // 🔥 Generate overlay
             $overlayedImages = $this->generateOverlayImages($workspace);
 
+            // ✅ Jika overlay gagal (kosong), ambil langsung dari DB sebagai fallback
             if (empty($overlayedImages)) {
-                Log::warning('Overlay gagal dibuat, tampilkan gambar asli sebagai fallback.');
+                Log::warning('Overlay gagal dibuat atau belum di-preview, ambil data langsung dari DB.');
 
                 $overlayedImages = $workspace->workspaceGambar
                     ->flatMap(function ($gambar) {
                         $fotos = is_string($gambar->foto_body) ? json_decode($gambar->foto_body, true) : $gambar->foto_body;
 
-                        return collect($fotos)->map(fn($f) => $f['file_path'] ?? null)->filter()->values();
+                        return collect($fotos)
+                            ->map(function ($f) use ($gambar) {
+                                return [
+                                    'file_path' => $f['file_path'] ?? null,
+                                    'file_name' => $f['file_name'] ?? null,
+                                    'varian_name' => $gambar->varian_name ?? (optional($gambar->varianModel)->name ?? '-'),
+                                    'keterangan' => $gambar->keterangan ?? '-',
+                                ];
+                            })
+                            ->filter(fn($f) => !empty($f['file_path']))
+                            ->values();
                     })
                     ->toArray();
             }
@@ -299,13 +317,11 @@ class WorkspaceController extends Controller
         } catch (\Throwable $e) {
             Log::error('Gagal generate overlay: ' . $e->getMessage());
 
-            // fallback ke gambar asli
+            // fallback terakhir
             $images = [];
             foreach ($workspace->workspaceGambar as $gambar) {
-                $fotos = $gambar->foto_body;
-                if (is_string($fotos)) {
-                    $fotos = json_decode($fotos, true);
-                }
+                $fotos = is_string($gambar->foto_body) ? json_decode($gambar->foto_body, true) : $gambar->foto_body;
+
                 if (is_array($fotos)) {
                     foreach ($fotos as $foto) {
                         if (isset($foto['file_path'])) {
@@ -325,6 +341,143 @@ class WorkspaceController extends Controller
                 'error' => 'Terjadi kesalahan saat membuat overlay. Menampilkan gambar asli.',
             ]);
         }
+    }
+
+    private function generateOverlayImages($workspace)
+    {
+        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+        $overlayedImages = [];
+
+        Log::info('=== START GENERATE OVERLAY ===');
+        Log::info('Workspace ID: ' . $workspace->id);
+
+        $workspace->load(['workspaceGambar.varianModel', 'customer', 'employee', 'pemeriksa']);
+
+        // Pastikan folder tmp ada
+        $tmpFolder = storage_path('app/public/tmp');
+        if (!file_exists($tmpFolder)) {
+            mkdir($tmpFolder, 0777, true);
+        }
+
+        foreach ($workspace->workspaceGambar as $gambar) {
+            // Ambil varian_name
+            $varianName = trim($gambar->varian_name) ?: optional($gambar->varianModel)->name_utama ?: optional($gambar->varianModel)->name_terurai ?: optional($gambar->varianModel)->name_kontruksi ?: optional($gambar->varianModel)->name_optional ?: '-';
+
+            Log::info("Gambar ID {$gambar->id} | varian_id = {$gambar->varian_id} | varianName = {$varianName}");
+
+            // Decode foto_body
+            $fotos = is_string($gambar->foto_body) ? json_decode($gambar->foto_body, true) : $gambar->foto_body;
+
+            if (!is_array($fotos) || empty($fotos)) {
+                Log::warning("Gambar ID {$gambar->id} tidak memiliki foto_body valid.");
+                continue;
+            }
+
+            foreach ($fotos as $foto) {
+                // ✅ Fallback path kosong
+                $filePath = is_array($foto) && isset($foto['file_path']) ? $foto['file_path'] : $foto;
+
+                if (empty($filePath) || $filePath === '/storage/' || $filePath === '\\/storage\\/') {
+                    if (isset($foto['file_name']) && !empty($foto['file_name'])) {
+                        $filePath = '/storage/body/' . ltrim($foto['file_name'], '/');
+                        Log::info("Path kosong diganti fallback untuk gambar ID {$gambar->id}: {$filePath}");
+                    } else {
+                        Log::warning("Foto path dan file_name kosong untuk gambar ID {$gambar->id}");
+                        continue;
+                    }
+                }
+
+                // Bersihkan path
+                $cleanPath = trim(str_replace('\\', '/', $filePath), '/');
+                $cleanPath = preg_replace('/^(storage|public)\//i', '', $cleanPath);
+                $path = storage_path('app/public/' . $cleanPath);
+
+                // Cek file
+                if (!file_exists($path)) {
+                    Log::warning("File tidak ditemukan: {$path}");
+                    continue;
+                }
+
+                // Salin ke tmp
+                $filename = basename($path);
+                $tmpPath = $tmpFolder . '/' . $filename;
+
+                try {
+                    copy($path, $tmpPath);
+                    Log::info("File disalin ke tmp: {$tmpPath}");
+                } catch (\Throwable $e) {
+                    Log::error('Gagal menyalin ke tmp: ' . $e->getMessage());
+                    continue;
+                }
+
+                // Proses gambar
+                try {
+                    $img = $manager->read($tmpPath);
+                } catch (\Throwable $e) {
+                    Log::error("Gagal membaca gambar ID {$gambar->id}: " . $e->getMessage());
+                    continue;
+                }
+
+                $imgW = $img->width();
+                $imgH = $img->height();
+                $scaleX = $imgW / 1087;
+                $scaleY = $imgH / 768;
+                $map = fn($x, $y) => [max(0, min(intval($x * $scaleX), $imgW - 10)), max(0, min(intval($y * $scaleY), $imgH - 10))];
+
+                $applyFont = function ($font, $size, $color = '#000000') {
+                    $fontPath = public_path('fonts/arial.ttf');
+                    if (file_exists($fontPath)) {
+                        $font->file($fontPath);
+                    }
+                    $font->size($size);
+                    $font->color($color);
+                };
+
+                $halaman = $gambar->halaman_gambar ? str_pad($gambar->halaman_gambar, 2, '0', STR_PAD_LEFT) : '-';
+                $jumlah = $workspace->jumlah_gambar ? str_pad($workspace->jumlah_gambar, 2, '0', STR_PAD_LEFT) : '-';
+                $halamanJumlah = "{$halaman} / {$jumlah}";
+
+                $overlays = [
+                    ['text' => $workspace->customer->name ?? '-', 'x' => 875, 'y' => 720, 'size_percent' => 0.008, 'align' => 'center'],
+                    ['text' => $workspace->customer->direktur ?? '-', 'x' => 831, 'y' => 663, 'size_percent' => 0.006],
+                    ['text' => $varianName, 'x' => 918, 'y' => 675, 'size_percent' => 0.007, 'align' => 'center'],
+                    ['text' => $workspace->employee->name ?? '-', 'x' => 831, 'y' => 644, 'size_percent' => 0.006],
+                    ['text' => $workspace->pemeriksa->name ?? '-', 'x' => 831, 'y' => 653, 'size_percent' => 0.006],
+                    ['text' => $workspace->created_at->format('d/m/y'), 'x' => 907, 'y' => 644, 'size_percent' => 0.006, 'align' => 'center'],
+                    ['text' => $workspace->created_at->format('d/m/y'), 'x' => 907, 'y' => 654, 'size_percent' => 0.006, 'align' => 'center'],
+                    ['text' => $workspace->created_at->format('d/m/y'), 'x' => 907, 'y' => 664, 'size_percent' => 0.006, 'align' => 'center'],
+                    ['text' => $halaman, 'x' => 1015, 'y' => 715, 'size_percent' => 0.01, 'align' => 'center'],
+                    ['text' => $halamanJumlah, 'x' => 1025, 'y' => 729, 'size_percent' => 0.007, 'align' => 'center'],
+                ];
+
+                foreach ($overlays as $o) {
+                    [$x, $y] = $map($o['x'], $o['y']);
+                    $fontSize = intval($imgW * $o['size_percent']);
+                    $text = trim($o['text'] ?? '-') ?: '-';
+                    $img->text($text, $x, $y, function ($font) use ($applyFont, $fontSize, $o, $text) {
+                        $color = $text === '-' ? '#888888' : '#000000';
+                        $applyFont($font, $fontSize, $color);
+                        $font->align($o['align'] ?? 'left');
+                        $font->valign('middle');
+                    });
+                }
+
+                // Simpan hasil overlay
+                $overlayFilename = 'overlay_' . uniqid() . '.jpg';
+                $savePath = $tmpFolder . '/' . $overlayFilename;
+
+                try {
+                    $img->save($savePath);
+                    $overlayedImages[] = "storage/tmp/{$overlayFilename}";
+                    Log::info("Overlay disimpan: {$savePath}");
+                } catch (\Throwable $e) {
+                    Log::error("Gagal menyimpan overlay ID {$gambar->id}: " . $e->getMessage());
+                }
+            }
+        }
+
+        Log::info('=== END GENERATE OVERLAY ===');
+        return $overlayedImages;
     }
 
     public function exportOverlayPDF($id)
@@ -379,167 +532,6 @@ class WorkspaceController extends Controller
         }
 
         return response()->download($zipPath)->deleteFileAfterSend(true);
-    }
-
-    private function generateOverlayImages($workspace)
-    {
-        $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
-        $overlayedImages = [];
-
-        Log::info('=== START GENERATE OVERLAY ===');
-        Log::info('Workspace ID: ' . $workspace->id);
-
-        // Pastikan relasi penting sudah di-load
-        $workspace->load(['workspaceGambar.varianModel', 'customer', 'employee', 'pemeriksa']);
-
-        // Pastikan folder tmp ada
-        $tmpFolder = storage_path('app/public/tmp');
-        if (!file_exists($tmpFolder)) {
-            mkdir($tmpFolder, 0777, true);
-        }
-
-        foreach ($workspace->workspaceGambar as $gambar) {
-            // Ambil nama varian dengan urutan prioritas
-            $varianName = optional($gambar->varianModel)->name_utama ?: optional($gambar->varianModel)->name_kontruksi ?: optional($gambar->varianModel)->name_terurai ?: optional($gambar->varianModel)->name_optional ?: optional($workspace->varian)->name_utama ?: optional($workspace->varian)->name_kontruksi ?: optional($workspace->varian)->name_terurai ?: optional($workspace->varian)->name_optional ?: 'Varian tidak tersedia';
-
-            Log::info("Gambar ID {$gambar->id} | varian_id = {$gambar->varian_id} | varianName = {$varianName}");
-
-            $fotos = $gambar->foto_body;
-            if (is_string($fotos)) {
-                $fotos = json_decode($fotos, true);
-            }
-            if (!is_array($fotos) || empty($fotos)) {
-                continue;
-            }
-
-            foreach ($fotos as $index => $foto) {
-                $filePath = is_array($foto) && isset($foto['file_path']) ? $foto['file_path'] : (is_string($foto) ? $foto : null);
-                if (!$filePath) {
-                    continue;
-                }
-
-                $filePath = str_replace(['\\', 'storage/'], '/', $filePath);
-                $path = storage_path('app/public/' . ltrim($filePath, '/'));
-                if (!file_exists($path)) {
-                    continue;
-                }
-
-                try {
-                    $img = $manager->read($path);
-                } catch (\Throwable $e) {
-                    Log::error("Gagal membaca gambar ID {$gambar->id}: " . $e->getMessage());
-                    continue;
-                }
-
-                $imgW = $img->width();
-                $imgH = $img->height();
-                $scaleX = $imgW / 1087;
-                $scaleY = $imgH / 768;
-                $map = fn($x, $y) => [max(0, min(intval($x * $scaleX), $imgW - 10)), max(0, min(intval($y * $scaleY), $imgH - 10))];
-
-                $applyFont = function ($font, $size, $color = '#ff0000') {
-                    $fontPath = public_path('fonts/arial.ttf');
-                    if (file_exists($fontPath)) {
-                        $font->file($fontPath);
-                    }
-                    $font->size($size);
-                    $font->color($color);
-                };
-
-                $halaman = $gambar->halaman_gambar ? str_pad($gambar->halaman_gambar, 2, '0', STR_PAD_LEFT) : '-';
-                $jumlah = $workspace->jumlah_gambar ? str_pad($workspace->jumlah_gambar, 2, '0', STR_PAD_LEFT) : '-';
-                $halamanJumlah = "{$halaman} / {$jumlah}";
-
-                // Overlay text
-                $overlays = [
-                    [
-                        'text' => $workspace->customer->name ?? '-',
-                        'x' => 875,
-                        'y' => 720,
-                        'size_percent' => 0.007,
-                        'align' => 'center',
-                    ],
-                    [
-                        'text' => $workspace->customer->direktur ?? '-',
-                        'x' => 831,
-                        'y' => 663,
-                        'size_percent' => 0.006,
-                    ],
-                    [
-                        'text' => $varianName,
-                        'x' => 918,
-                        'y' => 675,
-                        'size_percent' => 0.007,
-                        'align' => 'center',
-                    ],
-                    [
-                        'text' => $workspace->employee->name ?? '-',
-                        'x' => 831,
-                        'y' => 644,
-                        'size_percent' => 0.006,
-                    ],
-                    [
-                        'text' => $workspace->pemeriksa->name ?? '-',
-                        'x' => 831,
-                        'y' => 653,
-                        'size_percent' => 0.006,
-                    ],
-                    [
-                        'text' => $workspace->created_at->format('d/m/y'),
-                        'x' => 905,
-                        'y' => 644,
-                        'size_percent' => 0.006,
-                        'align' => 'center',
-                    ],
-                    [
-                        'text' => $halaman,
-                        'x' => 1015,
-                        'y' => 715,
-                        'size_percent' => 0.011,
-                        'align' => 'center',
-                    ],
-                    [
-                        'text' => $halamanJumlah,
-                        'x' => 1025,
-                        'y' => 729,
-                        'size_percent' => 0.007,
-                        'align' => 'center',
-                    ],
-                ];
-
-                foreach ($overlays as $o) {
-                    [$x, $y] = $map($o['x'], $o['y']);
-                    $fontSize = intval($imgW * $o['size_percent']);
-                    $text = trim($o['text'] ?? '-') ?: '-';
-                    try {
-                        $img->text($text, $x, $y, function ($font) use ($applyFont, $fontSize, $o, $text) {
-                            $color = $text === '-' ? '#888888' : '#000000';
-                            $applyFont($font, $fontSize, $color);
-                            $font->align($o['align'] ?? 'left');
-                            $font->valign('middle');
-                        });
-                    } catch (\Throwable $e) {
-                        Log::error("Gagal menulis overlay ID {$gambar->id}: " . $e->getMessage());
-                    }
-                }
-
-                // Simpan overlay
-                $filename = 'overlay_' . uniqid() . '.jpg';
-                $savePath = $tmpFolder . '/' . $filename;
-                if (!file_exists(dirname($savePath))) {
-                    mkdir(dirname($savePath), 0777, true);
-                }
-                try {
-                    $img->save($savePath);
-                    $overlayedImages[] = "storage/tmp/{$filename}";
-                } catch (\Throwable $e) {
-                    Log::error("Gagal menyimpan overlay ID {$gambar->id}: " . $e->getMessage());
-                }
-            }
-        }
-
-        Log::info('=== END GENERATE OVERLAY ===');
-        return $overlayedImages;
     }
 
     public function getBrands(Request $request)
