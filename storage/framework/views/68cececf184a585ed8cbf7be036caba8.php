@@ -1085,21 +1085,64 @@
                 }
 
                 if (hiddenRows.length === 0) {
-                    // Kalau belum ada row lebih dari 4 di HTML, bisa buat dinamis (jika kamu mau)
                     toastr.warning('Tidak ada baris tambahan yang tersedia.');
                     return;
                 }
 
                 const nextRow = hiddenRows.first();
                 nextRow.show();
-                nextRow.find('.varian-select, .gambar-keterangan').prop('disabled', false).trigger(
-                    'change.select2');
+
+                // Ambil row pertama DETAIL sebagai sumber opsi
+                const firstDetailRow = container.find('.gambar-rincian-row:visible').first();
+
+                // ----------------------
+                // Sinkron dropdown VARIAN
+                // ----------------------
+                const varianSelect = nextRow.find('.varian-select');
+                varianSelect.empty();
+                firstDetailRow.find('.varian-select option').each(function() {
+                    const option = $(this);
+                    const newOption = $('<option></option>')
+                        .val(option.val())
+                        .text(option.text());
+
+                    // Salin semua data-* attributes
+                    $.each(option.data(), function(key, value) {
+                        newOption.data(key, value);
+                    });
+
+                    varianSelect.append(newOption);
+                });
+                varianSelect.prop('disabled', false).trigger('change.select2');
+
+                // --------------------------
+                // Sinkron dropdown KETERANGAN
+                // --------------------------
+                const keteranganSelect = nextRow.find('.gambar-keterangan');
+                keteranganSelect.empty();
+                firstDetailRow.find('.gambar-keterangan option').each(function() {
+                    const option = $(this);
+                    const newOption = $('<option></option>')
+                        .val(option.val())
+                        .text(option.text());
+
+                    // Salin semua data-* attributes (misal data-foto)
+                    $.each(option.data(), function(key, value) {
+                        newOption.data(key, value);
+                    });
+
+                    keteranganSelect.append(newOption);
+                });
+                keteranganSelect.prop('disabled', false).trigger('change.select2');
+
+                // Tombol preview di row baru disable dulu
                 nextRow.find('.preview-gambar-btn').prop('disabled', true);
 
                 updateHalamanRows();
 
                 toastr.success('Baris detail baru ditambahkan.');
             });
+
 
             // Event toggle hide hanya untuk kategori detail
             $(document).on('change', '.hide-detail-checkbox', function() {
@@ -1295,12 +1338,14 @@
 
                         console.log(
                             `[${type}] row=${rowNum} id=${finalVarianId} name="${finalVarianName}" fotos=${fotoArray.length}`
-                            );
+                        );
                     });
                 });
 
                 return true; // lanjut submit
             });
+
+
 
         });
     </script>

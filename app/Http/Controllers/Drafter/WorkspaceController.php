@@ -462,6 +462,162 @@ class WorkspaceController extends Controller
                     });
                 }
 
+                // DRAFTER PARAF
+                $fotoParafRaw = $workspace->employee->foto_paraf ?? null;
+
+                // Jika berupa JSON array, ambil elemen pertama
+                if (is_string($fotoParafRaw) && str_starts_with($fotoParafRaw, '[')) {
+                    $decoded = json_decode($fotoParafRaw, true);
+                    $fotoParafFilename = is_array($decoded) ? $decoded[0] ?? null : null;
+                } elseif (is_array($fotoParafRaw)) {
+                    $fotoParafFilename = $fotoParafRaw[0] ?? null;
+                } else {
+                    $fotoParafFilename = $fotoParafRaw;
+                }
+
+                // Pastikan file di folder paraf
+                $parafPath = $fotoParafFilename ? storage_path('app/public/paraf/' . ltrim($fotoParafFilename, '/')) : null;
+
+                if ($parafPath && file_exists($parafPath)) {
+                    try {
+                        // Baca file paraf
+                        $parafImg = $manager->read($parafPath);
+
+                        // === Scaling otomatis berdasarkan ukuran gambar utama ===
+                        $mainW = $img->width();
+                        $mainH = $img->height();
+
+                        // Ubah nilai ini untuk kontrol ukuran relatif (contoh: 0.08 = 8% dari lebar gambar)
+                        $scale = 0.02;
+                        $targetWidth = intval($mainW * $scale);
+                        $parafImg = $parafImg->scaleDown(width: $targetWidth);
+
+                        // === Posisi otomatis (kanan bawah, tapi bisa kamu ubah) ===
+                        $parafW = $parafImg->width();
+                        $parafH = $parafImg->height();
+
+                        // Offset (jarak dari tepi kanan & bawah)
+                        $offsetX = 310; // ubah ini untuk geser kiri-kanan
+                        $offsetY = 185; // ubah ini untuk geser atas-bawah
+
+                        $x = $mainW - $parafW - $offsetX;
+                        $y = $mainH - $parafH - $offsetY;
+
+                        // Tempelkan ke gambar utama
+                        $img = $img->place($parafImg, 'top-left', $x, $y);
+
+                        Log::info("✅ Foto paraf disisipkan di posisi ({$x}, {$y}) | path: {$parafPath}");
+                    } catch (\Throwable $e) {
+                        Log::error('❌ Gagal memproses foto paraf: ' . $e->getMessage());
+                    }
+                } else {
+                    Log::warning('⚠️ File foto paraf tidak ditemukan di folder paraf: ' . json_encode($parafPath));
+                }
+
+                // Pemeriksa PARAF
+                $fotoParafRaw = $workspace->pemeriksa->foto_paraf ?? null;
+
+                // Jika berupa JSON array, ambil elemen pertama
+                if (is_string($fotoParafRaw) && str_starts_with($fotoParafRaw, '[')) {
+                    $decoded = json_decode($fotoParafRaw, true);
+                    $fotoParafFilename = is_array($decoded) ? $decoded[0] ?? null : null;
+                } elseif (is_array($fotoParafRaw)) {
+                    $fotoParafFilename = $fotoParafRaw[0] ?? null;
+                } else {
+                    $fotoParafFilename = $fotoParafRaw;
+                }
+
+                // Pastikan file di folder paraf
+                $parafPath = $fotoParafFilename ? storage_path('app/public/paraf/' . ltrim($fotoParafFilename, '/')) : null;
+
+                if ($parafPath && file_exists($parafPath)) {
+                    try {
+                        // Baca file paraf
+                        $parafImg = $manager->read($parafPath);
+
+                        // === Scaling otomatis berdasarkan ukuran gambar utama ===
+                        $mainW = $img->width();
+                        $mainH = $img->height();
+
+                        // Ubah nilai ini untuk kontrol ukuran relatif (contoh: 0.08 = 8% dari lebar gambar)
+                        $scale = 0.02;
+                        $targetWidth = intval($mainW * $scale);
+                        $parafImg = $parafImg->scaleDown(width: $targetWidth);
+
+                        // === Posisi otomatis (kanan bawah, tapi bisa kamu ubah) ===
+                        $parafW = $parafImg->width();
+                        $parafH = $parafImg->height();
+
+                        // Offset (jarak dari tepi kanan & bawah)
+                        $offsetX = 315; // ubah ini untuk geser kiri-kanan
+                        $offsetY = 158; // ubah ini untuk geser atas-bawah
+
+                        $x = $mainW - $parafW - $offsetX;
+                        $y = $mainH - $parafH - $offsetY;
+
+                        // Tempelkan ke gambar utama
+                        $img = $img->place($parafImg, 'top-left', $x, $y);
+
+                        Log::info("✅ Foto paraf disisipkan di posisi ({$x}, {$y}) | path: {$parafPath}");
+                    } catch (\Throwable $e) {
+                        Log::error('❌ Gagal memproses foto paraf: ' . $e->getMessage());
+                    }
+                } else {
+                    Log::warning('⚠️ File foto paraf tidak ditemukan di folder paraf: ' . json_encode($parafPath));
+                }
+
+                // Customers PARAF
+                $fotoParafRaw = $workspace->customer->foto_paraf ?? null;
+
+                // Jika berupa JSON array, ambil elemen pertama
+                if (is_string($fotoParafRaw) && str_starts_with($fotoParafRaw, '[')) {
+                    $decoded = json_decode($fotoParafRaw, true);
+                    $fotoParafFilename = is_array($decoded) ? $decoded[0] ?? null : null;
+                } elseif (is_array($fotoParafRaw)) {
+                    $fotoParafFilename = $fotoParafRaw[0] ?? null;
+                } else {
+                    $fotoParafFilename = $fotoParafRaw;
+                }
+
+                // Pastikan file di folder paraf
+                $parafPath = $fotoParafFilename ? storage_path('app/public/paraf/' . ltrim($fotoParafFilename, '/')) : null;
+
+                if ($parafPath && file_exists($parafPath)) {
+                    try {
+                        // Baca file paraf
+                        $parafImg = $manager->read($parafPath);
+
+                        // === Scaling otomatis berdasarkan ukuran gambar utama ===
+                        $mainW = $img->width();
+                        $mainH = $img->height();
+
+                        // Ubah nilai ini untuk kontrol ukuran relatif (contoh: 0.08 = 8% dari lebar gambar)
+                        $scale = 0.02;
+                        $targetWidth = intval($mainW * $scale);
+                        $parafImg = $parafImg->scaleDown(width: $targetWidth);
+
+                        // === Posisi otomatis (kanan bawah, tapi bisa kamu ubah) ===
+                        $parafW = $parafImg->width();
+                        $parafH = $parafImg->height();
+
+                        // Offset (jarak dari tepi kanan & bawah)
+                        $offsetX = 315; // ubah ini untuk geser kiri-kanan
+                        $offsetY = 140; // ubah ini untuk geser atas-bawah
+
+                        $x = $mainW - $parafW - $offsetX;
+                        $y = $mainH - $parafH - $offsetY;
+
+                        // Tempelkan ke gambar utama
+                        $img = $img->place($parafImg, 'top-left', $x, $y);
+
+                        Log::info("✅ Foto paraf disisipkan di posisi ({$x}, {$y}) | path: {$parafPath}");
+                    } catch (\Throwable $e) {
+                        Log::error('❌ Gagal memproses foto paraf: ' . $e->getMessage());
+                    }
+                } else {
+                    Log::warning('⚠️ File foto paraf tidak ditemukan di folder paraf: ' . json_encode($parafPath));
+                }
+
                 // Simpan hasil overlay
                 $overlayFilename = 'overlay_' . uniqid() . '.jpg';
                 $savePath = $tmpFolder . '/' . $overlayFilename;

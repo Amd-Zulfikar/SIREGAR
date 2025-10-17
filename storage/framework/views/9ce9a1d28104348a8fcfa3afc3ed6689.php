@@ -44,27 +44,47 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php $__currentLoopData = $workspace->workspaceGambar; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $g): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <tr>
-                                                        <td><?php echo e($workspace->no_transaksi ?? '-'); ?></td>
-                                                        <td>
-                                                            <?php echo e($g->brandModel->name ?? '-'); ?>
+                                                <?php
+                                                    use Illuminate\Support\Str;
+                                                    // Ambil semua gambar utama
+                                                    $gambarUtamas = $workspace->workspaceGambar->filter(function ($g) {
+                                                        return Str::contains(strtolower($g->foto_body ?? ''), 'utama');
+                                                    });
+                                                ?>
 
-                                                            <?php echo e($g->chassisModel ? ' ' . $g->chassisModel->name : ''); ?>
+                                                <tr>
+                                                    <td><?php echo e($workspace->no_transaksi ?? '-'); ?></td>
+                                                    <td>
+                                                        <?php if($gambarUtamas->isNotEmpty()): ?>
+                                                            <ul class="mb-0 pl-3">
+                                                                <?php $__currentLoopData = $gambarUtamas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $g): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                                    <li>
+                                                                        <?php echo e($g->brandModel->name ?? '-'); ?>
 
-                                                            <?php echo e($g->vehicleModel ? ' ' . $g->vehicleModel->name : ''); ?>
+                                                                        <?php echo e($g->chassisModel ? ' ' . $g->chassisModel->name : ''); ?>
 
-                                                            <?php echo e($g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : ''); ?>
+                                                                        <?php echo e($g->vehicleModel ? ' ' . $g->vehicleModel->name : ''); ?>
 
-                                                        </td>
-                                                        <td><?php echo e($workspace->submission->name ?? '-'); ?></td>
-                                                        <td><?php echo e($workspace->created_at->format('d/m/Y')); ?></td>
-                                                    </tr>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                                        <?php echo e($g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : ''); ?>
+
+                                                                    </li>
+                                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                            </ul>
+                                                        <?php else: ?>
+                                                            <span class="text-muted">Tidak ada gambar utama</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td><?php echo e($workspace->submission->name ?? '-'); ?></td>
+                                                    <td><?php echo e($workspace->created_at->format('d/m/Y')); ?></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+
+
+
+
 
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">

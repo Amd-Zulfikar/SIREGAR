@@ -46,23 +46,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($workspace->workspaceGambar as $g)
-                                                    <tr>
-                                                        <td>{{ $workspace->no_transaksi ?? '-' }}</td>
-                                                        <td>
-                                                            {{ $g->brandModel->name ?? '-' }}
-                                                            {{ $g->chassisModel ? ' ' . $g->chassisModel->name : '' }}
-                                                            {{ $g->vehicleModel ? ' ' . $g->vehicleModel->name : '' }}
-                                                            {{ $g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : '' }}
-                                                        </td>
-                                                        <td>{{ $workspace->submission->name ?? '-' }}</td>
-                                                        <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
-                                                    </tr>
-                                                @endforeach
+                                                @php
+                                                    use Illuminate\Support\Str;
+                                                    // Ambil semua gambar utama
+                                                    $gambarUtamas = $workspace->workspaceGambar->filter(function ($g) {
+                                                        return Str::contains(strtolower($g->foto_body ?? ''), 'utama');
+                                                    });
+                                                @endphp
+
+                                                <tr>
+                                                    <td>{{ $workspace->no_transaksi ?? '-' }}</td>
+                                                    <td>
+                                                        @if ($gambarUtamas->isNotEmpty())
+                                                            <ul class="mb-0 pl-3">
+                                                                @foreach ($gambarUtamas as $g)
+                                                                    <li>
+                                                                        {{ $g->brandModel->name ?? '-' }}
+                                                                        {{ $g->chassisModel ? ' ' . $g->chassisModel->name : '' }}
+                                                                        {{ $g->vehicleModel ? ' ' . $g->vehicleModel->name : '' }}
+                                                                        {{ $g->keteranganModel ? ' - ' . $g->keteranganModel->keterangan : '' }}
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @else
+                                                            <span class="text-muted">Tidak ada gambar utama</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $workspace->submission->name ?? '-' }}</td>
+                                                    <td>{{ $workspace->created_at->format('d/m/Y') }}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+
+
+
+
 
                                 <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                     aria-labelledby="custom-tabs-four-profile-tab">
